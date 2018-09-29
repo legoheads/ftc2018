@@ -48,26 +48,24 @@ public class Teleop extends commonFunctions
     @Override
     public void runOpMode() throws InterruptedException
     {
-//        //Get references to the DC Motors from the hardware map
-//        leftMotorFront = hardwareMap.dcMotor.get("leftMotorFront");
-//        rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
-//        leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
-//        rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
-//        glyphWheelLeft = hardwareMap.dcMotor.get("glyphWheelLeft");
-//        glyphWheelRight = hardwareMap.dcMotor.get("glyphWheelRight");
-//        glyphLift = hardwareMap.dcMotor.get("glyphLift");
-//        relicSpool = hardwareMap.dcMotor.get("relicSpool");
-//
-//        //Get references to the Servo Motors from the hardware map
-//        glyphFlip = hardwareMap.servo.get("glyphFlip");
-//        relicGrab = hardwareMap.servo.get("relicGrab");
-//        relicFlip = hardwareMap.crservo.get("relicFlip");
-//        jewelArm = hardwareMap.servo.get("jewelArm");
-//
-//        //Get references to the Color Sensor from the hardware map
-//        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        //Get references to the DC Motors from the hardware map
+        leftMotorFront = hardwareMap.dcMotor.get("leftMotorFront");
+        rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
+        leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
+        rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
+        glyphWheelLeft = hardwareMap.dcMotor.get("glyphWheelLeft");
+        glyphWheelRight = hardwareMap.dcMotor.get("glyphWheelRight");
+        glyphLift = hardwareMap.dcMotor.get("glyphLift");
+        relicSpool = hardwareMap.dcMotor.get("relicSpool");
 
-        super.runOpMode();
+        //Get references to the Servo Motors from the hardware map
+        glyphFlip = hardwareMap.servo.get("glyphFlip");
+        relicGrab = hardwareMap.servo.get("relicGrab");
+        relicFlip = hardwareMap.crservo.get("relicFlip");
+        jewelArm = hardwareMap.servo.get("jewelArm");
+
+        //Get references to the Color Sensor from the hardware map
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
         commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
