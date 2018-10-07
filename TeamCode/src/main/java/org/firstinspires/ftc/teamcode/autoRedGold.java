@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Auto Red Gold") //Name the program
+@Autonomous(name="Auto Red2") //Name the program
 public class autoRedGold extends LinearOpMode
 {
     //Define drive motors
@@ -43,12 +43,27 @@ public class autoRedGold extends LinearOpMode
     //Define the color sensor
     ColorSensor colorSensor;
 
-    //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
+    //Define strings to use as our team color and the color we see with the sensor
+    String color = "Red";
+    String colorSeen;
 
-    //***************************************************************************************************************************
+    //Define the vuforia values
+    int vuforiaValues[] = {800, 500, 200};
+
+    //Define an int to use as the distance to the cryptobox
+    int distanceToCryptobox;
+
+    //Define drive powers to avoid magic numbers
+    float drivePower = (float) 0.2;
+    float shiftPower = (float) 0.2;
+    float turnPower = (float) 0.2;
+
+    //Vuforia Initialization
+    OpenGLMatrix lastLocation = null;
+    VuforiaLocalizer vuforia;
+    int count = 0;
+
+//***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
@@ -69,20 +84,23 @@ public class autoRedGold extends LinearOpMode
         relicFlip = hardwareMap.crservo.get("relicFlip");
         jewelArm = hardwareMap.servo.get("jewelArm");
 
-        //Get references to the Color Sensor from the hardware map
+        //Get references to the sensor from the hardware map
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, jewelArm, colorSensor);
+        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        autoFunctions autoFunctions = new autoFunctions(leftMotorFront, leftMotorBack, rightMotorFront, rightMotorBack);
 
-        //Set the sensor to active mode
+//Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
+        commonFunctions.initializeMotorsAndSensors();
+
+        //Wait for start button to be clicked
+        waitForStart();
 
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
-
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
 

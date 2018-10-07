@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Auto Blue Gold") //Name the program
+@Autonomous(name="Auto Blue2") //Name the program
 public class autoBlueGold extends LinearOpMode
 {
     //Define drive motors
@@ -42,6 +42,10 @@ public class autoBlueGold extends LinearOpMode
 
     //Define the color sensor
     ColorSensor colorSensor;
+
+    //Define strings to use as our team color and the color we see with the sensor
+    String color = "Blue";
+    String colorSeen;
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
@@ -73,16 +77,19 @@ public class autoBlueGold extends LinearOpMode
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, jewelArm, colorSensor);
+        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        autoFunctions autoFunctions = new autoFunctions(leftMotorFront, leftMotorBack, rightMotorFront, rightMotorBack);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
+        commonFunctions.initializeMotorsAndSensors();
+
+        //Wait for start button to be clicked
+        waitForStart();
 
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
-
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
 

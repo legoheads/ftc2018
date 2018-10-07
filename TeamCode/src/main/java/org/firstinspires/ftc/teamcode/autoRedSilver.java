@@ -6,8 +6,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Auto Red Silver") //Name the program
+@Autonomous(name="AutoRed1") //Name the program
 public class autoRedSilver extends LinearOpMode
 {
     //Define drive motors
@@ -43,12 +43,12 @@ public class autoRedSilver extends LinearOpMode
     //Define the color sensor
     ColorSensor colorSensor;
 
-    //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
+    //Define powers to avoid magic numbers
+    float drivePower = (float) 0.8;
+    float shiftPower = (float) 0.8;
+    float turnPower = (float) 0.8;
 
-    //***************************************************************************************************************************
+//***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
@@ -73,11 +73,15 @@ public class autoRedSilver extends LinearOpMode
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, jewelArm, colorSensor);
+        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        autoFunctions autoFunctions = new autoFunctions(leftMotorFront, leftMotorBack, rightMotorFront, rightMotorBack);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
+        commonFunctions.initializeMotorsAndSensors();
+
+        //Wait for start button to be clicked
+        waitForStart();
 
 //***************************************************************************************************************************
         while (opModeIsActive())
