@@ -35,10 +35,11 @@ public class vuforiaTest extends LinearOpMode
     DcMotor relicSpool;
 
     //Define the jewel motor
-    Servo jewelArm;
+    Servo sensorArm;
 
     //Define the color sensor
-    ColorSensor colorSensor;
+    ColorSensor colorSensorCenter;
+    ColorSensor colorSensorRight;
 
     //Define strings to use, as our team color, and the color we see with the sensor
     String color = "Blue";
@@ -79,13 +80,18 @@ public class vuforiaTest extends LinearOpMode
         glyphFlip = hardwareMap.servo.get("glyphFlip");
         relicGrab = hardwareMap.servo.get("relicGrab");
         relicFlip = hardwareMap.crservo.get("relicFlip");
-        jewelArm = hardwareMap.servo.get("jewelArm");
+        sensorArm = hardwareMap.servo.get("sensorArm");
 
         //Get references to the Color Sensor from the hardware map
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        colorSensorCenter = hardwareMap.colorSensor.get("colorSensorCenter");
+        colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, sensorArm, colorSensorCenter, colorSensorRight);
+
+        //Set the sensor to active mode
+        //Set the directions and modes of the motors.
+        functions.initializeMotorsAndSensors();
 
         //Initialize the camera
         cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -103,7 +109,7 @@ public class vuforiaTest extends LinearOpMode
         telemetry.update();
 
         //Set the sensor to active mode and set the directions of the motors
-        commonFunctions.initializeMotorsAndSensors();
+        functions.initializeMotorsAndSensors();
 
         //Wait for start button to be clicked
         waitForStart();

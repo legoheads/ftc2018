@@ -20,37 +20,34 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 @Autonomous(name="AutoBlue1") //Name the program
 public class autoBlueSilver extends LinearOpMode
 {
-    //Define drive motors
-    DcMotor leftMotorFront;
-    DcMotor rightMotorFront;
-    DcMotor leftMotorBack;
-    DcMotor rightMotorBack;
+        //Define drive motors
+        DcMotor leftMotorFront;
+        DcMotor rightMotorFront;
+        DcMotor leftMotorBack;
+        DcMotor rightMotorBack;
 
-    //Define glyph motors
-    DcMotor glyphWheelLeft;
-    DcMotor glyphWheelRight;
-    DcMotor glyphLift;
-    Servo glyphFlip;
+        //Define glyph motors
+        DcMotor glyphWheelLeft;
+        DcMotor glyphWheelRight;
+        DcMotor glyphLift;
+        Servo glyphFlip;
 
-    //Define relic motors
-    Servo relicGrab;
-    CRServo relicFlip;
-    DcMotor relicSpool;
+        //Define relic motors
+        Servo relicGrab;
+        CRServo relicFlip;
+        DcMotor relicSpool;
 
-    //Define the jewel motor
-    Servo jewelArm;
+        //Define the jewel motor
+        Servo sensorArm;
 
-    //Define the color sensor
-    ColorSensor colorSensor;
+        //Define the color sensor
+        ColorSensor colorSensorCenter;
+        ColorSensor colorSensorRight;
 
-    //Define strings to use as our team color and the color we see with the sensor
-    String color = "Blue";
-    String colorSeen;
-
-    //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.8;
-    float shiftPower = (float) 0.8;
-    float turnPower = (float) 0.8;
+        //Define drive powers to avoid magic numbers
+        float drivePower = (float) 0.3;
+        float shiftPower = (float) 0.3;
+        float turnPower = (float) 0.3;
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -71,18 +68,18 @@ public class autoBlueSilver extends LinearOpMode
         glyphFlip = hardwareMap.servo.get("glyphFlip");
         relicGrab = hardwareMap.servo.get("relicGrab");
         relicFlip = hardwareMap.crservo.get("relicFlip");
-        jewelArm = hardwareMap.servo.get("jewelArm");
+        sensorArm = hardwareMap.servo.get("sensorArm");
 
         //Get references to the Color Sensor from the hardware map
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        colorSensorCenter = hardwareMap.colorSensor.get("colorSensorCenter");
+        colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
-        autoFunctions autoFunctions = new autoFunctions(leftMotorFront, leftMotorBack, rightMotorFront, rightMotorBack);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, sensorArm, colorSensorCenter, colorSensorRight);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        commonFunctions.initializeMotorsAndSensors();
+        functions.initializeMotorsAndSensors();
 
         //Wait for start button to be clicked
         waitForStart();
@@ -97,4 +94,4 @@ public class autoBlueSilver extends LinearOpMode
             break;
         }//Close while opModeIsActive loop
     } //Close "run Opmode" loop
-}//Close class and end program
+} //Close class and end program

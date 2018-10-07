@@ -12,7 +12,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp(name="TeleOp") //Name the class
-public class Teleop extends commonFunctions
+public class Teleop extends LinearOpMode
 {
     //Define drive motors
     DcMotor leftMotorFront;
@@ -32,10 +32,11 @@ public class Teleop extends commonFunctions
     DcMotor relicSpool;
 
     //Define the jewel motor
-    Servo jewelArm;
+    Servo sensorArm;
 
     //Define the color sensor
-    ColorSensor colorSensor;
+    ColorSensor colorSensorCenter;
+    ColorSensor colorSensorRight;
 
     //Define floats to be used as joystick inputs and trigger inputs
     float drivePower;
@@ -62,17 +63,18 @@ public class Teleop extends commonFunctions
         glyphFlip = hardwareMap.servo.get("glyphFlip");
         relicGrab = hardwareMap.servo.get("relicGrab");
         relicFlip = hardwareMap.crservo.get("relicFlip");
-        jewelArm = hardwareMap.servo.get("jewelArm");
+        sensorArm = hardwareMap.servo.get("sensorArm");
 
         //Get references to the Color Sensor from the hardware map
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        colorSensorCenter = hardwareMap.colorSensor.get("colorSensorCenter");
+        colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
-        teleOpFunctions teleOpFunctions = new teleOpFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, sensorArm, colorSensorCenter, colorSensorRight);
 
-        //Set the sensor to active mode and set the directions of the motors
-        commonFunctions.initializeMotorsAndSensors();
+        //Set the sensor to active mode
+        //Set the directions and modes of the motors.
+        functions.initializeMotorsAndSensors();
 
         //Wait for start button to be clicked
         waitForStart();
@@ -86,39 +88,39 @@ public class Teleop extends commonFunctions
 
     //DRIVE MOTOR CONTROLS
             //Set float variables as the inputs from the joysticks and the triggers
-            drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.85);
-            shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.85);
+            drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.75);
+            shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.75);
             leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.75);
             rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.75);
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
             if (Math.abs(drivePower) > Math.abs(shiftPower))
             {
-                teleOpFunctions.straightDrive(drivePower);
+                functions.driveTeleop(drivePower);
             }
 
             //Shift if pushed more on X than Y on gamepad1 (fast)
             if (Math.abs(shiftPower) > Math.abs(drivePower))
             {
-                teleOpFunctions.shift(shiftPower);
+                functions.shiftTeleop(shiftPower);
             }
 
             //If the left trigger is pushed on gamepad1, turn left at that power (fast)
             if (leftTurnPower > 0)
             {
-                teleOpFunctions.leftTurn(leftTurnPower);
+                functions.leftTurnTeleop(leftTurnPower);
             }
 
             //If the right trigger is pushed on gamepad1, turn right at that power (fast)
             if (rightTurnPower > 0)
             {
-                teleOpFunctions.rightTurn(rightTurnPower);
+                functions.rightTurnTeleop(rightTurnPower);
             }
 
             //If the joysticks are not pushed significantly shut off the wheels
             if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
             {
-                commonFunctions.stopDriving();
+                functions.stopDriving();
             }
 
             //Count time

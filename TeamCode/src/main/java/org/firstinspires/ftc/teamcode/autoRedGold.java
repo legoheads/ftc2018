@@ -38,32 +38,18 @@ public class autoRedGold extends LinearOpMode
     DcMotor relicSpool;
 
     //Define the jewel motor
-    Servo jewelArm;
+    Servo sensorArm;
 
     //Define the color sensor
-    ColorSensor colorSensor;
-
-    //Define strings to use as our team color and the color we see with the sensor
-    String color = "Red";
-    String colorSeen;
-
-    //Define the vuforia values
-    int vuforiaValues[] = {800, 500, 200};
-
-    //Define an int to use as the distance to the cryptobox
-    int distanceToCryptobox;
+    ColorSensor colorSensorCenter;
+    ColorSensor colorSensorRight;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.2;
-    float shiftPower = (float) 0.2;
-    float turnPower = (float) 0.2;
+    float drivePower = (float) 0.3;
+    float shiftPower = (float) 0.3;
+    float turnPower = (float) 0.3;
 
-    //Vuforia Initialization
-    OpenGLMatrix lastLocation = null;
-    VuforiaLocalizer vuforia;
-    int count = 0;
-
-//***************************************************************************************************************************
+    //***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
@@ -82,18 +68,18 @@ public class autoRedGold extends LinearOpMode
         glyphFlip = hardwareMap.servo.get("glyphFlip");
         relicGrab = hardwareMap.servo.get("relicGrab");
         relicFlip = hardwareMap.crservo.get("relicFlip");
-        jewelArm = hardwareMap.servo.get("jewelArm");
+        sensorArm = hardwareMap.servo.get("sensorArm");
 
-        //Get references to the sensor from the hardware map
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        //Get references to the Color Sensor from the hardware map
+        colorSensorCenter = hardwareMap.colorSensor.get("colorSensorCenter");
+        colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
-        autoFunctions autoFunctions = new autoFunctions(leftMotorFront, leftMotorBack, rightMotorFront, rightMotorBack);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, sensorArm, colorSensorCenter, colorSensorRight);
 
-//Set the sensor to active mode
+        //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        commonFunctions.initializeMotorsAndSensors();
+        functions.initializeMotorsAndSensors();
 
         //Wait for start button to be clicked
         waitForStart();

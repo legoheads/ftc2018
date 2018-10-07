@@ -38,14 +38,11 @@ public class autoBlueGold extends LinearOpMode
     DcMotor relicSpool;
 
     //Define the jewel motor
-    Servo jewelArm;
+    Servo sensorArm;
 
     //Define the color sensor
-    ColorSensor colorSensor;
-
-    //Define strings to use as our team color and the color we see with the sensor
-    String color = "Blue";
-    String colorSeen;
+    ColorSensor colorSensorCenter;
+    ColorSensor colorSensorRight;
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
@@ -71,18 +68,18 @@ public class autoBlueGold extends LinearOpMode
         glyphFlip = hardwareMap.servo.get("glyphFlip");
         relicGrab = hardwareMap.servo.get("relicGrab");
         relicFlip = hardwareMap.crservo.get("relicFlip");
-        jewelArm = hardwareMap.servo.get("jewelArm");
+        sensorArm = hardwareMap.servo.get("sensorArm");
 
         //Get references to the Color Sensor from the hardware map
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        colorSensorCenter = hardwareMap.colorSensor.get("colorSensorCenter");
+        colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
-        autoFunctions autoFunctions = new autoFunctions(leftMotorFront, leftMotorBack, rightMotorFront, rightMotorBack);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, sensorArm, colorSensorCenter, colorSensorRight);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        commonFunctions.initializeMotorsAndSensors();
+        functions.initializeMotorsAndSensors();
 
         //Wait for start button to be clicked
         waitForStart();
@@ -93,6 +90,11 @@ public class autoBlueGold extends LinearOpMode
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
 
+            functions.driveAutonomous(-drivePower, -2000);
+
+            functions.leftTurnAutonomous(turnPower, 1500);
+
+            functions.driveAutonomous(-drivePower, -3000);
             //Break the loop after one run
             break;
         }//Close while opModeIsActive loop

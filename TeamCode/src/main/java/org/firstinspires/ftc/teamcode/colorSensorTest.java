@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Disabled
+//@Disabled
 @TeleOp(name="Color Sensor Test") //Name the class
 public class colorSensorTest extends LinearOpMode
 {
@@ -35,13 +35,15 @@ public class colorSensorTest extends LinearOpMode
     DcMotor relicSpool;
 
     //Define the jewel motor
-    Servo jewelArm;
+    Servo sensorArm;
 
     //Define the color sensor
-    ColorSensor colorSensor;
+    ColorSensor colorSensorCenter;
+    ColorSensor colorSensorRight;
 
     //Define a float array that will be used to store sensor input
-    float hsvValues[] = {0F, 0F, 0F};
+    float hsvValuesCenter[] = {0F, 0F, 0F};
+    float hsvValuesRight[] = {0F, 0F, 0F};
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -62,16 +64,16 @@ public class colorSensorTest extends LinearOpMode
         glyphFlip = hardwareMap.servo.get("glyphFlip");
         relicGrab = hardwareMap.servo.get("relicGrab");
         relicFlip = hardwareMap.crservo.get("relicFlip");
-        jewelArm = hardwareMap.servo.get("jewelArm");
+        sensorArm = hardwareMap.servo.get("sensorArm");
 
-        //Get references to the sensor from the hardware map
-        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        //Get references to the Color Sensor from the hardware map
+        colorSensorCenter = hardwareMap.colorSensor.get("colorSensorCenter");
+        colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        commonFunctions commonFunctions = new commonFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, sensorArm, colorSensorCenter, colorSensorRight);
 
-        //Set the sensor to active mode and set the directions of the motors
-        commonFunctions.initializeMotorsAndSensors();
+        functions.initializeMotorsAndSensors();
 
         //Wait for start button to be clicked
         waitForStart();
@@ -83,16 +85,26 @@ public class colorSensorTest extends LinearOpMode
         while (opModeIsActive())
         {
             //Convert the color sensor values from RGB to HSV
-            Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+            Color.RGBToHSV(colorSensorCenter.red() * 8, colorSensorCenter.green() * 8, colorSensorCenter.blue() * 8, hsvValuesCenter);
+            Color.RGBToHSV(colorSensorRight.red() * 8, colorSensorRight.green() * 8, colorSensorRight.blue() * 8, hsvValuesRight);
 
             //Display the sensor outputs on the screen
-            telemetry.addData("Clear", colorSensor.alpha());
-            telemetry.addData("Red", colorSensor.red());
-            telemetry.addData("Green", colorSensor.green());
-            telemetry.addData("Blue", colorSensor.blue());
-            telemetry.addData("Hue", hsvValues[0]);
-            telemetry.addData("Saturation", hsvValues[1]);
-            telemetry.addData("Value", hsvValues[2]);
+            telemetry.addData("Clear Center", colorSensorCenter.alpha());
+            telemetry.addData("Red Center", colorSensorCenter.red());
+            telemetry.addData("Green Center", colorSensorCenter.green());
+            telemetry.addData("Blue Center", colorSensorCenter.blue());
+            telemetry.addData("Hue Center", hsvValuesCenter[0]);
+            telemetry.addData("Saturation Center", hsvValuesCenter[1]);
+            telemetry.addData("Value Center", hsvValuesCenter[2]);
+
+            //Display the sensor outputs on the screen
+            telemetry.addData("Clear Right", colorSensorRight.alpha());
+            telemetry.addData("Red Right", colorSensorRight.red());
+            telemetry.addData("Green Right", colorSensorRight.green());
+            telemetry.addData("Blue Right", colorSensorRight.blue());
+            telemetry.addData("Hue Right", hsvValuesRight[0]);
+            telemetry.addData("Saturation Right", hsvValuesRight[1]);
+            telemetry.addData("Value Right", hsvValuesRight[2]);
 
             //Update the data if/when it changes
             telemetry.update();
