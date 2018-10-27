@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="AutoRed1") //Name the program
+@Autonomous(name="Auto Red Silver") //Name the program
 public class autoRedSilver extends LinearOpMode
 {
     //Define drive motors

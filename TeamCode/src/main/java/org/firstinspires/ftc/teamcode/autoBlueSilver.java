@@ -17,37 +17,37 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="AutoBlue1") //Name the program
+@Autonomous(name="Auto Blue Silver") //Name the program
 public class autoBlueSilver extends LinearOpMode
 {
-        //Define drive motors
-        DcMotor leftMotorFront;
-        DcMotor rightMotorFront;
-        DcMotor leftMotorBack;
-        DcMotor rightMotorBack;
+    //Define drive motors
+    DcMotor leftMotorFront;
+    DcMotor rightMotorFront;
+    DcMotor leftMotorBack;
+    DcMotor rightMotorBack;
 
-        //Define glyph motors
-        DcMotor glyphWheelLeft;
-        DcMotor glyphWheelRight;
-        DcMotor glyphLift;
-        Servo glyphFlip;
+    //Define glyph motors
+    DcMotor glyphWheelLeft;
+    DcMotor glyphWheelRight;
+    DcMotor glyphLift;
+    Servo glyphFlip;
 
-        //Define relic motors
-        Servo relicGrab;
-        CRServo relicFlip;
-        DcMotor relicSpool;
+    //Define relic motors
+    Servo relicGrab;
+    CRServo relicFlip;
+    DcMotor relicSpool;
 
-        //Define the jewel motor
-        Servo sensorArm;
+    //Define the jewel motor
+    Servo sensorArm;
 
-        //Define the color sensor
-        ColorSensor colorSensorCenter;
-        ColorSensor colorSensorRight;
+    //Define the color sensor
+    ColorSensor colorSensorCenter;
+    ColorSensor colorSensorRight;
 
-        //Define drive powers to avoid magic numbers
-        float drivePower = (float) 0.3;
-        float shiftPower = (float) 0.3;
-        float turnPower = (float) 0.3;
+    //Define drive powers to avoid magic numbers
+    float drivePower = (float) 0.3;
+    float shiftPower = (float) 0.3;
+    float turnPower = (float) 0.3;
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -87,6 +87,8 @@ public class autoBlueSilver extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
+
+            functions.jewelPush(colorSensorCenter, "blue", "colorSeen");
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
 
