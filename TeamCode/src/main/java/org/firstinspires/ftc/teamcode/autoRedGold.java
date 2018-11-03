@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-@Autonomous(name="Auto Red Gold") //Name the program
+@Autonomous(name="Auto Red2") //Name the program
 public class autoRedGold extends LinearOpMode
 {
     //Define drive motors
@@ -87,13 +87,6 @@ public class autoRedGold extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
-
-            functions.knockCube(colorSensorCenter, colorSensorRight);
-
-            glyphFlip.setPosition(0.3);
-
-            Thread.sleep(1000);
-
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
 
