@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 
 //@Disabled
 @TeleOp(name="Tele Op Test") //Name the class
@@ -18,6 +19,8 @@ public class testBotTele extends LinearOpMode
 //    DcMotor leftMotorBack;
 //    DcMotor rightMotorBack;
 
+
+
     //Define floats to be used as joystick and trigger inputs
     float drivePower;
     float shiftPower;
@@ -26,6 +29,7 @@ public class testBotTele extends LinearOpMode
 
     DcMotor lifter;
     CRServo pin;
+    Servo marker;
 
     //Define a function to use to set motor powers
     public void setDriveMotorPowers(float leftFrontPower, float leftBackPower, float rightFrontPower, float rightBackPower)
@@ -50,6 +54,7 @@ public class testBotTele extends LinearOpMode
         lifter = hardwareMap.dcMotor.get("lifter");
 
         pin = hardwareMap.crservo.get("pin");
+        marker = hardwareMap.servo.get("marker");
 
         //Reverse some motors and keep others forward
         leftMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -75,6 +80,9 @@ public class testBotTele extends LinearOpMode
             shiftPower = -gamepad1.left_stick_x;
             leftTurnPower = gamepad1.left_trigger / 2;
             rightTurnPower = gamepad1.right_trigger / 2;
+
+
+
 
             //Drive if the joystick is pushed more Y than X
             if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -181,6 +189,14 @@ public class testBotTele extends LinearOpMode
                 Thread.sleep(7200);
                 pin.setPower(0.0);
             }
+
+            //Dump team marker
+            if(gamepad1.dpad_down)
+            {
+                marker.setPosition(0.4);
+            }
+
+
 
 
             //Update the data
