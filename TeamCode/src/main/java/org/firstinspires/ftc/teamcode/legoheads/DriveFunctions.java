@@ -24,28 +24,15 @@ public class DriveFunctions extends LinearOpMode
     DcMotor rightMotorBack;
 
     //Define glyph motors
-    DcMotor glyphWheelLeft;
-    DcMotor glyphWheelRight;
-    DcMotor glyphLift;
-    Servo glyphFlip;
-
-    //Define relic motors
-    Servo relicGrab;
-    CRServo relicFlip;
-    DcMotor relicSpool;
-
-    //Define the jewel motor
-    Servo sensorArm;
-
-    //Define the color sensor
-    ColorSensor colorSensorCenter;
-    ColorSensor colorSensorRight;
+    DcMotor lifter;
+    CRServo pin;
+    CRServo intake;
 
     /**
      * Initialize all the hardware
      * This creates a data type DriveFunctions to store all the hardware devices
      */
-    public DriveFunctions(DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor glyphWheelLeft, DcMotor glyphWheelRight, DcMotor glyphLift, Servo glyphFlip, Servo relicGrab, CRServo relicFlip, DcMotor relicSpool, Servo sensorArm, ColorSensor colorSensorCenter, ColorSensor colorSensorRight)
+    public DriveFunctions(DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor lifter, CRServo pin, CRServo intake)
     {
         //These lines enable us to store the motors, sensors and CDI without having to write them over and over again
         //Initialize DC and Servo motors
@@ -53,18 +40,10 @@ public class DriveFunctions extends LinearOpMode
         this.leftMotorBack = leftMotorBack;
         this.rightMotorFront = rightMotorFront;
         this.rightMotorBack = rightMotorBack;
-        this.glyphWheelLeft = glyphWheelLeft;
-        this.glyphWheelRight = glyphWheelRight;
-        this.glyphLift = glyphLift;
-        this.glyphFlip = glyphFlip;
-        this.relicGrab = relicGrab;
-        this.relicSpool = relicSpool;
-        this.relicFlip = relicFlip;
-        this.sensorArm = sensorArm;
 
-        //Initialize sensors
-        this.colorSensorCenter = colorSensorCenter;
-        this.colorSensorRight = colorSensorRight;
+        this.lifter = lifter;
+        this.pin = pin;
+        this.intake = intake;
     }
 
     /**
@@ -72,9 +51,9 @@ public class DriveFunctions extends LinearOpMode
      */
     public void initializeMotorsAndSensors()
     {
-        //Set the sensor to the mode that we want
-        colorSensorCenter.enableLed(true);
-        colorSensorRight.enableLed(true);
+//        //Set the sensor to the mode that we want
+//        colorSensorCenter.enableLed(true);
+//        colorSensorRight.enableLed(true);
 
         //Reverse some motors and keep others forward
         leftMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -87,13 +66,6 @@ public class DriveFunctions extends LinearOpMode
         leftMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //Set the relic spool on brake mode to not allow the motor move when it has no power set to it
-        relicSpool.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        //Set the glyph lifter on brake mode to lock the glyphter at a certain height when not being used
-        glyphLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
     }
 
     /**
@@ -153,16 +125,6 @@ public class DriveFunctions extends LinearOpMode
     {
         //This sequence of backwards, forwards, forwards, backwards makes the robot shift
         setDriveMotorPowers(-power, power, power, -power);
-    }
-
-    /**
-     * If this function is called, turn on the intake wheels either intaking or outputing
-     */
-    public void intake(float power)
-    {
-        //Start the intake wheels
-        glyphWheelLeft.setPower(-power);
-        glyphWheelRight.setPower(power);
     }
 
     public void resetEncoders()
@@ -400,50 +362,50 @@ public class DriveFunctions extends LinearOpMode
         return "white";
     }
 
-    public void knockCube(ColorSensor colorSensorCenter, ColorSensor colorSensorRight) throws InterruptedException
-    {
-        //Define constants to avoid magic numbers
-        float power = (float) 0.3;
-        int shiftDistance = 800;
-        int clearDistance = 1100;
-        int startDistance = 800;
-
-        driveAutonomous(-power, -startDistance);
-
-        //Drop the arm
-        sensorArm.setPosition(0.0);
-
-        //Wait for 0.3 second
-        Thread.sleep(300);
-
-        //Delay until a color is seen
-        while (!iSeeAColor(colorSensorCenter))
-        { }
-
-        while (!iSeeAColor(colorSensorRight))
-        { }
-
-        if (yellowOrWhite(colorSensorCenter).equals("yellow"))
-        {
-            sensorArm.setPosition(1.0);
-            driveAutonomous(-power, -clearDistance);
-        }
-
-        else if (yellowOrWhite(colorSensorRight).equals("yellow"))
-        {
-            sensorArm.setPosition(1.0);
-            leftShiftAutonomous(power, shiftDistance);
-            driveAutonomous(-power, -clearDistance);
-            rightShiftAutonomous(power, shiftDistance);
-        }
-        else
-        {
-            sensorArm.setPosition(1.0);
-            rightShiftAutonomous(power, shiftDistance);
-            driveAutonomous(-power, -clearDistance);
-            leftShiftAutonomous(power, shiftDistance);
-        }
-    }
+//    public void knockCube(ColorSensor colorSensorCenter, ColorSensor colorSensorRight) throws InterruptedException
+//    {
+//        //Define constants to avoid magic numbers
+//        float power = (float) 0.3;
+//        int shiftDistance = 800;
+//        int clearDistance = 1100;
+//        int startDistance = 800;
+//
+//        driveAutonomous(-power, -startDistance);
+//
+//        //Drop the arm
+//        sensorArm.setPosition(0.0);
+//
+//        //Wait for 0.3 second
+//        Thread.sleep(300);
+//
+//        //Delay until a color is seen
+//        while (!iSeeAColor(colorSensorCenter))
+//        { }
+//
+//        while (!iSeeAColor(colorSensorRight))
+//        { }
+//
+//        if (yellowOrWhite(colorSensorCenter).equals("yellow"))
+//        {
+//            sensorArm.setPosition(1.0);
+//            driveAutonomous(-power, -clearDistance);
+//        }
+//
+//        else if (yellowOrWhite(colorSensorRight).equals("yellow"))
+//        {
+//            sensorArm.setPosition(1.0);
+//            leftShiftAutonomous(power, shiftDistance);
+//            driveAutonomous(-power, -clearDistance);
+//            rightShiftAutonomous(power, shiftDistance);
+//        }
+//        else
+//        {
+//            sensorArm.setPosition(1.0);
+//            rightShiftAutonomous(power, shiftDistance);
+//            driveAutonomous(-power, -clearDistance);
+//            leftShiftAutonomous(power, shiftDistance);
+//        }
+//    }
 
     //Empty main
     @Override

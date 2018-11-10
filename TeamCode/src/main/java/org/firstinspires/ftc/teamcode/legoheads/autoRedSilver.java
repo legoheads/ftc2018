@@ -19,23 +19,9 @@ public class autoRedSilver extends LinearOpMode
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
 
-    //Define glyph motors
-    DcMotor glyphWheelLeft;
-    DcMotor glyphWheelRight;
-    DcMotor glyphLift;
-    Servo glyphFlip;
-
-    //Define relic motors
-    Servo relicGrab;
-    CRServo relicFlip;
-    DcMotor relicSpool;
-
-    //Define the jewel motor
-    Servo sensorArm;
-
-    //Define the color sensor
-    ColorSensor colorSensorCenter;
-    ColorSensor colorSensorRight;
+    DcMotor lifter;
+    CRServo pin;
+    CRServo intake;
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
@@ -52,23 +38,13 @@ public class autoRedSilver extends LinearOpMode
         rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
-        glyphWheelLeft = hardwareMap.dcMotor.get("glyphWheelLeft");
-        glyphWheelRight = hardwareMap.dcMotor.get("glyphWheelRight");
-        glyphLift = hardwareMap.dcMotor.get("glyphLift");
-        relicSpool = hardwareMap.dcMotor.get("relicSpool");
 
-        //Get references to the Servo Motors from the hardware map
-        glyphFlip = hardwareMap.servo.get("glyphFlip");
-        relicGrab = hardwareMap.servo.get("relicGrab");
-        relicFlip = hardwareMap.crservo.get("relicFlip");
-        sensorArm = hardwareMap.servo.get("sensorArm");
-
-        //Get references to the Color Sensor from the hardware map
-        colorSensorCenter = hardwareMap.colorSensor.get("colorSensorCenter");
-        colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
+        lifter = hardwareMap.dcMotor.get("lifter");
+        pin = hardwareMap.crservo.get("pin");
+        intake = hardwareMap.crservo.get("intake");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, sensorArm, colorSensorCenter, colorSensorRight);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, lifter, pin, intake);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.

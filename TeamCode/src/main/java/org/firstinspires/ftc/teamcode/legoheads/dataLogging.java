@@ -21,52 +21,30 @@ public class dataLogging extends LinearOpMode
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
 
-    //Define glyph motors
-    DcMotor glyphWheelLeft;
-    DcMotor glyphWheelRight;
-    DcMotor glyphLift;
-    Servo glyphFlip;
-
-    //Define relic motors
-    Servo relicGrab;
-    CRServo relicFlip;
-    DcMotor relicSpool;
-
-    //Define the jewel motor
-    Servo sensorArm;
-
-    //Define the color sensor
-    ColorSensor colorSensorCenter;
-    ColorSensor colorSensorRight;
+    DcMotor lifter;
+    CRServo pin;
+    CRServo intake;
 
 //***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
     {
-        //Get references to the DC motors from the hardware map
+        //Get references to the DC Motors from the hardware map
         leftMotorFront = hardwareMap.dcMotor.get("leftMotorFront");
         rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
-        glyphWheelLeft = hardwareMap.dcMotor.get("glyphWheelLeft");
-        glyphWheelRight = hardwareMap.dcMotor.get("glyphWheelRight");
-        glyphLift = hardwareMap.dcMotor.get("glyphLift");
-        relicSpool = hardwareMap.dcMotor.get("relicSpool");
 
-        //Get references to the Servo Motors from the hardware map
-        glyphFlip = hardwareMap.servo.get("glyphFlip");
-        relicGrab = hardwareMap.servo.get("relicGrab");
-        relicFlip = hardwareMap.crservo.get("relicFlip");
-        sensorArm = hardwareMap.servo.get("sensorArm");
-
-        //Get references to the Color Sensor from the hardware map
-        colorSensorCenter = hardwareMap.colorSensor.get("colorSensorCenter");
-        colorSensorRight = hardwareMap.colorSensor.get("colorSensorRight");
+        lifter = hardwareMap.dcMotor.get("lifter");
+        pin = hardwareMap.crservo.get("pin");
+        intake = hardwareMap.crservo.get("intake");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, glyphWheelLeft, glyphWheelRight, glyphLift, glyphFlip, relicGrab, relicFlip, relicSpool, sensorArm, colorSensorCenter, colorSensorRight);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, lifter, pin, intake);
 
+        //Set the sensor to active mode
+        //Set the directions and modes of the motors.
         functions.initializeMotorsAndSensors();
 
         //Wait for start button to be clicked
@@ -85,14 +63,12 @@ public class dataLogging extends LinearOpMode
                 leftMotorBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightMotorBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                glyphLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
                 //Use the encoders
                 leftMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-                glyphLift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             //Show all the encoder values on the driver station
@@ -100,7 +76,6 @@ public class dataLogging extends LinearOpMode
             telemetry.addData("left back", leftMotorBack.getCurrentPosition());
             telemetry.addData("right front", rightMotorFront.getCurrentPosition());
             telemetry.addData("right back", rightMotorBack.getCurrentPosition());
-            telemetry.addData("glyphter", glyphLift.getCurrentPosition());
 
             //Update the data if/when it changes
             telemetry.update();
