@@ -133,9 +133,6 @@ public class autoBlueSilver extends LinearOpMode
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
-
-            //Break the loop after one run
-            break;
         }//Close while opModeIsActive loop
     } //Close "run Opmode" loop
 } //Close class and end program
