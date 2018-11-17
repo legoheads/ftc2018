@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.sample_test;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -8,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by Sarthak on 10/1/2018.
  */
+@Disabled
 @Autonomous(name = "Motor Encoder Coordinate Position", group = "Test")
 public class TestMotorEncoderCoordinatePosition extends LinearOpMode {
 

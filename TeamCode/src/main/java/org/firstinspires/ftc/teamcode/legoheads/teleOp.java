@@ -15,15 +15,28 @@ public class teleOp extends LinearOpMode
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
 
+    //lifter and pin to hang robot
     DcMotor lifter;
     CRServo pin;
+
+
+    //Linear slide extension and flip
+    DcMotor extend;
+    DcMotor flip;
+
+    //Spinner
     CRServo intake;
+
 
     //Define drive powers to avoid magic numbers
     float drivePower;
     float shiftPower;
     float leftTurnPower;
     float rightTurnPower;
+
+    int pinCount = -1;
+    int liftCount;
+    int flipCount;
 
     //***************************************************************************************************************************
     //MAIN BELOW
@@ -39,6 +52,9 @@ public class teleOp extends LinearOpMode
         lifter = hardwareMap.dcMotor.get("lifter");
         pin = hardwareMap.crservo.get("pin");
         intake = hardwareMap.crservo.get("intake");
+        flip = hardwareMap.dcMotor.get("flip");
+
+        extend = hardwareMap.dcMotor.get("extend");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
         DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, lifter, pin, intake);
@@ -57,6 +73,8 @@ public class teleOp extends LinearOpMode
             shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.85);
             leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.75);
             rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.75);
+
+
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
             if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -92,89 +110,58 @@ public class teleOp extends LinearOpMode
 
             if (gamepad1.a)
             {
-                //Use the encoder
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                functions.hang(2925, (float)0.6);
 
-                //Reset the encoder
-                lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                //Use the encoder
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                //Set up the motor to run to the given position
-                lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                //Set the target position as the value entered
-                lifter.setTargetPosition(2925);
-
-                //Turn the motor on at the corresponding power
-                lifter.setPower(0.6);
-
-                //Empty while loop while the motor is moving
-                while ((lifter.isBusy()))
-                { }
-
-                //Stop the motor
-                lifter.setPower(0.0);
-
-                //Use the encoder in the future
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
-
             if (gamepad1.y)
             {
-                //Use the encoder
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                functions.hang(-2925, (float)-0.6);
 
-                //Reset the encoder
-                lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                //Use the encoder
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                //Set up the motor to run to the given position
-                lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                //Set the target position as the value entered
-                lifter.setTargetPosition(-2925);
-
-                //Turn the motor on at the corresponding power
-                lifter.setPower(-0.6);
-
-                //Empty while loop while the motor is moving
-                while ((lifter.isBusy()))
-                { }
-
-                //Stop the motor
-                lifter.setPower(0.0);
-
-                //Use the encoder in the future
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if (gamepad1.b)
-            {
-                pin.setPower(0.75);
-                Thread.sleep(7200);
-                pin.setPower(0.0);
-            }
 
-            if (gamepad1.x)
+            if(gamepad1.b)
             {
                 pin.setPower(-0.75);
                 Thread.sleep(7200);
                 pin.setPower(0.0);
             }
 
+            if(gamepad1.x) {
+                pin.setPower(0.75);
+                Thread.sleep(7200);
+                pin.setPower(0.0);
+            }
+
+
             if (gamepad1.right_bumper)
             {
-                intake.setPower(1.0);
+                intake.setPower(0.6);
             }
 
             if (gamepad1.left_bumper)
             {
-                intake.setPower(-1.0);
+                intake.setPower(-0.6);
             }
+
+            if (gamepad1.dpad_up){
+                extend.setPower(0.7);
+                Thread.sleep(3000);
+            }
+            if (gamepad1.dpad_down){
+                extend.setPower(-0.7);
+                Thread.sleep(3000);
+            }
+            if (gamepad1.dpad_left){
+                flip.setPower(0.7);
+                Thread.sleep(2000);
+            }
+            if (gamepad1.dpad_right){
+                flip.setPower(-0.7);
+                Thread.sleep(2000);
+            }
+
+
 
         }//Close while opModeIsActive loop
     } //Close "run Opmode" loop

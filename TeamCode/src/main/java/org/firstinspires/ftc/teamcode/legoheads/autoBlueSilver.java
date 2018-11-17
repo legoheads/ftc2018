@@ -30,6 +30,8 @@ public class autoBlueSilver extends LinearOpMode
     CRServo pin;
     CRServo intake;
 
+    Servo marker;
+
     private GoldMineralDetector genericDetector = null;
 
     //Define possible mineral locations in enum
@@ -59,6 +61,8 @@ public class autoBlueSilver extends LinearOpMode
         lifter = hardwareMap.dcMotor.get("lifter");
         pin = hardwareMap.crservo.get("pin");
         intake = hardwareMap.crservo.get("intake");
+
+        marker = hardwareMap.servo.get("marker");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
         DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, lifter, pin, intake);
@@ -99,37 +103,74 @@ public class autoBlueSilver extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
+            functions.hang(-2625, (float) -0.6);
 
-            if(genericDetector.isFound())
-            {
-                telemetry.addData("Location", genericDetector.getScreenPosition());
-                //telemetry.addData("Rect", genericDetector.getRect().toString());
-                blockLocation = genericDetector.getScreenPosition();
-                if(blockLocation != null)
-                {
-                    telemetry.addData("X Value", blockLocation.x);
-                    if (blockLocation.x < 100)
-                    {
-                        mineralLocation = location.LEFT;
-                        telemetry.addData("Position", "Left");
-                    }
-                    else if (blockLocation.x < 400)
-                    {
-                        mineralLocation = location.CENTER;
-                        telemetry.addData("Position", "Center");
-                    }
-                    else if (blockLocation.x > 500)
-                    {
-                        mineralLocation = location.RIGHT;
-                        telemetry.addData("Position", "Right");
-                    }
-                }
-                else
-                {
-                    mineralLocation = location.UNKNOWN;
-                    telemetry.addData("Position", "Unknown");
-                }
-            }
+//            functions.knockCube(colorSensorCenter, colorSensorRight);
+
+//            lifter.setPower(-0.5);
+//           Thread.sleep(1200);
+
+            pin.setPower(0.75) ;
+            Thread.sleep(7200);
+            pin.setPower(0.0);
+
+
+            functions.driveAutonomous(drivePower, 400);
+
+            functions.rightTurnAutonomous(turnPower, 1450);
+
+            functions.driveAutonomous(-drivePower, -200);
+
+            functions.leftTurnAutonomous(turnPower, 720);
+
+            marker.setPosition(-0.3);
+
+
+//            glyphFlip.setPosition(0.3);
+
+//            Thread.sleep(1000);
+//
+//            functions.driveAutonomous(drivePower, 200);
+//
+//            functions.rightShiftAutonomous(shiftPower, 300);
+//
+//            functions.leftTurnAutonomous(turnPower, 1450);
+//
+//            functions.driveAutonomous(-drivePower, -2000);
+
+
+
+
+//            if(genericDetector.isFound())
+//            {
+//                telemetry.addData("Location", genericDetector.getScreenPosition());
+//                //telemetry.addData("Rect", genericDetector.getRect().toString());
+//                blockLocation = genericDetector.getScreenPosition();
+//                if(blockLocation != null)
+//                {
+//                    telemetry.addData("X Value", blockLocation.x);
+//                    if (blockLocation.x < 100)
+//                    {
+//                        mineralLocation = location.LEFT;
+//                        telemetry.addData("Position", "Left");
+//                    }
+//                    else if (blockLocation.x < 400)
+//                    {
+//                        mineralLocation = location.CENTER;
+//                        telemetry.addData("Position", "Center");
+//                    }
+//                    else if (blockLocation.x > 500)
+//                    {
+//                        mineralLocation = location.RIGHT;
+//                        telemetry.addData("Position", "Right");
+//                    }
+//                }
+//                else
+//                {
+//                    mineralLocation = location.UNKNOWN;
+//                    telemetry.addData("Position", "Unknown");
+//                }
+//            }
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

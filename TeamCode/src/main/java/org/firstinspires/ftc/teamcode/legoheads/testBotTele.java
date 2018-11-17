@@ -178,7 +178,7 @@ public class testBotTele extends LinearOpMode
 
             if (gamepad1.b)
             {
-                pin.setPower(0.75);
+                pin.setPower(0.75) ;
                 Thread.sleep(7200);
                 pin.setPower(0.0);
             }
@@ -193,7 +193,7 @@ public class testBotTele extends LinearOpMode
             //Dump team marker
             if(gamepad1.dpad_down)
             {
-                marker.setPosition(0.4);
+                marker.setPosition(-0.3);
             }
 
 

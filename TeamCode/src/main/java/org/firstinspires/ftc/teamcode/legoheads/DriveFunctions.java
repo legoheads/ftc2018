@@ -362,6 +362,36 @@ public class DriveFunctions extends LinearOpMode
         return "white";
     }
 
+    public void hang(int distance, float power){
+        //Use the encoder
+        lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //Reset the encoder
+        lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //Use the encoder
+        lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //Set up the motor to run to the given position
+        lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Set the target position as the value entered
+        lifter.setTargetPosition(distance);
+
+        //Turn the motor on at the corresponding power
+        lifter.setPower(power);
+
+        //Empty while loop while the motor is moving
+        while ((lifter.isBusy()))
+        { }
+
+        //Stop the motor
+        lifter.setPower(0.0);
+
+        //Use the encoder in the future
+        lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
 //    public void knockCube(ColorSensor colorSensorCenter, ColorSensor colorSensorRight) throws InterruptedException
 //    {
 //        //Define constants to avoid magic numbers
