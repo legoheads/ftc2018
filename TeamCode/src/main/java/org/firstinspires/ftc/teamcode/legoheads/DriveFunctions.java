@@ -13,6 +13,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.disnodeteam.dogecv.CameraViewDisplay;
+import com.disnodeteam.dogecv.filters.LeviColorFilter;
+
+import org.opencv.core.Point;
 
 @Disabled
 public class DriveFunctions extends LinearOpMode
@@ -24,26 +28,41 @@ public class DriveFunctions extends LinearOpMode
     DcMotor rightMotorBack;
 
     //Define glyph motors
-    DcMotor lifter;
+    DcMotor mineralSpool;
+    DcMotor spinner;
+    DcMotor mineralFlipper;
+    DcMotor hanger;
+
     CRServo pin;
-    CRServo intake;
+    Servo markerDropper;
+    Servo mineralFlipInit;
+
+    //Define possible mineral locations in enum
+    enum location {
+        LEFT, CENTER, RIGHT, UNKNOWN
+    };
 
     /**
      * Initialize all the hardware
      * This creates a data type DriveFunctions to store all the hardware devices
      */
-    public DriveFunctions(DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor lifter, CRServo pin, CRServo intake)
+    public DriveFunctions(DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor mineralSpool, DcMotor spinner, DcMotor mineralFlipper, DcMotor hanger, CRServo pin, Servo markerDropper, Servo mineralFlipInit)
     {
         //These lines enable us to store the motors, sensors and CDI without having to write them over and over again
-        //Initialize DC and Servo motors
+        //Initialize DC motors
         this.leftMotorFront = leftMotorFront;
         this.leftMotorBack = leftMotorBack;
         this.rightMotorFront = rightMotorFront;
         this.rightMotorBack = rightMotorBack;
 
-        this.lifter = lifter;
+        this.mineralSpool = mineralSpool;
+        this.spinner = spinner;
+        this.mineralFlipper = mineralFlipper;
+        this.hanger = hanger;
+
         this.pin = pin;
-        this.intake = intake;
+        this.markerDropper = markerDropper;
+        this.mineralFlipInit = mineralFlipInit;
     }
 
     /**
@@ -184,9 +203,6 @@ public class DriveFunctions extends LinearOpMode
      */
     public static void oneMotorEncoder(DcMotor motor, float power, int degrees)
     {
-        //Use the encoder
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         //Reset the encoder
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
@@ -362,37 +378,72 @@ public class DriveFunctions extends LinearOpMode
         return "white";
     }
 
-    public void hang(int distance, float power){
-        //Use the encoder
-        lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Reset the encoder
-        lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //Use the encoder
-        lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Set up the motor to run to the given position
-        lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Set the target position as the value entered
-        lifter.setTargetPosition(distance);
-
-        //Turn the motor on at the corresponding power
-        lifter.setPower(power);
-
-        //Empty while loop while the motor is moving
-        while ((lifter.isBusy()))
-        { }
-
-        //Stop the motor
-        lifter.setPower(0.0);
-
-        //Use the encoder in the future
-        lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    public void hang(float power, int degrees)
+    {
+        oneMotorEncoder(hanger, power, degrees);
     }
 
-//    public void knockCube(ColorSensor colorSensorCenter, ColorSensor colorSensorRight) throws InterruptedException
+    public void dropDown() throws InterruptedException
+    {
+        hang((float) -0.6, -2925);
+
+        pin.setPower(-0.75) ;
+        Thread.sleep(7200);
+        pin.setPower(0.0);
+    }
+
+    Point blockLocation = null;
+
+    public void goldMineralDetectionCV(Point blockLocation) throws InterruptedException {
+        float power = (float) 0.3;
+        int startDistance = 300;
+        int distanceToBlock = 500;
+        int turnDistance = 1400;
+
+        double blockDistance = 0.0;
+        int count = 0;
+        location goldLocation;
+        while (((blockLocation.y < 30.0) || (blockLocation.y > 500.0)) && (count < 300))
+        {
+            sleep(10);
+            count++;
+        }
+
+        blockDistance = blockLocation.y;
+
+        if (blockDistance < 120)
+        {
+            goldLocation = location.RIGHT;
+        }
+        else if (blockDistance < 320)
+        {
+            goldLocation = location.CENTER;
+        }
+        else if (blockDistance < 520)
+        {
+            goldLocation = location.LEFT;
+        }
+        else
+        {
+            goldLocation = location.CENTER;
+        }
+
+
+        if (goldLocation == location.RIGHT)
+        {
+            driveAutonomous(-power, -startDistance);
+        }
+        if (goldLocation == location.LEFT)
+        {
+            driveAutonomous(power, startDistance);
+        }
+
+        rightTurnAutonomous(power, turnDistance);
+
+        driveAutonomous(power, distanceToBlock);
+    }
+
+//    public void knockCube(ColorSensor colorSensor) throws InterruptedException
 //    {
 //        //Define constants to avoid magic numbers
 //        float power = (float) 0.3;
@@ -400,40 +451,31 @@ public class DriveFunctions extends LinearOpMode
 //        int clearDistance = 1100;
 //        int startDistance = 800;
 //
-//        driveAutonomous(-power, -startDistance);
-//
 //        //Drop the arm
-//        sensorArm.setPosition(0.0);
 //
 //        //Wait for 0.3 second
 //        Thread.sleep(300);
 //
 //        //Delay until a color is seen
-//        while (!iSeeAColor(colorSensorCenter))
+//        while (!iSeeAColor(colorSensor))
 //        { }
 //
-//        while (!iSeeAColor(colorSensorRight))
-//        { }
-//
-//        if (yellowOrWhite(colorSensorCenter).equals("yellow"))
+//        if (yellowOrWhite(colorSensor).equals("yellow"))
 //        {
-//            sensorArm.setPosition(1.0);
 //            driveAutonomous(-power, -clearDistance);
-//        }
-//
-//        else if (yellowOrWhite(colorSensorRight).equals("yellow"))
-//        {
-//            sensorArm.setPosition(1.0);
-//            leftShiftAutonomous(power, shiftDistance);
-//            driveAutonomous(-power, -clearDistance);
-//            rightShiftAutonomous(power, shiftDistance);
 //        }
 //        else
 //        {
-//            sensorArm.setPosition(1.0);
-//            rightShiftAutonomous(power, shiftDistance);
-//            driveAutonomous(-power, -clearDistance);
 //            leftShiftAutonomous(power, shiftDistance);
+//            if (yellowOrWhite(colorSensor).equals("yellow"))
+//            {
+//                driveAutonomous(-power, -clearDistance);
+//            }
+//            else
+//            {
+//                rightShiftAutonomous(power, 2*shiftDistance);
+//                driveAutonomous(-power, -clearDistance);
+//            }
 //        }
 //    }
 

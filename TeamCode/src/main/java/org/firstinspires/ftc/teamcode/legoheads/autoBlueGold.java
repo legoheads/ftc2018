@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="Working Auto") //Name the program
+@Autonomous(name="Auto Blue Gold") //Name the program
 public class autoBlueGold extends LinearOpMode
 {
     //Define drive motors
@@ -20,12 +20,17 @@ public class autoBlueGold extends LinearOpMode
     DcMotor rightMotorBack;
 
     //Define glyph motors
-    DcMotor lifter;
+    DcMotor mineralSpool;
+    DcMotor spinner;
+    DcMotor mineralFlipper;
+    DcMotor hanger;
+
     CRServo pin;
-    CRServo intake;
+    Servo markerDropper;
+    Servo mineralFlipInit;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
+    float drivePower = (float) -0.3;
     float shiftPower = (float) 0.3;
     float turnPower = (float) 0.3;
 
@@ -40,12 +45,17 @@ public class autoBlueGold extends LinearOpMode
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
-        lifter = hardwareMap.dcMotor.get("lifter");
+        mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
+        spinner = hardwareMap.dcMotor.get("spinner");
+        mineralFlipper = hardwareMap.dcMotor.get("mineralFlipper");
+        hanger = hardwareMap.dcMotor.get("hanger");
+
         pin = hardwareMap.crservo.get("pin");
-        intake = hardwareMap.crservo.get("intake");
+        markerDropper = hardwareMap.servo.get("markerDropper");
+        mineralFlipInit = hardwareMap.servo.get("mineralFlipInit");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, lifter, pin, intake);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, mineralFlipper, hanger, pin, markerDropper, mineralFlipInit);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -57,22 +67,37 @@ public class autoBlueGold extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
+            markerDropper.setPosition(0.4);
 
-//            functions.knockCube(colorSensorCenter, colorSensorRight);
+            functions.dropDown();
 
-            functions.driveAutonomous(-drivePower, -400);
+            spinner.setPower(0.3);
 
-//            glyphFlip.setPosition(0.3);
+            functions.setDriveMotorPowers(drivePower, drivePower, drivePower, drivePower);
+            Thread.sleep(2500);
+            functions.setDriveMotorPowers((float) 0.0, (float)0.0, (float)0.0, (float)0.0);
+
+//            functions.knockCube(colorSensor);
+
+            spinner.setPower(-0.3);
 
             Thread.sleep(1000);
 
-            functions.driveAutonomous(drivePower, 200);
+            functions.setDriveMotorPowers(-drivePower, -drivePower, drivePower, drivePower);
+            Thread.sleep(4000);
+            functions.setDriveMotorPowers((float) 0.0, (float)0.0, (float)0.0, (float)0.0);
 
-            functions.rightShiftAutonomous(shiftPower, 300);
+            markerDropper.setPosition(-0.3);
 
-            functions.leftTurnAutonomous(turnPower, 1450);
+            Thread.sleep(1000);
 
-            functions.driveAutonomous(-drivePower, -2000);
+            spinner.setPower(0.3);
+
+            functions.setDriveMotorPowers(drivePower, drivePower, drivePower, drivePower);
+            Thread.sleep(7000);
+            functions.setDriveMotorPowers((float) 0.0, (float)0.0, (float)0.0, (float)0.0);
+
+            spinner.setPower(0.0);
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

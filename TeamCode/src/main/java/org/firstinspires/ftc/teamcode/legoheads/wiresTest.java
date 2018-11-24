@@ -1,17 +1,14 @@
-//Run from the package
 package org.firstinspires.ftc.teamcode.legoheads;
 
-//Import necessary items
-
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="Auto Red Silver") //Name the program
-public class autoRedSilver extends LinearOpMode
+@TeleOp(name="wires test ") //Name the class
+public class wiresTest extends LinearOpMode
 {
     //Define drive motors
     DcMotor leftMotorFront;
@@ -29,12 +26,11 @@ public class autoRedSilver extends LinearOpMode
     Servo markerDropper;
     Servo mineralFlipInit;
 
-    //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
 
-    //***************************************************************************************************************************
+    //Define drive powers to avoid magic numbers
+    float power = (float) 0.5;
+
+//***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
@@ -67,11 +63,52 @@ public class autoRedSilver extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
+            if (gamepad1.y)
+            {
+                functions.oneMotorEncoder(leftMotorFront, power, 300);
+                telemetry.addData("motor forwards", leftMotorFront);
+            }
+            if (gamepad1.b)
+            {
+                functions.oneMotorEncoder(rightMotorFront, power, 300);
+                telemetry.addData("motor forwards", rightMotorFront);
+            }
+            if (gamepad1.a)
+            {
+                functions.oneMotorEncoder(leftMotorBack, power, 300);
+                telemetry.addData("motor forwards", leftMotorBack);
+            }
+            if (gamepad1.x)
+            {
+                functions.oneMotorEncoder(rightMotorBack, power, 300);
+                telemetry.addData("motor forwards", rightMotorBack);
+            }
+
+            if (gamepad1.dpad_up)
+            {
+                functions.oneMotorEncoder(leftMotorFront, -power, -300);
+                telemetry.addData("motor backwards", leftMotorFront);
+            }
+            if (gamepad1.dpad_right)
+            {
+                functions.oneMotorEncoder(rightMotorFront, -power, -300);
+                telemetry.addData("motor backwards", rightMotorFront);
+            }
+            if (gamepad1.dpad_down)
+            {
+                functions.oneMotorEncoder(leftMotorBack, -power, -300);
+                telemetry.addData("motor backwards", leftMotorBack);
+            }
+            if (gamepad1.dpad_left)
+            {
+                functions.oneMotorEncoder(rightMotorBack, -power, -300);
+                telemetry.addData("motor backwards", rightMotorBack);
+            }
+
+            telemetry.update();
+
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
-
-            //Break the loop after one run
-            break;
         }//Close while opModeIsActive loop
     } //Close "run Opmode" loop
 } //Close class and end program

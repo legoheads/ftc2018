@@ -8,8 +8,9 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-//@Disabled
+@Disabled
 @TeleOp(name="Tele Op Test") //Name the class
 public class testBotTele extends LinearOpMode
 {
@@ -80,8 +81,6 @@ public class testBotTele extends LinearOpMode
             shiftPower = -gamepad1.left_stick_x;
             leftTurnPower = gamepad1.left_trigger / 2;
             rightTurnPower = gamepad1.right_trigger / 2;
-
-
 
 
             //Drive if the joystick is pushed more Y than X
@@ -195,9 +194,6 @@ public class testBotTele extends LinearOpMode
             {
                 marker.setPosition(-0.3);
             }
-
-
-
 
             //Update the data
             telemetry.update();

@@ -10,25 +10,32 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="Auto Red2") //Name the program
+@Autonomous(name="Auto Red Gold") //Name the program
 public class autoRedGold extends LinearOpMode
 {
+    //Define drive motors
     //Define drive motors
     DcMotor leftMotorFront;
     DcMotor rightMotorFront;
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
 
-    DcMotor lifter;
+    //Define glyph motors
+    DcMotor mineralSpool;
+    DcMotor spinner;
+    DcMotor mineralFlipper;
+    DcMotor hanger;
+
     CRServo pin;
-    CRServo intake;
+    Servo markerDropper;
+    Servo mineralFlipInit;
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
     float shiftPower = (float) 0.3;
     float turnPower = (float) 0.3;
 
-//***************************************************************************************************************************
+    //***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
@@ -39,12 +46,17 @@ public class autoRedGold extends LinearOpMode
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
-        lifter = hardwareMap.dcMotor.get("lifter");
+        mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
+        spinner = hardwareMap.dcMotor.get("spinner");
+        mineralFlipper = hardwareMap.dcMotor.get("mineralFlipper");
+        hanger = hardwareMap.dcMotor.get("hanger");
+
         pin = hardwareMap.crservo.get("pin");
-        intake = hardwareMap.crservo.get("intake");
+        markerDropper = hardwareMap.servo.get("markerDropper");
+        mineralFlipInit = hardwareMap.servo.get("mineralFlipInit");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, lifter, pin, intake);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, mineralFlipper, hanger, pin, markerDropper, mineralFlipInit);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.

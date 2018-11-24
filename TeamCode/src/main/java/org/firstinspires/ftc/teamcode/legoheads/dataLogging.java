@@ -21,9 +21,15 @@ public class dataLogging extends LinearOpMode
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
 
-    DcMotor lifter;
+    //Define glyph motors
+    DcMotor mineralSpool;
+    DcMotor spinner;
+    DcMotor mineralFlipper;
+    DcMotor hanger;
+
     CRServo pin;
-    CRServo intake;
+    Servo markerDropper;
+    Servo mineralFlipInit;
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -36,12 +42,17 @@ public class dataLogging extends LinearOpMode
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
-        lifter = hardwareMap.dcMotor.get("lifter");
+        mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
+        spinner = hardwareMap.dcMotor.get("spinner");
+        mineralFlipper = hardwareMap.dcMotor.get("mineralFlipper");
+        hanger = hardwareMap.dcMotor.get("hanger");
+
         pin = hardwareMap.crservo.get("pin");
-        intake = hardwareMap.crservo.get("intake");
+        markerDropper = hardwareMap.servo.get("markerDropper");
+        mineralFlipInit = hardwareMap.servo.get("mineralFlipInit");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, lifter, pin, intake);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, mineralFlipper, hanger, pin, markerDropper, mineralFlipInit);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.

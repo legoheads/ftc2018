@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.legoheads;
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -16,8 +17,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.subsystems.sampling.GoldMineralDetector;
 import org.opencv.core.Point;
 
-@Autonomous(name="AutoWithCV") //Name the program
-public class autoBlueSilver extends LinearOpMode
+@Autonomous(name="CV Test") //Name the program
+public class cvTest extends LinearOpMode
 {
     //Define drive motors
     DcMotor leftMotorFront;
@@ -104,69 +105,43 @@ public class autoBlueSilver extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
-//            functions.dropDown();
+
+            if(genericDetector.isFound())
+            {
                 telemetry.addData("Location", genericDetector.getScreenPosition());
                 //telemetry.addData("Rect", genericDetector.getRect().toString());
                 blockLocation = genericDetector.getScreenPosition();
-                if (blockLocation != null)
+                if(blockLocation != null)
                 {
-                    float power = (float) 0.3;
-                    int startDistance = 800;
-                    int distanceToBlock = 1100;
-                    int turnDistance = 1400;
-
-                    int count = 0;
-                    DriveFunctions.location goldLocation;
-                    while (((blockLocation.y < 30.0) || (blockLocation.y > 500.0)) && (count < 300))
+                    telemetry.addData("X Value", blockLocation.x);
+                    if (blockLocation.x < 250)
                     {
-                        sleep(10);
-                        count++;
+                        mineralLocation = location.LEFT;
+                        telemetry.addData("Position", "Left");
                     }
-
-
-                    if (blockLocation.y < 120)
+                    else if (blockLocation.x < 400)
                     {
-                        goldLocation = DriveFunctions.location.RIGHT;
+                        mineralLocation = location.CENTER;
+                        telemetry.addData("Position", "Center");
                     }
-                    else if (blockLocation.y < 320)
+                    else if (blockLocation.x > 450)
                     {
-                        goldLocation = DriveFunctions.location.CENTER;
-                    }
-                    else if (blockLocation.y < 520)
-                    {
-                        goldLocation = DriveFunctions.location.LEFT;
+                        mineralLocation = location.RIGHT;
+                        telemetry.addData("Position", "Right");
                     }
                     else
                     {
-                        goldLocation = DriveFunctions.location.CENTER;
+                        mineralLocation = location.UNKNOWN;
+                        telemetry.addData("Position", "unknown found");
                     }
-
-
-                    if (goldLocation == DriveFunctions.location.RIGHT)
-                    {
-                        functions.driveAutonomous(- power, - startDistance);
-                    }
-                    if (goldLocation == DriveFunctions.location.LEFT)
-                    {
-                        functions.driveAutonomous(power, startDistance);
-                    }
-
-                    functions.rightTurnAutonomous(power, turnDistance);
-
-                    functions.driveAutonomous(power, distanceToBlock);
                 }
-
-//            functions.rightTurnAutonomous(turnPower, 1450);
-//
-//            functions.driveAutonomous(-drivePower, -200);
-//
-//            functions.leftTurnAutonomous(turnPower, 720);
-//
-
-            //Always call idle() at the bottom of your while(opModeIsActive()) loop
-            idle();
-
-            break;
+                else
+                {
+                    mineralLocation = location.UNKNOWN;
+                    telemetry.addData("Position", "Unknown not found");
+                }
+                telemetry.update();
+            }
         }//Close while opModeIsActive loop
     } //Close "run Opmode" loop
 } //Close class and end program
