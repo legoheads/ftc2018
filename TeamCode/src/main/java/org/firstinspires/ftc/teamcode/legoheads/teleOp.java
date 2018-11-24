@@ -214,26 +214,26 @@ public class teleOp extends LinearOpMode
                 hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-//            if (gamepad1.dpad_up)
-//            {
-//                mineralSpool.setPower(0.7);
-//                Thread.sleep(3000);
-//            }
-//            if (gamepad1.dpad_down)
-//            {
-//                mineralSpool.setPower(-0.7);
-//                Thread.sleep(3000);
-//            }
-//            if (gamepad1.dpad_left)
-//            {
-//                mineralFlipper.setPower(0.7);
-//                Thread.sleep(2000);
-//            }
-//            if (gamepad1.dpad_right)
-//            {
-//                mineralFlipper.setPower(-0.7);
-//                Thread.sleep(2000);
-//            }
+            if (gamepad1.dpad_up)
+            {
+                mineralSpool.setPower(-0.4);
+                Thread.sleep(3000);
+            }
+            if (gamepad1.dpad_down)
+            {
+                mineralSpool.setPower(0.4);
+                Thread.sleep(3000);
+            }
+            if (gamepad1.dpad_left)
+            {
+                mineralFlipper.setPower(1.0);
+                Thread.sleep(2000);
+            }
+            if (gamepad1.dpad_right)
+            {
+                mineralFlipper.setPower(-1.0);
+                Thread.sleep(2000);
+            }
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
