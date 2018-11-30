@@ -161,7 +161,7 @@ public class teleOp extends LinearOpMode
                 hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 //Set the target position as the value entered
-                hanger.setTargetPosition(-2925);
+                hanger.setTargetPosition(-3100);
 
                 //Turn the motor on at the corresponding power
                 hanger.setPower(-0.6);
@@ -216,12 +216,12 @@ public class teleOp extends LinearOpMode
 
             if (gamepad1.dpad_up)
             {
-                mineralSpool.setPower(-0.4);
+                mineralSpool.setPower(0.4);
                 Thread.sleep(3000);
             }
             if (gamepad1.dpad_down)
             {
-                mineralSpool.setPower(0.4);
+                mineralSpool.setPower(-0.4);
                 Thread.sleep(3000);
             }
             if (gamepad1.dpad_left)

@@ -383,14 +383,14 @@ public class DriveFunctions extends LinearOpMode
         oneMotorEncoder(hanger, power, degrees);
     }
 
-    public void dropDown() throws InterruptedException
-    {
-        hang((float) -0.6, -2925);
-
-        pin.setPower(-0.75) ;
-        Thread.sleep(7200);
-        pin.setPower(0.0);
-    }
+//    public void dropDown() throws InterruptedException
+//    {
+//        hang((float) -0.6, -2925);
+//
+//        pin.setPower(-0.75) ;
+//        Thread.sleep(7200);
+//        pin.setPower(0.0);
+//    }
 
     Point blockLocation = null;
 

@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name="Auto Red Silver") //Name the program
-public class autoRedSilver extends LinearOpMode
+@Autonomous(name="AutoCrater") //Name the program
+public class autoCrater extends LinearOpMode
 {
     //Define drive motors
     DcMotor leftMotorFront;
@@ -30,11 +30,11 @@ public class autoRedSilver extends LinearOpMode
     Servo mineralFlipInit;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
+    float drivePower = (float) -0.3;
     float shiftPower = (float) 0.3;
     float turnPower = (float) 0.3;
 
-    //***************************************************************************************************************************
+//***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
@@ -67,9 +67,43 @@ public class autoRedSilver extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
+
+            //Drop down
+            functions.hang((float) -0.6, -2700);
+
+            //Take out pin
+            pin.setPower(-0.75) ;
+            Thread.sleep(7200);
+            pin.setPower(0.0);
+
+            functions.driveAutonomous(drivePower, 1000);
+
+
+            functions.leftTurnAutonomous(turnPower, 1000);
+
+            functions.driveAutonomous(drivePower, 1000);
+
+            functions.leftTurnAutonomous(turnPower, 400);
+
+            functions.driveAutonomous(drivePower, 3000);
+
+
+            markerDropper.setPosition(-0.3);
+
+            //Go to Our crater
+            functions.driveAutonomous(-drivePower, -4000);
+
+//            //Go to Opponents Crater
+//            functions.leftTurnAutonomous(turnPower, 1000);
+//            functions.driveAutonomous(drivePower, 4000);
+
+
+
+
+
+
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
-
             //Break the loop after one run
             break;
         }//Close while opModeIsActive loop
