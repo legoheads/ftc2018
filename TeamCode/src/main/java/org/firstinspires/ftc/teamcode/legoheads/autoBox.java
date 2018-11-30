@@ -105,6 +105,8 @@ public class autoBox extends LinearOpMode
         while (opModeIsActive())
         {
 
+            markerDropper.setPosition(0.35);
+
 
             functions.hang((float) -0.6, -2700);
 
@@ -115,11 +117,12 @@ public class autoBox extends LinearOpMode
 
             functions.driveAutonomous(drivePower, 2500);
 
-
             functions.leftTurnAutonomous(turnPower, 500);
 
 
-            markerDropper.setPosition(-0.3);
+            markerDropper.setPosition(0.2);
+
+            Thread.sleep(1000);
 
             functions.leftTurnAutonomous(turnPower, 1000);
 

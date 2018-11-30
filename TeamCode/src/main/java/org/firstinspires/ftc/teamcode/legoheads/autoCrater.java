@@ -67,6 +67,7 @@ public class autoCrater extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
+            markerDropper.setPosition(0.35);
 
             //Drop down
             functions.hang((float) -0.6, -2700);
@@ -88,7 +89,9 @@ public class autoCrater extends LinearOpMode
             functions.driveAutonomous(drivePower, 3000);
 
 
-            markerDropper.setPosition(-0.3);
+            markerDropper.setPosition(0.2);
+
+            Thread.sleep(1000);
 
             //Go to Our crater
             functions.driveAutonomous(-drivePower, -4000);

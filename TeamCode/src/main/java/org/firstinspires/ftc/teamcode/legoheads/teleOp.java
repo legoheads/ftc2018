@@ -218,21 +218,25 @@ public class teleOp extends LinearOpMode
             {
                 mineralSpool.setPower(0.4);
                 Thread.sleep(3000);
+                mineralSpool.setPower(0.0);
             }
             if (gamepad1.dpad_down)
             {
                 mineralSpool.setPower(-0.4);
                 Thread.sleep(3000);
+                mineralSpool.setPower(0.0);
             }
             if (gamepad1.dpad_left)
             {
                 mineralFlipper.setPower(1.0);
                 Thread.sleep(2000);
+                mineralFlipper.setPower(0.0);
             }
             if (gamepad1.dpad_right)
             {
                 mineralFlipper.setPower(-1.0);
                 Thread.sleep(2000);
+                mineralFlipper.setPower(0.0);
             }
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
