@@ -5,41 +5,54 @@ package org.firstinspires.ftc.teamcode.legoheads;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-@Disabled
-@TeleOp(name="Tele Op Test") //Name the class
+@TeleOp(name="MOS Program") //Name the class
 public class testBotTele extends LinearOpMode
 {
     //Define drive motors
     DcMotor leftMotorFront;
     DcMotor rightMotorFront;
-//    DcMotor leftMotorBack;
-//    DcMotor rightMotorBack;
+    DcMotor leftMotorBack;
+    DcMotor rightMotorBack;
 
+    Servo glyphFlip;
 
+    //Define relic motors
+    Servo relicGrab;
+    CRServo relicFlip;
+    DcMotor relicSpool;
 
-    //Define floats to be used as joystick and trigger inputs
+    //Define floats to be used as joystick inputs and trigger inputs
     float drivePower;
     float shiftPower;
-    float rightTurnPower;
     float leftTurnPower;
+    float rightTurnPower;
 
-    DcMotor lifter;
-    CRServo pin;
-    Servo marker;
+    //Define an int to use as gamepad2 initialization
+    int gamepad2Init = 0;
+
+    //Define an elapsed time variable
+    private ElapsedTime runtime = new ElapsedTime();
+    private ElapsedTime flipTime = new ElapsedTime();
+    private ElapsedTime relicTime = new ElapsedTime();
+
+    //Define booleans to make relic movements and shut off the intake wheels when gamepad2 is initialized
+    boolean bMoved = false;
 
     //Define a function to use to set motor powers
     public void setDriveMotorPowers(float leftFrontPower, float leftBackPower, float rightFrontPower, float rightBackPower)
     {
         //Use the entered powers and feed them to the motors
         leftMotorFront.setPower(leftFrontPower);
-//        leftMotorBack.setPower(leftBackPower);
+        leftMotorBack.setPower(leftBackPower);
         rightMotorFront.setPower(rightFrontPower);
-//        rightMotorBack.setPower(rightBackPower);
+        rightMotorBack.setPower(rightBackPower);
     }
 
     //***********************************************************************************************************
@@ -47,155 +60,153 @@ public class testBotTele extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-        //Get references to the DC motors from the hardware map
+        //Get references to the DC Motors from the hardware map
         leftMotorFront = hardwareMap.dcMotor.get("leftMotorFront");
-//        leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
-//        rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
-        lifter = hardwareMap.dcMotor.get("lifter");
+        leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
+        rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
-        pin = hardwareMap.crservo.get("pin");
-        marker = hardwareMap.servo.get("marker");
+        //Get references to the Servo Motors from the hardware map
+        glyphFlip = hardwareMap.servo.get("glyphFlip");
+        relicGrab = hardwareMap.servo.get("relicGrab");
+        relicFlip = hardwareMap.crservo.get("relicFlip");
 
-        //Reverse some motors and keep others forward
-        leftMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
-//        leftMotorBack.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
-//        rightMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotorBack.setDirection(DcMotorSimple.Direction.FORWARD);
 
-        leftMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-//        leftMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-        rightMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
-//        rightMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        //Set the drive motors to brake mode to prevent rolling due to chain
+        leftMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Wait for start button to be clicked
         waitForStart();
+
+        //Reset the flipper
+        glyphFlip.setPosition(0.95);
+
+        //Reset the runtime after the start button is clicked
+        runtime.reset();
+
 //***********************************************************************************************************
         //LOOP BELOW
         //While the op mode is active, do anything within the loop
         //Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive())
         {
-            //Set float variables as the inputs from the joysticks and the triggers
-            drivePower = -gamepad1.left_stick_y;
-            shiftPower = -gamepad1.left_stick_x;
-            leftTurnPower = gamepad1.left_trigger / 2;
-            rightTurnPower = gamepad1.right_trigger / 2;
 
+            //DRIVE MOTOR CONTROLS
+            //Set float variables as the inputs from the joysticks and the triggers
+            drivePower = (float) -((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.85);
+            shiftPower = (float) -((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.85);
+            leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.75);
+            rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.75);
+
+            //Gamepad2 init
+            if ((Math.abs(gamepad2.left_stick_y) > 0.1) && (gamepad2Init == 0))
+            {
+                bMoved = true;
+            }
+
+            //If gamepad2 is used, flip down the relic grabber and open the claws
+            if (bMoved)
+            {
+                relicFlip.setPower(0.7);
+                relicTime.reset();
+                relicGrab.setPosition(0.32);
+                bMoved = false;
+                gamepad2Init++;
+
+            }
 
             //Drive if the joystick is pushed more Y than X
             if (Math.abs(drivePower) > Math.abs(shiftPower))
             {
-                setDriveMotorPowers(drivePower, drivePower, drivePower, drivePower);
+                setDriveMotorPowers(-drivePower, drivePower, drivePower, -drivePower);
             }
 
             //Shift if the joystick is pushed more on X than Y
             if (Math.abs(shiftPower) > Math.abs(drivePower))
             {
-                setDriveMotorPowers(-shiftPower, shiftPower, shiftPower, -shiftPower);
+                setDriveMotorPowers(shiftPower, shiftPower, shiftPower, shiftPower);
             }
 
             //If the left trigger is pushed, turn left at that power
             if (leftTurnPower > 0)
             {
-                setDriveMotorPowers(-leftTurnPower, -leftTurnPower, leftTurnPower, leftTurnPower);
+                setDriveMotorPowers(leftTurnPower, leftTurnPower, -leftTurnPower, -leftTurnPower);
             }
 
             //If the right trigger is pushed, turn right at that power
             if (rightTurnPower > 0)
             {
-                setDriveMotorPowers(rightTurnPower, rightTurnPower, -rightTurnPower, -rightTurnPower);
+                setDriveMotorPowers(-rightTurnPower, -rightTurnPower, rightTurnPower, rightTurnPower);
             }
 
-            //Do nothing if joystick is stationary and triggers are stationary
-            if ((drivePower == 0) && (shiftPower == 0) && (leftTurnPower == 0) && (rightTurnPower == 0))
+            //If the joysticks are not pushed significantly shut off the wheels
+            if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
             {
-                setDriveMotorPowers(0, 0, 0, 0);
+                setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
             }
 
-            if (gamepad1.a)
+            if (drivePower < -0.6)
             {
-                //Use the encoder
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                //Reset the encoder
-                lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                //Use the encoder
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                //Set up the motor to run to the given position
-                lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                //Set the target position as the value entered
-                lifter.setTargetPosition(2925);
-
-                //Turn the motor on at the corresponding power
-                lifter.setPower(0.6);
-
-                //Empty while loop while the motor is moving
-                while ((lifter.isBusy()))
-                { }
-
-                //Stop the motor
-                lifter.setPower(0.0);
-
-                //Use the encoder in the future
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                glyphFlip.setPosition(0.75);
             }
 
-            if (gamepad1.y)
+            //If the dpad is pushed down, flip the glyphs into the cryptobox
+            //Then reset the flipper
+            if (gamepad1.dpad_down)
             {
-                //Use the encoder
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                //Reset the encoder
-                lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-                //Use the encoder
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                //Set up the motor to run to the given position
-                lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                //Set the target position as the value entered
-                lifter.setTargetPosition(-2925);
-
-                //Turn the motor on at the corresponding power
-                lifter.setPower(-0.6);
-
-                //Empty while loop while the motor is moving
-                while ((lifter.isBusy()))
-                { }
-
-                //Stop the motor
-                lifter.setPower(0.0);
-
-                //Use the encoder in the future
-                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                glyphFlip.setPosition(0.3);
+                flipTime.reset();
+                if (flipTime.time() > 1.2)
+                {
+                    glyphFlip.setPosition(0.75);
+                }
             }
 
-            if (gamepad1.b)
+            if (relicTime.time() > 1.1)
             {
-                pin.setPower(0.75) ;
-                Thread.sleep(7200);
-                pin.setPower(0.0);
+                relicFlip.setPower(0.0);
             }
 
-            if (gamepad1.x)
+            //If the x button is pressed, open the claws
+            if (gamepad2.x)
             {
-                pin.setPower(-0.75);
-                Thread.sleep(7200);
-                pin.setPower(0.0);
+                relicGrab.setPosition(0.32);
             }
 
-            //Dump team marker
-            if(gamepad1.dpad_down)
+            //If the b button is pressed, close the
+            if (gamepad2.b)
             {
-                marker.setPosition(-0.3);
+                relicGrab.setPosition(1.00);
             }
 
+            //If the y button is pressed, flip the relic flipper down
+            //Also open the claws after a certain time to drop the relic
+            if (gamepad2.y)
+            {
+                relicFlip.setPower(0.7);
+                relicTime.reset();
+//                functions.crServoTime(relicFlip, (float) 0.7, 1500);
+            }
+
+            //If the a button is pressed, flip the relic flipper up
+            if (gamepad2.a)
+            {
+                //Up while holding relic, since it requires more time
+//                functions.crServoTime(relicFlip, (float) -0.7, 3000);
+                relicFlip.setPower(-0.7);
+                relicTime.reset();
+            }
+
+            //Count time
             //Update the data
+            telemetry.addData("Status", runtime);
             telemetry.update();
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
