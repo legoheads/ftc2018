@@ -13,10 +13,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.filters.LeviColorFilter;
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
-import org.opencv.core.Point;
+
+//import com.disnodeteam.dogecv.CameraViewDisplay;
+//import com.disnodeteam.dogecv.filters.LeviColorFilter;
+//
+//import org.opencv.core.Point;
 
 @Disabled
 public class DriveFunctions extends LinearOpMode
@@ -37,10 +42,14 @@ public class DriveFunctions extends LinearOpMode
     Servo markerDropper;
     Servo mineralFlipInit;
 
-    //Define possible mineral locations in enum
-    enum location {
-        LEFT, CENTER, RIGHT, UNKNOWN
-    };
+    //TFOD Variables
+    private static final String VUFORIA_KEY = "Adp/KFX/////AAAAGYMHgTasR0y/o1XMGBLR4bwahfNzuw2DQMMYq7vh4UvYHleflzPtt5rN2kFp7NCyO6Ikkqhj/20qTYc9ex+340/hvC49r4mphdmd6lI/Ip64CbMTB8Vo53jBHlGMkGr0xq/+C0SKL1hRXj5EkXtSe6q9F9T/nAIcg9Jr+OfAcifXPH9UJYG8WmbLlvpqN+QuVA5KQ6ve1USpxYhcimV9xWCBrq5hFk1hGLbeveHrKDG3wYRdwBeYv3Yo5qYTsotfB4CgJT9CX/fDR/0JUL7tE29d1v1eEF/VXCgQP4EPUoDNBtNE6jpKJhtQ8HJ2KjmJnW55f9OqNc6SsULV3bkQ52PY+lPLt1y4muyMrixCT7Lu";
+    private VuforiaLocalizer vuforia;
+    private TFObjectDetector tfod;
+    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+
 
     /**
      * Initialize all the hardware
@@ -378,6 +387,33 @@ public class DriveFunctions extends LinearOpMode
         return "white";
     }
 
+    public void initVuforia() {
+        /*
+         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
+         */
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        //  Instantiate the Vuforia engine
+        vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
+    }
+
+    /**
+     * Initialize the Tensor Flow Object Detection engine.
+     */
+    public void initTfod() {
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
+    }
+
+
     public void hang(float power, int degrees)
     {
         oneMotorEncoder(hanger, power, degrees);
@@ -392,56 +428,56 @@ public class DriveFunctions extends LinearOpMode
 //        pin.setPower(0.0);
 //    }
 
-    Point blockLocation = null;
+//    Point blockLocation = null;
 
-    public void goldMineralDetectionCV(Point blockLocation) throws InterruptedException {
-        float power = (float) 0.3;
-        int startDistance = 300;
-        int distanceToBlock = 500;
-        int turnDistance = 1400;
-
-        double blockDistance = 0.0;
-        int count = 0;
-        location goldLocation;
-        while (((blockLocation.y < 30.0) || (blockLocation.y > 500.0)) && (count < 300))
-        {
-            sleep(10);
-            count++;
-        }
-
-        blockDistance = blockLocation.y;
-
-        if (blockDistance < 120)
-        {
-            goldLocation = location.RIGHT;
-        }
-        else if (blockDistance < 320)
-        {
-            goldLocation = location.CENTER;
-        }
-        else if (blockDistance < 520)
-        {
-            goldLocation = location.LEFT;
-        }
-        else
-        {
-            goldLocation = location.CENTER;
-        }
-
-
-        if (goldLocation == location.RIGHT)
-        {
-            driveAutonomous(-power, -startDistance);
-        }
-        if (goldLocation == location.LEFT)
-        {
-            driveAutonomous(power, startDistance);
-        }
-
-        rightTurnAutonomous(power, turnDistance);
-
-        driveAutonomous(power, distanceToBlock);
-    }
+//    public void goldMineralDetectionCV(Point blockLocation) throws InterruptedException {
+//        float power = (float) 0.3;
+//        int startDistance = 300;
+//        int distanceToBlock = 500;
+//        int turnDistance = 1400;
+//
+//        double blockDistance = 0.0;
+//        int count = 0;
+//        location goldLocation;
+//        while (((blockLocation.y < 30.0) || (blockLocation.y > 500.0)) && (count < 300))
+//        {
+//            sleep(10);
+//            count++;
+//        }
+//
+//        blockDistance = blockLocation.y;
+//
+//        if (blockDistance < 120)
+//        {
+//            goldLocation = location.RIGHT;
+//        }
+//        else if (blockDistance < 320)
+//        {
+//            goldLocation = location.CENTER;
+//        }
+//        else if (blockDistance < 520)
+//        {
+//            goldLocation = location.LEFT;
+//        }
+//        else
+//        {
+//            goldLocation = location.CENTER;
+//        }
+//
+//
+//        if (goldLocation == location.RIGHT)
+//        {
+//            driveAutonomous(-power, -startDistance);
+//        }
+//        if (goldLocation == location.LEFT)
+//        {
+//            driveAutonomous(power, startDistance);
+//        }
+//
+//        rightTurnAutonomous(power, turnDistance);
+//
+//        driveAutonomous(power, distanceToBlock);
+//    }
 
 //    public void knockCube(ColorSensor colorSensor) throws InterruptedException
 //    {

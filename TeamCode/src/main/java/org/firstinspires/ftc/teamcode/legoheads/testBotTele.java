@@ -107,9 +107,7 @@ public class testBotTele extends LinearOpMode
 
             //Gamepad2 init
             if ((Math.abs(gamepad2.left_stick_y) > 0.1) && (gamepad2Init == 0))
-            {
                 bMoved = true;
-            }
 
             //If gamepad2 is used, flip down the relic grabber and open the claws
             if (bMoved)
@@ -124,15 +122,11 @@ public class testBotTele extends LinearOpMode
 
             //Drive if the joystick is pushed more Y than X
             if (Math.abs(drivePower) > Math.abs(shiftPower))
-            {
                 setDriveMotorPowers(-drivePower, drivePower, drivePower, -drivePower);
-            }
 
             //Shift if the joystick is pushed more on X than Y
             if (Math.abs(shiftPower) > Math.abs(drivePower))
-            {
                 setDriveMotorPowers(shiftPower, shiftPower, shiftPower, shiftPower);
-            }
 
             //If the left trigger is pushed, turn left at that power
             if (leftTurnPower > 0)

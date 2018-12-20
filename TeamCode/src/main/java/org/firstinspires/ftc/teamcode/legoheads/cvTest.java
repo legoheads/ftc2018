@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.legoheads;
 
 //Import necessary items
 
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.filters.LeviColorFilter;
+//import com.disnodeteam.dogecv.CameraViewDisplay;
+//import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,8 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.subsystems.sampling.GoldMineralDetector;
-import org.opencv.core.Point;
+//import org.firstinspires.ftc.teamcode.subsystems.sampling.GoldMineralDetector;
+//import org.opencv.core.Point;
 
 @Autonomous(name="CV Test") //Name the program
 public class cvTest extends LinearOpMode
@@ -36,7 +36,7 @@ public class cvTest extends LinearOpMode
     Servo markerDropper;
     Servo mineralFlipInit;
 
-    private GoldMineralDetector genericDetector = null;
+//    private GoldMineralDetector genericDetector = null;
 
     //Define possible mineral locations in enum
     enum location {
@@ -85,16 +85,16 @@ public class cvTest extends LinearOpMode
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
-
-        genericDetector = new GoldMineralDetector();
-        genericDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        genericDetector.colorFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
-
-        genericDetector.enable();
-
-        telemetry.addData("Status", "Initialized.");
-
-        Point blockLocation = null;
+//
+//        genericDetector = new GoldMineralDetector();
+//        genericDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+//        genericDetector.colorFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
+//
+//        genericDetector.enable();
+//
+//        telemetry.addData("Status", "Initialized.");
+//
+//        Point blockLocation = null;
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
         functions.initializeMotorsAndSensors();
@@ -106,42 +106,42 @@ public class cvTest extends LinearOpMode
         while (opModeIsActive())
         {
 
-            if(genericDetector.isFound())
-            {
-                telemetry.addData("Location", genericDetector.getScreenPosition());
-                //telemetry.addData("Rect", genericDetector.getRect().toString());
-                blockLocation = genericDetector.getScreenPosition();
-                if(blockLocation != null)
-                {
-                    telemetry.addData("X Value", blockLocation.x);
-                    if (blockLocation.x < 250)
-                    {
-                        mineralLocation = location.LEFT;
-                        telemetry.addData("Position", "Left");
-                    }
-                    else if (blockLocation.x < 400)
-                    {
-                        mineralLocation = location.CENTER;
-                        telemetry.addData("Position", "Center");
-                    }
-                    else if (blockLocation.x > 450)
-                    {
-                        mineralLocation = location.RIGHT;
-                        telemetry.addData("Position", "Right");
-                    }
-                    else
-                    {
-                        mineralLocation = location.UNKNOWN;
-                        telemetry.addData("Position", "unknown found");
-                    }
-                }
-                else
-                {
-                    mineralLocation = location.UNKNOWN;
-                    telemetry.addData("Position", "Unknown not found");
-                }
-                telemetry.update();
-            }
+//            if(genericDetector.isFound())
+//            {
+////                telemetry.addData("Location", genericDetector.getScreenPosition());
+////                //telemetry.addData("Rect", genericDetector.getRect().toString());
+////                blockLocation = genericDetector.getScreenPosition();
+//                if(blockLocation != null)
+//                {
+////                    telemetry.addData("X Value", blockLocation.x);
+////                    if (blockLocation.x < 250)
+////                    {
+////                        mineralLocation = location.LEFT;
+////                        telemetry.addData("Position", "Left");
+////                    }
+////                    else if (blockLocation.x < 400)
+////                    {
+////                        mineralLocation = location.CENTER;
+////                        telemetry.addData("Position", "Center");
+////                    }
+////                    else if (blockLocation.x > 450)
+////                    {
+////                        mineralLocation = location.RIGHT;
+////                        telemetry.addData("Position", "Right");
+////                    }
+////                    else
+////                    {
+////                        mineralLocation = location.UNKNOWN;
+////                        telemetry.addData("Position", "unknown found");
+////                    }
+////                }
+//                else
+//                {
+//                    mineralLocation = location.UNKNOWN;
+//                    telemetry.addData("Position", "Unknown not found");
+//                }
+//                telemetry.update();
+//            }
         }//Close while opModeIsActive loop
     } //Close "run Opmode" loop
 } //Close class and end program

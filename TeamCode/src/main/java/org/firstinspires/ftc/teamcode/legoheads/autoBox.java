@@ -3,8 +3,8 @@ package org.firstinspires.ftc.teamcode.legoheads;
 
 //Import necessary items
 
-import com.disnodeteam.dogecv.CameraViewDisplay;
-import com.disnodeteam.dogecv.filters.LeviColorFilter;
+//import com.disnodeteam.dogecv.CameraViewDisplay;
+//import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -13,8 +13,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.subsystems.sampling.GoldMineralDetector;
-import org.opencv.core.Point;
+//import org.firstinspires.ftc.teamcode.subsystems.sampling.GoldMineralDetector;
+//import org.opencv.core.Point;
 
 @Autonomous(name="AutoBox") //Name the program
 public class autoBox extends LinearOpMode
@@ -35,7 +35,7 @@ public class autoBox extends LinearOpMode
     Servo markerDropper;
     Servo mineralFlipInit;
 
-    private GoldMineralDetector genericDetector = null;
+//    private GoldMineralDetector genericDetector = null;
 
     //Define possible mineral locations in enum
     enum location {
@@ -84,16 +84,16 @@ public class autoBox extends LinearOpMode
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
-
-        genericDetector = new GoldMineralDetector();
-        genericDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-        genericDetector.colorFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
-
-        genericDetector.enable();
-
-        telemetry.addData("Status", "Initialized.");
-
-        Point blockLocation = null;
+//
+//        genericDetector = new GoldMineralDetector();
+//        genericDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
+//        genericDetector.colorFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
+//
+//        genericDetector.enable();
+//
+//        telemetry.addData("Status", "Initialized.");
+//
+//        Point blockLocation = null;
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
         functions.initializeMotorsAndSensors();

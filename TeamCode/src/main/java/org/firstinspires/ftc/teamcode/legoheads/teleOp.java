@@ -239,6 +239,13 @@ public class teleOp extends LinearOpMode
                 mineralFlipper.setPower(0.0);
             }
 
+            if(gamepad1.right_bumper){
+                markerDropper.setPosition(markerDropper.getPosition()+1.0);
+            }
+            if(gamepad1.left_bumper){
+                markerDropper.setPosition(markerDropper.getPosition()-1.0);
+            }
+
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
         }//Close while opModeIsActive loop
