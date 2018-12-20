@@ -27,14 +27,9 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.subsystems.samplingNew;
+package org.firstinspires.ftc.teamcode.subsystems.tensorFlow;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -169,11 +164,7 @@ public class sampling implements tensorFlow {
                 }
             }
             telemetry.update();
-//            if (location!=null){
-//                return location;
-//            }
         }
-//        return "Left";
     }
 
     public goldMineral getMineral(int time) throws InterruptedException {
@@ -181,7 +172,6 @@ public class sampling implements tensorFlow {
         double count=0;
         while (location == goldMineral.UNKNOWN && count < time) {
             lookForMinerals();
-//                    vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Gold", "%s position", location);
             telemetry.addData("Seconds", count/100);
             telemetry.update();

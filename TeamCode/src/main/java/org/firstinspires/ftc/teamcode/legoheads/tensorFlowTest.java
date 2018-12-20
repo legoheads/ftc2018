@@ -32,9 +32,7 @@ package org.firstinspires.ftc.teamcode.legoheads;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
@@ -98,11 +96,7 @@ public class tensorFlowTest extends LinearOpMode {
         initVuforia();
 
         initTfod();
-//        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-//
-//        } else {
-//            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-//        }
+
         /** Wait for the game to begin */
         telemetry.addData(">", "Press Play to start tracking");
         telemetry.update();
@@ -117,13 +111,6 @@ public class tensorFlowTest extends LinearOpMode {
             while (opModeIsActive()) {
 
                 getMineral(5000);
-
-
-//                if (tfod != null) {
-//                    lookForMinerals();
-//                    telemetry.addData("Good?", location);
-//                    telemetry.update();
-//                }
             }
         }
 
@@ -198,19 +185,19 @@ public class tensorFlowTest extends LinearOpMode {
                 }
             }
             telemetry.update();
-//            if (location!=null){
-//                return location;
-//            }
         }
-//        return "Left";
     }
 
+    /**
+     * @param time enter amonut of time (miliseconds) to spend checking for gold mineral.
+     * @return
+     */
     public goldMineral getMineral(int time){
+        //Devide by 10 because loop runs every 10 miliseconds
         time/=10;
         double count=0;
         while (location == goldMineral.UNKNOWN && count < time) {
             lookForMinerals();
-//                    vuMark = RelicRecoveryVuMark.from(relicTemplate);
             telemetry.addData("Gold", "%s position", location);
             telemetry.addData("Seconds", count/100);
             telemetry.update();

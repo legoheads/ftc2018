@@ -8,17 +8,12 @@ package org.firstinspires.ftc.teamcode.legoheads;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.subsystems.samplingNew.sampling;
-
-import java.util.List;
+import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.sampling;
 //import org.firstinspires.ftc.teamcode.subsystems.sampling.GoldMineralDetector;
 //import org.opencv.core.Point;
 
@@ -60,106 +55,25 @@ public class autoTensor extends LinearOpMode
      */
     private TFObjectDetector tfod;
 
-        private sampling genericDetector = null;
+    private sampling genericDetector = null;
 
 //***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
     {
-//        //Get references to the DC Motors from the hardware map
-//        leftMotorFront = hardwareMap.dcMotor.get("leftMotorFront");
-//        rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
-//        leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
-//        rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 //
-//        mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
-//        spinner = hardwareMap.dcMotor.get("spinner");
-//        mineralFlipper = hardwareMap.dcMotor.get("mineralFlipper");
-//        hanger = hardwareMap.dcMotor.get("hanger");
-//
-//        pin = hardwareMap.crservo.get("pin");
-//        markerDropper = hardwareMap.servo.get("markerDropper");
-//        mineralFlipInit = hardwareMap.servo.get("mineralFlipInit");
-
-        //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-//        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, mineralFlipper, hanger, pin, markerDropper, mineralFlipInit);
-
-        //Set the sensor to active mode
-        //Set the directions and modes of the motors.
-//        functions.initializeMotorsAndSensors();
-//
-//        //Vuforia Initialization
-//        functions.initVuforia();
-//
-//        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-//            functions.initTfod();
-//        } else {
-//            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-//
-//
-//        }
 
 
         genericDetector = new sampling(telemetry, hardwareMap, vuforia, tfod);
-//        genericDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-//        genericDetector.colorFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
 
-
-
-//        /** Wait for the game to begin */
-//        telemetry.addData(">", "Press Play to start tracking");
-//        telemetry.update();
-//        waitForStart();
-
-
-
-//        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-//        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-//        parameters.vuforiaLicenseKey = "Adp/KFX/////AAAAGYMHgTasR0y/o1XMGBLR4bwahfNzuw2DQMMYq7vh4UvYHleflzPtt5rN2kFp7NCyO6Ikkqhj/20qTYc9ex+340/hvC49r4mphdmd6lI/Ip64CbMTB8Vo53jBHlGMkGr0xq/+C0SKL1hRXj5EkXtSe6q9F9T/nAIcg9Jr+OfAcifXPH9UJYG8WmbLlvpqN+QuVA5KQ6ve1USpxYhcimV9xWCBrq5hFk1hGLbeveHrKDG3wYRdwBeYv3Yo5qYTsotfB4CgJT9CX/fDR/0JUL7tE29d1v1eEF/VXCgQP4EPUoDNBtNE6jpKJhtQ8HJ2KjmJnW55f9OqNc6SsULV3bkQ52PY+lPLt1y4muyMrixCT7Lu";
-//        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-//        telemetry.addData(">", "Press Play to start");
-//        telemetry.update();
-//
-//        genericDetector = new GoldMineralDetector();
-//        genericDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-//        genericDetector.colorFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
-//
-//        genericDetector.enable();
-//
-//        telemetry.addData("Status", "Initialized.");
-//
-//        Point blockLocation = null;
-        //Set the sensor to active mode
-        //Set the directions and modes of the motors.
-//        functions.initializeMotorsAndSensors();
-
-//        functions.initVuforia();
-//
-//        functions.initTfod();
-
-
-//        /** Wait for the game to begin */
-//        telemetry.addData(">", "Press Play to start tracking");
-//        telemetry.update();
-
-
-//        //Wait for start button to be clicked
-//        waitForStart();
 
 //***************************************************************************************************************************
-//        while (opModeIsActive()){
 
-            // The TFObjectDetector uses the camera frames from the VuforiaLocalizer, so we create that
-            // first.
             genericDetector.initVuforia();
 
             genericDetector.initTfod();
-//        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-//
-//        } else {
-//            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-//        }
+
             /** Wait for the game to begin */
             telemetry.addData(">", "Press Play to start tracking");
             telemetry.update();
@@ -175,12 +89,6 @@ public class autoTensor extends LinearOpMode
 
                     genericDetector.getMineral(5000);
 
-
-//                if (tfod != null) {
-//                    lookForMinerals();
-//                    telemetry.addData("Good?", location);
-//                    telemetry.update();
-//                }
                 }
             }
 
@@ -188,9 +96,6 @@ public class autoTensor extends LinearOpMode
                 tfod.shutdown();
             }
 
-//            //Always call idle() at the bottom of your while(opModeIsActive()) loop
-//            idle();
-//
 //            break;
         }//Close while opModeIsActive loop
 //    } //Close "run Opmode" loop
