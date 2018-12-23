@@ -22,6 +22,7 @@ public class teleOp extends LinearOpMode
     DcMotor hanger;
 
     Servo mineralFlipper;
+    Servo dunker;
     CRServo pin;
     Servo markerDropper;
 
@@ -30,6 +31,7 @@ public class teleOp extends LinearOpMode
     float shiftPower;
     float leftTurnPower;
     float rightTurnPower;
+    float spoolPower;
 
     int pinCount = -1;
     int liftCount;
@@ -51,11 +53,16 @@ public class teleOp extends LinearOpMode
         hanger = hardwareMap.dcMotor.get("hanger");
 
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
+        dunker = hardwareMap.servo.get("dunker");
         pin = hardwareMap.crservo.get("pin");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, pin, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, pin, markerDropper);
+
+        //Set the sensor to active mode
+        //Set the directions and modes of the motors.
+        functions.initializeMotorsAndSensors();
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -71,8 +78,7 @@ public class teleOp extends LinearOpMode
             shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.85);
             leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.75);
             rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.75);
-
-
+            spoolPower = -gamepad1.right_stick_y / 2;
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
             if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -131,12 +137,12 @@ public class teleOp extends LinearOpMode
 
             if (gamepad1.right_bumper || gamepad2.right_bumper)
             {
-                spinner.setPower(0.3);
+                spinner.setPower(0.5);
             }
 
             if (gamepad1.left_bumper || gamepad2.left_bumper)
             {
-                spinner.setPower(-0.3);
+                spinner.setPower(-0.5);
             }
 
             if (gamepad2.b)
@@ -212,33 +218,39 @@ public class teleOp extends LinearOpMode
                 hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if (gamepad1.dpad_up)
+            if (Math.abs(spoolPower) > 0.2)
             {
-                mineralSpool.setPower(0.4);
-                Thread.sleep(3000);
-                mineralSpool.setPower(0.0);
+                mineralSpool.setPower(spoolPower);
             }
-            if (gamepad1.dpad_down)
+
+            if (Math.abs(spoolPower) <=0.2)
             {
-                mineralSpool.setPower(-0.4);
-                Thread.sleep(3000);
                 mineralSpool.setPower(0.0);
             }
             if (gamepad1.dpad_left)
             {
-                mineralFlipper.setPosition(0.9);
-            }
-            if (gamepad1.dpad_right)
-            {
-                mineralFlipper.setPosition(0.1);
+                spinner.setPower(-0.5);
+                mineralFlipper.setDirection(Servo.Direction.FORWARD);
+                mineralFlipper.setPosition(1.0);
             }
 
-            if(gamepad1.right_bumper){
-                markerDropper.setPosition(markerDropper.getPosition()+1.0);
+            if (gamepad1.dpad_right)
+            {
+                spinner.setPower(0.5);
+                mineralFlipper.setDirection(Servo.Direction.FORWARD);
+                mineralFlipper.setPosition(0.3);
+//                spinner.setPower(0.5);
             }
-            if(gamepad1.left_bumper){
-                markerDropper.setPosition(markerDropper.getPosition()-1.0);
+
+            if (gamepad1.dpad_up)
+            {
+                dunker.setPosition(0.2);
             }
+            if (gamepad1.dpad_down)
+            {
+                dunker.setPosition(1.0);
+            }
+
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

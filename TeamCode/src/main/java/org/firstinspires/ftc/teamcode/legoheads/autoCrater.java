@@ -27,6 +27,7 @@ public class autoCrater extends LinearOpMode
     DcMotor hanger;
 
     Servo mineralFlipper;
+    Servo dunker;
     CRServo pin;
     Servo markerDropper;
 
@@ -61,11 +62,12 @@ public class autoCrater extends LinearOpMode
         hanger = hardwareMap.dcMotor.get("hanger");
 
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
+        dunker = hardwareMap.servo.get("dunker");
         pin = hardwareMap.crservo.get("pin");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, pin, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, pin, markerDropper);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.

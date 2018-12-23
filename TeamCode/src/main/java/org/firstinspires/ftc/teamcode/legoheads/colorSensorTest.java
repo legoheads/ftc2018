@@ -29,17 +29,26 @@ public class colorSensorTest extends LinearOpMode
     DcMotor hanger;
 
     Servo mineralFlipper;
+    Servo dunker;
     CRServo pin;
     Servo markerDropper;
 
-//    //Define the color sensor
-//    ColorSensor colorSensorCenter;
-//    ColorSensor colorSensorRight;
+//    private GoldMineralDetector genericDetector = null;
 
-    //Define a float array that will be used to store sensor input
-    float hsvValues[] = {0F, 0F, 0F};
+    //Define possible mineral locations in enum
+    enum location {
+        LEFT, CENTER, RIGHT, UNKNOWN
+    };
 
-//***************************************************************************************************************************
+    //Create location object to store the mineral location data
+    autoBox.location mineralLocation;
+
+    //Define drive powers to avoid magic numbers
+    float drivePower = (float) 0.3;
+    float shiftPower = (float) 0.3;
+    float turnPower = (float) 0.3;
+
+    //***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
@@ -55,12 +64,16 @@ public class colorSensorTest extends LinearOpMode
         hanger = hardwareMap.dcMotor.get("hanger");
 
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
+        dunker = hardwareMap.servo.get("dunker");
         pin = hardwareMap.crservo.get("pin");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, pin, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, pin, markerDropper);
 
+        //Set the sensor to active mode
+        //Set the directions and modes of the motors.
+        functions.initializeMotorsAndSensors();
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
