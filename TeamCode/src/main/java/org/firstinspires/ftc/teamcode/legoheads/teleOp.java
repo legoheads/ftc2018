@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name="Tele Op ") //Name the class
+@TeleOp(name="Tele Op") //Name the class
 public class teleOp extends LinearOpMode
 {
     //Define drive motors
@@ -19,12 +19,11 @@ public class teleOp extends LinearOpMode
     //Define glyph motors
     DcMotor mineralSpool;
     DcMotor spinner;
-    DcMotor mineralFlipper;
     DcMotor hanger;
 
+    Servo mineralFlipper;
     CRServo pin;
     Servo markerDropper;
-    Servo mineralFlipInit;
 
     //Define drive powers to avoid magic numbers
     float drivePower;
@@ -49,15 +48,14 @@ public class teleOp extends LinearOpMode
 
         mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
         spinner = hardwareMap.dcMotor.get("spinner");
-        mineralFlipper = hardwareMap.dcMotor.get("mineralFlipper");
         hanger = hardwareMap.dcMotor.get("hanger");
 
+        mineralFlipper = hardwareMap.servo.get("mineralFlipper");
         pin = hardwareMap.crservo.get("pin");
         markerDropper = hardwareMap.servo.get("markerDropper");
-        mineralFlipInit = hardwareMap.servo.get("mineralFlipInit");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, mineralFlipper, hanger, pin, markerDropper, mineralFlipInit);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, pin, markerDropper);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -228,15 +226,11 @@ public class teleOp extends LinearOpMode
             }
             if (gamepad1.dpad_left)
             {
-                mineralFlipper.setPower(1.0);
-                Thread.sleep(2000);
-                mineralFlipper.setPower(0.0);
+                mineralFlipper.setPosition(0.9);
             }
             if (gamepad1.dpad_right)
             {
-                mineralFlipper.setPower(-1.0);
-                Thread.sleep(2000);
-                mineralFlipper.setPower(0.0);
+                mineralFlipper.setPosition(0.1);
             }
 
             if(gamepad1.right_bumper){
