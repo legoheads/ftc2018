@@ -38,6 +38,7 @@ public class DriveFunctions extends LinearOpMode
     DcMotor hanger;
 
     Servo mineralFlipper;
+    Servo mineralDoor;
     Servo dunker;
     CRServo pin;
     Servo markerDropper;
@@ -55,7 +56,7 @@ public class DriveFunctions extends LinearOpMode
      * Initialize all the hardware
      * This creates a data type DriveFunctions to store all the hardware devices
      */
-    public DriveFunctions(DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor mineralSpool, DcMotor spinner, DcMotor hanger, Servo mineralFlipper, Servo dunker, CRServo pin, Servo markerDropper)
+    public DriveFunctions(DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor mineralSpool, DcMotor spinner, DcMotor hanger, Servo mineralFlipper, Servo mineralDoor, Servo dunker, CRServo pin, Servo markerDropper)
     {
         //These lines enable us to store the motors, sensors and CDI without having to write them over and over again
         //Initialize DC motors
@@ -69,6 +70,7 @@ public class DriveFunctions extends LinearOpMode
         this.hanger = hanger;
 
         this.mineralFlipper = mineralFlipper;
+        this.mineralDoor = mineralDoor;
         this.dunker = dunker;
         this.pin = pin;
         this.markerDropper = markerDropper;
