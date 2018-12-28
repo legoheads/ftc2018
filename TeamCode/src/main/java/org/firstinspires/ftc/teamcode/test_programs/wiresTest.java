@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.legoheads;
+package org.firstinspires.ftc.teamcode.test_programs;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.teamcode.DriveFunctions;
 
 @TeleOp(name="wires test ") //Name the class
 public class wiresTest extends LinearOpMode

@@ -1,16 +1,16 @@
 //Run from the package
-package org.firstinspires.ftc.teamcode.legoheads;
+package org.firstinspires.ftc.teamcode.auto;
 
 //Import necessary items
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.DriveFunctions;
 
 @Autonomous(name="AutoCrater") //Name the program
 public class autoCrater extends LinearOpMode

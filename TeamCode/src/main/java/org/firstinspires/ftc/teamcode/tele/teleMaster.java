@@ -1,14 +1,14 @@
-package org.firstinspires.ftc.teamcode.legoheads;
+package org.firstinspires.ftc.teamcode.tele;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.teamcode.DriveFunctions;
 
 @TeleOp(name="Tele Op") //Name the class
-public class teleOp extends LinearOpMode
+public class teleMaster extends LinearOpMode
 {
     //Define drive motors
     DcMotor leftMotorFront;
@@ -74,8 +74,7 @@ public class teleOp extends LinearOpMode
         waitForStart();
 
 //***************************************************************************************************************************
-        while (opModeIsActive())
-        {
+        while (opModeIsActive()) {
             drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.85);
             shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.85);
             leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.75);
@@ -222,7 +221,7 @@ public class teleOp extends LinearOpMode
 
             if (Math.abs(spoolPower) > 0.2)
             {
-                mineralSpool.setPower(spoolPower);
+                mineralSpool.setPower(-spoolPower);
             }
 
             if (Math.abs(spoolPower) <=0.2)
@@ -231,19 +230,20 @@ public class teleOp extends LinearOpMode
             }
             if (gamepad1.dpad_left)
             {
-                spinner.setPower(-0.5);
-                mineralFlipper.setPosition(mineralFlipper.getPosition() + 0.3);
+//                spinner.setPower(-0.5);
+                mineralFlipper.setPosition(0.6);
             }
 
+            //
             if (gamepad1.dpad_right)
             {
-                spinner.setPower(0.5);
-                mineralFlipper.setPosition(mineralFlipper.getPosition() - 0.3);
+//                spinner.setPower(0.5);
+                mineralFlipper.setPosition(0.0);
             }
 
-            if (gamepad1.dpad_up)
-            {
-                functions.driveAutonomous((float) 0.4, 80);
+            //Dunk
+            if (gamepad1.dpad_up){
+//                functions.driveAutonomous((float) 0.4, 80);
                 //Use the encoder
                 hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -257,7 +257,7 @@ public class teleOp extends LinearOpMode
                 hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 //Set the target position as the value entered
-                hanger.setTargetPosition(-2600);
+                hanger.setTargetPosition(-3000);
 
                 //Turn the motor on at the corresponding power
                 hanger.setPower(-1.0);
@@ -314,8 +314,8 @@ public class teleOp extends LinearOpMode
                 dunker.setPosition(0.2);
             }
 
-            if (gamepad1.dpad_down)
-            {
+            //Dunk return
+            if (gamepad1.dpad_down){
                 //Use the encoder
                 hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -329,7 +329,7 @@ public class teleOp extends LinearOpMode
                 hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                 //Set the target position as the value entered
-                hanger.setTargetPosition(2600);
+                hanger.setTargetPosition(3000);
 
                 //Turn the motor on at the corresponding power
                 hanger.setPower(1.0);

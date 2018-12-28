@@ -1,5 +1,5 @@
 //Run from the package
-package org.firstinspires.ftc.teamcode.legoheads;
+package org.firstinspires.ftc.teamcode;
 
 //Import necessary items
 
@@ -421,101 +421,6 @@ public class DriveFunctions extends LinearOpMode
         oneMotorEncoder(hanger, power, degrees);
     }
 
-//    public void dropDown() throws InterruptedException
-//    {
-//        hang((float) -0.6, -2925);
-//
-//        pin.setPower(-0.75) ;
-//        Thread.sleep(7200);
-//        pin.setPower(0.0);
-//    }
-
-//    Point blockLocation = null;
-
-//    public void goldMineralDetectionCV(Point blockLocation) throws InterruptedException {
-//        float power = (float) 0.3;
-//        int startDistance = 300;
-//        int distanceToBlock = 500;
-//        int turnDistance = 1400;
-//
-//        double blockDistance = 0.0;
-//        int count = 0;
-//        location goldLocation;
-//        while (((blockLocation.y < 30.0) || (blockLocation.y > 500.0)) && (count < 300))
-//        {
-//            sleep(10);
-//            count++;
-//        }
-//
-//        blockDistance = blockLocation.y;
-//
-//        if (blockDistance < 120)
-//        {
-//            goldLocation = location.RIGHT;
-//        }
-//        else if (blockDistance < 320)
-//        {
-//            goldLocation = location.CENTER;
-//        }
-//        else if (blockDistance < 520)
-//        {
-//            goldLocation = location.LEFT;
-//        }
-//        else
-//        {
-//            goldLocation = location.CENTER;
-//        }
-//
-//
-//        if (goldLocation == location.RIGHT)
-//        {
-//            driveAutonomous(-power, -startDistance);
-//        }
-//        if (goldLocation == location.LEFT)
-//        {
-//            driveAutonomous(power, startDistance);
-//        }
-//
-//        rightTurnAutonomous(power, turnDistance);
-//
-//        driveAutonomous(power, distanceToBlock);
-//    }
-
-//    public void knockCube(ColorSensor colorSensor) throws InterruptedException
-//    {
-//        //Define constants to avoid magic numbers
-//        float power = (float) 0.3;
-//        int shiftDistance = 800;
-//        int clearDistance = 1100;
-//        int startDistance = 800;
-//
-//        //Drop the arm
-//
-//        //Wait for 0.3 second
-//        Thread.sleep(300);
-//
-//        //Delay until a color is seen
-//        while (!iSeeAColor(colorSensor))
-//        { }
-//
-//        if (yellowOrWhite(colorSensor).equals("yellow"))
-//        {
-//            driveAutonomous(-power, -clearDistance);
-//        }
-//        else
-//        {
-//            leftShiftAutonomous(power, shiftDistance);
-//            if (yellowOrWhite(colorSensor).equals("yellow"))
-//            {
-//                driveAutonomous(-power, -clearDistance);
-//            }
-//            else
-//            {
-//                rightShiftAutonomous(power, 2*shiftDistance);
-//                driveAutonomous(-power, -clearDistance);
-//            }
-//        }
-//    }
 
     //Empty main
     @Override

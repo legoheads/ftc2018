@@ -2,7 +2,7 @@
 
 Welcome!
 
-This module, TeamCode, is the place where you will write/paste the code for your team's
+This module, TeamCode, is where all the Legoheads 2018 progams are kept.  the place where you will write/paste the code for your team's
 robot controller App. This module is currently empty (a clean slate) but the
 process for adding OpModes is straightforward.
 
@@ -20,10 +20,11 @@ A range of different samples classes can be seen in this folder.
 The class names follow a naming convention which indicates the purpose of each class.
 The full description of this convention is found in the samples/sample_convention.md file.
 
-A brief synopsis of the naming convention is given here:
-The prefix of the name will be one of the following:
+Within the TeamCode Module there are several subfolders. All programs exist in one of the following folders:
 
-* Basic:    This is a minimally functional OpMode used to illustrate the skeleton/structure
+
+* Auto:     This folder contains our 2 autonomous programs. "autobox" is the autonmous used when starting
+            This is a minimally functional OpMode used to illustrate the skeleton/structure
             of a particular style of OpMode.  These are bare bones examples.
 * Sensor:   This is a Sample OpMode that shows how to use a specific sensor.
             It is not intended as a functioning robot, it is simply showing the minimal code
