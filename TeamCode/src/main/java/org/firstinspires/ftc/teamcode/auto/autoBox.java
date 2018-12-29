@@ -17,7 +17,7 @@ import org.firstinspires.ftc.teamcode.DriveFunctions;
 //import org.firstinspires.ftc.teamcode.subsystems.sampling.GoldMineralDetector;
 //import org.opencv.core.Point;
 
-@Autonomous(name="AutoBox") //Name the program
+@Autonomous(name="Auto Box") //Name the program
 public class autoBox extends LinearOpMode
 {
     //Define drive motors
@@ -127,7 +127,7 @@ public class autoBox extends LinearOpMode
 
             functions.driveAutonomous(drivePower, 3500);
 
-            mineralSpool.setPower(0.5);
+            mineralSpool.setPower(-0.5);
 
             Thread.sleep(1500);
 

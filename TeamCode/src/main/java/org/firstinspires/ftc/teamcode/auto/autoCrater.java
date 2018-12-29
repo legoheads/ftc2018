@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.subsystems.team_marker.ServoArmDrop;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
 
-@Autonomous(name="AutoCrater") //Name the program
+@Autonomous(name="Auto Crater") //Name the program
 public class autoCrater extends LinearOpMode
 {
     //Define drive motors
@@ -116,17 +116,16 @@ public class autoCrater extends LinearOpMode
 
             Thread.sleep(1000);
 
+            functions.driveAutonomous(-drivePower, -200);
+
+            functions.leftTurnAutonomous(turnPower, 1950);
+
             //Go to Our crater
-            functions.driveAutonomous(-drivePower, -4000);
+            functions.driveAutonomous(drivePower, 3800);
 
-//            //Go to Opponents Crater
-//            functions.leftTurnAutonomous(turnPower, 1000);
-//            functions.driveAutonomous(drivePower, 4000);
-
-
-
-
-
+            mineralSpool.setPower(-0.5);
+            Thread.sleep(1500);
+            mineralSpool.setPower(0.0);
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
