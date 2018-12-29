@@ -22,9 +22,7 @@ public class wiresTest extends LinearOpMode
     DcMotor hanger;
 
     Servo mineralFlipper;
-    Servo mineralDoor;
     Servo dunker;
-    CRServo pin;
     Servo markerDropper;
 
     //Define drive powers to avoid magic numbers
@@ -45,13 +43,11 @@ public class wiresTest extends LinearOpMode
         hanger = hardwareMap.dcMotor.get("hanger");
 
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
-        mineralDoor = hardwareMap.servo.get("mineralDoor");
         dunker = hardwareMap.servo.get("dunker");
-        pin = hardwareMap.crservo.get("pin");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, mineralDoor, dunker, pin, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, markerDropper);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.

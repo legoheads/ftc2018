@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.ServoArmDrop;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
@@ -31,9 +32,7 @@ public class autoBox extends LinearOpMode
     DcMotor hanger;
 
     Servo mineralFlipper;
-    Servo mineralDoor;
     Servo dunker;
-    CRServo pin;
     Servo markerDropper;
 
 //    private GoldMineralDetector genericDetector = null;
@@ -47,16 +46,17 @@ public class autoBox extends LinearOpMode
     location mineralLocation;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
+    float drivePower = (float) 0.6;
+    float shiftPower = (float) 0.6;
+    float turnPower = (float) 0.6;
+
+    ServoArmDrop servoArmDrop = new ServoArmDrop(markerDropper);
 
 //***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
     {
-        //Get references to the DC Motors from the hardware map
         leftMotorFront = hardwareMap.dcMotor.get("leftMotorFront");
         rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
@@ -67,13 +67,11 @@ public class autoBox extends LinearOpMode
         hanger = hardwareMap.dcMotor.get("hanger");
 
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
-        mineralDoor = hardwareMap.servo.get("mineralDoor");
         dunker = hardwareMap.servo.get("dunker");
-        pin = hardwareMap.crservo.get("pin");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, mineralDoor, dunker, pin, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, markerDropper);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -107,28 +105,33 @@ public class autoBox extends LinearOpMode
         while (opModeIsActive())
         {
 
-            markerDropper.setPosition(0.35);
+            servoArmDrop.hold();
 
+            functions.hang((float) -1.0, -2500);
 
-            functions.hang((float) -0.6, -2700);
+            hanger.setPower(-1.0);
+            Thread.sleep(1500);
+            hanger.setPower(0.0);
 
-            //Take out pin
-            pin.setPower(-0.75) ;
-            Thread.sleep(7200);
-            pin.setPower(0.0);
+            functions.leftShiftAutonomous(shiftPower, 250);
 
             functions.driveAutonomous(drivePower, 2500);
 
-            functions.leftTurnAutonomous(turnPower, 500);
+            functions.leftTurnAutonomous(turnPower, 960);
 
+            servoArmDrop.drop();
 
-            markerDropper.setPosition(0.2);
+            Thread.sleep(500);
 
-            Thread.sleep(1000);
+            functions.leftTurnAutonomous(turnPower, 480);
 
-            functions.leftTurnAutonomous(turnPower, 1000);
+            functions.driveAutonomous(drivePower, 3500);
 
-            functions.driveAutonomous(drivePower, 4000);
+            mineralSpool.setPower(0.5);
+
+            Thread.sleep(1500);
+
+            mineralSpool.setPower(0.0);
 
 
 

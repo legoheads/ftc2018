@@ -8,6 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.ServoArmDrop;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
@@ -27,9 +29,7 @@ public class autoCrater extends LinearOpMode
     DcMotor hanger;
 
     Servo mineralFlipper;
-    Servo mineralDoor;
     Servo dunker;
-    CRServo pin;
     Servo markerDropper;
 
 //    private GoldMineralDetector genericDetector = null;
@@ -43,16 +43,18 @@ public class autoCrater extends LinearOpMode
     autoBox.location mineralLocation;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
+    float drivePower = (float) 0.6;
+    float shiftPower = (float) 0.6;
+    float turnPower = (float) 0.6;
+
+    TeamMarker teamMarker;
+    //ServoArmDrop servoArmDrop = new ServoArmDrop(markerDropper);
 
     //***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
     {
-        //Get references to the DC Motors from the hardware map
         leftMotorFront = hardwareMap.dcMotor.get("leftMotorFront");
         rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
@@ -63,13 +65,13 @@ public class autoCrater extends LinearOpMode
         hanger = hardwareMap.dcMotor.get("hanger");
 
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
-        mineralDoor = hardwareMap.servo.get("mineralDoor");
         dunker = hardwareMap.servo.get("dunker");
-        pin = hardwareMap.crservo.get("pin");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, mineralDoor, dunker, pin, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, markerDropper);
+
+        teamMarker = new ServoArmDrop(markerDropper);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -83,34 +85,34 @@ public class autoCrater extends LinearOpMode
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
 
-        functions.waitForStart();
+        waitForStart();
 
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
-            markerDropper.setPosition(0.35);
+            teamMarker.hold();
 
             //Drop down
-            functions.hang((float) -0.6, -2700);
+            functions.hang((float) -1.0, -2500);
 
-            //Take out pin
-            pin.setPower(-0.75) ;
-            Thread.sleep(7200);
-            pin.setPower(0.0);
+            hanger.setPower(-1.0);
+            Thread.sleep(1500);
+            hanger.setPower(0.0);
 
-            functions.driveAutonomous(drivePower, 1000);
+            functions.leftShiftAutonomous(shiftPower, 250);
+
+            functions.driveAutonomous(drivePower, 950);
 
 
             functions.leftTurnAutonomous(turnPower, 1000);
 
             functions.driveAutonomous(drivePower, 1000);
 
-            functions.leftTurnAutonomous(turnPower, 400);
+            functions.leftTurnAutonomous(turnPower, 450);
 
-            functions.driveAutonomous(drivePower, 3000);
+            functions.driveAutonomous(drivePower, 3100);
 
-
-            markerDropper.setPosition(0.2);
+            teamMarker.drop();
 
             Thread.sleep(1000);
 
