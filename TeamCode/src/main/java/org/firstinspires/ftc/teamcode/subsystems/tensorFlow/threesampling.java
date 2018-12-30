@@ -39,86 +39,42 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import java.util.List;
 
-/**
- * This 2018-2019 OpMode illustrates the basics of using the TensorFlow Object Detection API to
- * determine the position of the gold and silver minerals.
- *
- * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
- *
- * IMPORTANT: In order to use this OpMode, you need to obtain your own Vuforia license key as
- * is explained below.
- */
-//@Autonomous(name = "sampling", group = "Concept")
-public class sampling implements tensorFlow {
+public class threesampling implements TensorFlow {
 
     HardwareMap hardwareMap;
     Telemetry telemetry;
     VuforiaLocalizer vuforia;
     TFObjectDetector tfod;
 
-
-
-    public sampling(Telemetry myTelemetry, HardwareMap myHardwareMap, VuforiaLocalizer myVuforia, TFObjectDetector mytfod){
+    public threesampling(Telemetry myTelemetry, HardwareMap myHardwareMap, VuforiaLocalizer myVuforia, TFObjectDetector mytfod){
         telemetry = myTelemetry;
         hardwareMap = myHardwareMap;
         vuforia = myVuforia;
         tfod = mytfod;
     }
 
-
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
-
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
-
     private static final String VUFORIA_KEY = "Adp/KFX/////AAAAGYMHgTasR0y/o1XMGBLR4bwahfNzuw2DQMMYq7vh4UvYHleflzPtt5rN2kFp7NCyO6Ikkqhj/20qTYc9ex+340/hvC49r4mphdmd6lI/Ip64CbMTB8Vo53jBHlGMkGr0xq/+C0SKL1hRXj5EkXtSe6q9F9T/nAIcg9Jr+OfAcifXPH9UJYG8WmbLlvpqN+QuVA5KQ6ve1USpxYhcimV9xWCBrq5hFk1hGLbeveHrKDG3wYRdwBeYv3Yo5qYTsotfB4CgJT9CX/fDR/0JUL7tE29d1v1eEF/VXCgQP4EPUoDNBtNE6jpKJhtQ8HJ2KjmJnW55f9OqNc6SsULV3bkQ52PY+lPLt1y4muyMrixCT7Lu";
 
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
+    private int RUNTIME = 5000;
 
+//    enum goldMineral { LEFT, CENTER, RIGHT, UNKNOWN }
+    private goldMineral location = TensorFlow.goldMineral.UNKNOWN;
 
-    enum goldMineral {
-        LEFT, CENTER, RIGHT, UNKNOWN
-    }
-
-    goldMineral location = goldMineral.UNKNOWN;
-
-    /**
-     * Initialize the Vuforia localization engine.
-     */
+    @Override
     public void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
+        //Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
+        parameters.cameraDirection = CameraDirection.FRONT;
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the Tensor Flow Object Detection engine.
     }
 
-    /**
-     * Initialize the Tensor Flow Object Detection engine.
-     */
+    @Override
     public void initTfod() {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -127,7 +83,14 @@ public class sampling implements tensorFlow {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
     }
 
+    @Override
+    public void tFodActivate(){
+        if (tfod != null) {
+            tfod.activate();
+        }
+    }
 
+    @Override
     public void lookForMinerals(){
         // getUpdatedRecognitions() will return null if no new information is available since
         // the last time that call was made.
@@ -167,10 +130,16 @@ public class sampling implements tensorFlow {
         }
     }
 
-    public goldMineral getMineral(int time) throws InterruptedException {
-        time/=10;
+    @Override
+    public goldMineral getMineral() throws InterruptedException {
+        RUNTIME/=10;
         double count=0;
-        while (location == goldMineral.UNKNOWN && count < time) {
+
+        initVuforia();
+        initTfod();
+        tFodActivate();
+
+        while (location == goldMineral.UNKNOWN && count < RUNTIME) {
             lookForMinerals();
             telemetry.addData("Gold", "%s position", location);
             telemetry.addData("Seconds", count/100);
