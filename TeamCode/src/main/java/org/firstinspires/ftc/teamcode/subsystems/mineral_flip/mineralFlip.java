@@ -1,8 +1,8 @@
-package org.firstinspires.ftc.teamcode.subsystems.intake;
+package org.firstinspires.ftc.teamcode.subsystems.mineral_flip;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-public class intakeThings implements Intake{
+public class mineralFlip implements Flip {
 
     Servo flip;
 
@@ -10,7 +10,7 @@ public class intakeThings implements Intake{
     final double DOWN_POSITION = 0.0;
     final double FLIP_POSITION = 0.6;
 
-    public intakeThings(Servo mineralFlip) { this.flip = mineralFlip; }
+    public mineralFlip(Servo mineralFlip) { this.flip = mineralFlip; }
 
     @Override
     public void up(){
@@ -18,9 +18,7 @@ public class intakeThings implements Intake{
     }
 
     @Override
-    public void down(){
-        flip.setPosition(DOWN_POSITION);
-    }
+    public void down(){ flip.setPosition(DOWN_POSITION); }
 
     @Override
     public void flip() {

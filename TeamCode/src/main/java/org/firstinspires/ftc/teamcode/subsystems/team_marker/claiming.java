@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 /**
  * Created by Rohan on 12/28/2018.
  */
-public class ServoArmDrop implements TeamMarker {
+public class claiming implements TeamMarker {
 
     Servo dropper;
 
     final double DROP_POSITION = 0.2;
     final double HOLD_POSITION = 0.4;
 
-    public ServoArmDrop(Servo teamMarkerArm){
+    public claiming(Servo teamMarkerArm){
         this.dropper = teamMarkerArm;
     }
 

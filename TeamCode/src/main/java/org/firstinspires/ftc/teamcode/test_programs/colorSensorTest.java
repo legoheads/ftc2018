@@ -3,9 +3,11 @@ package org.firstinspires.ftc.teamcode.test_programs;
 
 //Import necessary items
 
+import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -30,6 +32,8 @@ public class colorSensorTest extends LinearOpMode
     Servo dunker;
     Servo markerDropper;
 
+    ColorSensor colorSensor;
+
 //    private GoldMineralDetector genericDetector = null;
 
     //Define possible mineral locations in enum
@@ -37,8 +41,8 @@ public class colorSensorTest extends LinearOpMode
         LEFT, CENTER, RIGHT, UNKNOWN
     };
 
-    //Create location object to store the mineral location data
-//    autoBox.location mineralLocation;
+    //Create goldPos object to store the mineral goldPos data
+//    autoBox.goldPos mineralLocation;
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
@@ -63,8 +67,10 @@ public class colorSensorTest extends LinearOpMode
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -97,7 +103,7 @@ public class colorSensorTest extends LinearOpMode
 //
 //            //Update the data if/when it changes
 //            telemetry.update();
-//
+
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
 
