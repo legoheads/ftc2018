@@ -7,14 +7,14 @@ package org.firstinspires.ftc.teamcode.auto;
 //import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.subsystems.team_marker.ServoArmDrop;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
-//import org.firstinspires.ftc.teamcode.subsystems.sampling.GoldMineralDetector;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
+//import org.firstinspires.ftc.teamcode.subsystems.threesampling.GoldMineralDetector;
 //import org.opencv.core.Point;
 
 @Autonomous(name="Auto Box") //Name the program
@@ -35,6 +35,8 @@ public class autoBox extends LinearOpMode
     Servo dunker;
     Servo markerDropper;
 
+    TeamMarker teamMarker;
+
 //    private GoldMineralDetector genericDetector = null;
 
     //Define possible mineral locations in enum
@@ -50,7 +52,7 @@ public class autoBox extends LinearOpMode
     float shiftPower = (float) 0.6;
     float turnPower = (float) 0.6;
 
-    ServoArmDrop servoArmDrop = new ServoArmDrop(markerDropper);
+
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -71,7 +73,7 @@ public class autoBox extends LinearOpMode
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -84,19 +86,12 @@ public class autoBox extends LinearOpMode
         parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
-//
-//        genericDetector = new GoldMineralDetector();
-//        genericDetector.init(hardwareMap.appContext, CameraViewDisplay.getInstance());
-//        genericDetector.colorFilter = new LeviColorFilter(LeviColorFilter.ColorPreset.YELLOW);
-//
-//        genericDetector.enable();
-//
-//        telemetry.addData("Status", "Initialized.");
-//
-//        Point blockLocation = null;
+
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
         functions.initializeMotorsAndSensors();
+
+        teamMarker = new claiming(markerDropper);
 
         //Wait for start button to be clicked
         waitForStart();
@@ -105,7 +100,7 @@ public class autoBox extends LinearOpMode
         while (opModeIsActive())
         {
 
-            servoArmDrop.hold();
+            teamMarker.hold();
 
             functions.hang((float) -1.0, -2500);
 
@@ -119,7 +114,7 @@ public class autoBox extends LinearOpMode
 
             functions.leftTurnAutonomous(turnPower, 960);
 
-            servoArmDrop.drop();
+            teamMarker.drop();
 
             Thread.sleep(500);
 
@@ -132,80 +127,6 @@ public class autoBox extends LinearOpMode
             Thread.sleep(1500);
 
             mineralSpool.setPower(0.0);
-
-
-
-
-//
-//           functions.rightTurnAutonomous(turnPower, 1450);
-//
-//            functions.driveAutonomous(-drivePower, -200);
-//
-//            functions.leftTurnAutonomous(turnPower, 720);
-
-
-
-
-
-
-            //Open CV
-//                telemetry.addData("Location", genericDetector.getScreenPosition());
-//                //telemetry.addData("Rect", genericDetector.getRect().toString());
-//                blockLocation = genericDetector.getScreenPosition();
-//                if (blockLocation != null)
-//                {
-//                    float power = (float) 0.3;
-//                    int startDistance = 800;
-//                    int distanceToBlock = 1100;
-//                    int turnDistance = 1400;
-//
-//                    int count = 0;
-//                    DriveFunctions.location goldLocation;
-//                    while (((blockLocation.y < 30.0) || (blockLocation.y > 500.0)) && (count < 300))
-//                    {
-//                        sleep(10);
-//                        count++;
-//                    }
-//
-//
-//                    if (blockLocation.y < 120)
-//                    {
-//                        goldLocation = DriveFunctions.location.RIGHT;
-//                    }
-//                    else if (blockLocation.y < 320)
-//                    {
-//                        goldLocation = DriveFunctions.location.CENTER;
-//                    }
-//                    else if (blockLocation.y < 520)
-//                    {
-//                        goldLocation = DriveFunctions.location.LEFT;
-//                    }
-//                    else
-//                    {
-//                        goldLocation = DriveFunctions.location.CENTER;
-//                    }
-//
-//
-//                    if (goldLocation == DriveFunctions.location.RIGHT)
-//                    {
-//                        functions.driveAutonomous(- power, - startDistance);
-//                    }
-//                    if (goldLocation == DriveFunctions.location.LEFT)
-//                    {
-//                        functions.driveAutonomous(power, startDistance);
-//                    }
-//
-//                    functions.rightTurnAutonomous(power, turnDistance);
-//
-//                    functions.driveAutonomous(power, distanceToBlock);
-//                }
-
-//            functions.rightTurnAutonomous(turnPower, 1450);
-//
-//            functions.driveAutonomous(-drivePower, -200);
-//
-//            functions.leftTurnAutonomous(turnPower, 720);
-
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

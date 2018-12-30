@@ -5,11 +5,11 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
-import org.firstinspires.ftc.teamcode.subsystems.team_marker.ServoArmDrop;
+
+
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
@@ -32,6 +32,10 @@ public class autoCrater extends LinearOpMode
     Servo dunker;
     Servo markerDropper;
 
+    TeamMarker teamMarker;
+
+
+
 //    private GoldMineralDetector genericDetector = null;
 
     //Define possible mineral locations in enum
@@ -47,8 +51,8 @@ public class autoCrater extends LinearOpMode
     float shiftPower = (float) 0.6;
     float turnPower = (float) 0.6;
 
-    TeamMarker teamMarker;
-    //ServoArmDrop servoArmDrop = new ServoArmDrop(markerDropper);
+
+    //claiming teamMarker = new claiming(markerDropper);
 
     //***************************************************************************************************************************
     //MAIN BELOW
@@ -69,9 +73,9 @@ public class autoCrater extends LinearOpMode
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, mineralSpool, spinner, hanger, mineralFlipper, dunker, markerDropper);
+        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
-        teamMarker = new ServoArmDrop(markerDropper);
+        teamMarker = new claiming(markerDropper);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
