@@ -147,6 +147,11 @@ public class teleMaster extends LinearOpMode {
             //Dunk
             if (gamepad2.dpad_up) {
                 dunk.dunk();
+
+            }
+
+            if (gamepad2.dpad_down)
+            {
                 dunk.down();
             }
 
