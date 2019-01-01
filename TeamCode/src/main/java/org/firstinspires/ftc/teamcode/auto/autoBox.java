@@ -122,11 +122,11 @@ public class autoBox extends LinearOpMode
 
             functions.driveAutonomous(drivePower, 3500);
 
-            mineralSpool.setPower(-0.5);
-
-            Thread.sleep(1500);
-
-            mineralSpool.setPower(0.0);
+//            mineralSpool.setPower(-0.5);
+//
+//            Thread.sleep(1500);
+//
+//            mineralSpool.setPower(0.0);
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

@@ -68,48 +68,50 @@ public class autoTensorBox extends LinearOpMode {
         //Initializations
         functions.initializeMotorsAndSensors();
 
-        //Find Gold Mineral after Initialization but before game starts
-        goldMineral = tensor.getMineral();
+
 
 //        /** Wait for the game to begin */
 //        telemetry.addData(">", "Press Play to start");
 //        telemetry.update();
+
+        //Find Gold Mineral after Initialization but before game starts
+        goldMineral = tensor.getMineral();
 
         waitForStart();
 
         //Code to run once play is pressed
         while(opModeIsActive()){
 
+
+
             telemetry.addData("GoldPosition", goldMineral);
 
+            teamMarker.hold();
 
+            functions.hang((float) -1.0, -2500);
 
-//            teamMarker.hold();
-//
-//            functions.hang((float) -1.0, -2500);
-//
-//            hanger.setPower(-1.0);
-//            Thread.sleep(1500);
-//            hanger.setPower(0.0);
-//
-//            functions.leftShiftAutonomous(shiftPower, 250);
-//
-//            functions.driveAutonomous(drivePower, 2500);
-//
-//            functions.leftTurnAutonomous(turnPower, 960);
-//
-//            teamMarker.drop();
-//            Thread.sleep(500);
-//
-//            functions.leftTurnAutonomous(turnPower, 480);
-//
-//            functions.driveAutonomous(drivePower, 3500);
-//
-//            mineralSpool.setPower(-0.5);
-//
-//            Thread.sleep(1500);
-//
-//            mineralSpool.setPower(0.0);
+            hanger.setPower(-1.0);
+            Thread.sleep(1500);
+            hanger.setPower(0.0);
+
+            functions.leftShiftAutonomous(shiftPower, 250);
+
+            functions.driveAutonomous(drivePower, 2500);
+
+            functions.leftTurnAutonomous(turnPower, 960);
+
+            teamMarker.drop();
+            Thread.sleep(500);
+
+            functions.leftTurnAutonomous(turnPower, 480);
+
+            functions.driveAutonomous(drivePower, 3500);
+
+            mineralSpool.setPower(-0.5);
+
+            Thread.sleep(1500);
+
+            mineralSpool.setPower(0.0);
 
             idle();
             break;

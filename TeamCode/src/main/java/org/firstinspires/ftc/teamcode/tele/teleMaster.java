@@ -37,6 +37,7 @@ public class teleMaster extends LinearOpMode {
     Intake intake;
     Hang hang;
 
+    int upDownToggle = 0;
     //***************************************************************************************************************************
     //MAIN BELOW
     @Override
@@ -82,25 +83,33 @@ public class teleMaster extends LinearOpMode {
             float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.5);
             float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.3);
             float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.3);
-            float spoolPower = gamepad2.right_stick_y;
+            float spoolPower = gamepad1.right_stick_y;
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
-            if (Math.abs(drivePower) > Math.abs(shiftPower)) { functions.driveTeleop(drivePower); }
+            if (Math.abs(drivePower) > Math.abs(shiftPower))
+            {
+                functions.driveTeleop(drivePower);
+            }
 
             //Shift if pushed more on X than Y on gamepad1 (fast)
-            if (Math.abs(shiftPower) > Math.abs(drivePower)) { functions.shiftTeleop(shiftPower); }
+            if (Math.abs(shiftPower) > Math.abs(drivePower))
+            {
+                functions.shiftTeleop(shiftPower);
+            }
 
             //If the left trigger is pushed on gamepad1, turn left at that power (fast)
             if (leftTurnPower > 0)
+            {
                 functions.leftTurnTeleop(leftTurnPower);
+            }
 
             //If the right trigger is pushed on gamepad1, turn right at that power (fast)
             if (rightTurnPower > 0)
                 functions.rightTurnTeleop(rightTurnPower);
 
-//            //If the joysticks are not pushed significantly shut off the wheels
-//            if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
-//                functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+            //If the joysticks are not pushed significantly shut off the wheels
+            if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
+                functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
 
             if (gamepad1.dpad_down) { hang.down(); }
 
@@ -113,14 +122,21 @@ public class teleMaster extends LinearOpMode {
             if (gamepad1.left_bumper || gamepad2.left_bumper)
                 intake.start();
 
-            if (gamepad2.b)
-                intake.stop();
-
             if (Math.abs(spoolPower) > 0.1)
                 mineralSpool.setPower(-spoolPower);
 
             if (Math.abs(spoolPower) <=0.1)
                 mineralSpool.setPower(0.0);
+
+            if (gamepad1.b)
+            {
+                intake.stop();
+            }
+
+            if (gamepad1.x) {
+                mineralSpool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                mineralSpool.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            }
 
             if (gamepad2.a) {
                 if (currFlipPos == flipPositions.DOWN) {
@@ -144,6 +160,26 @@ public class teleMaster extends LinearOpMode {
                 flip.up();
             }
 
+            if (gamepad2.b)
+            {
+                upDownToggle++;
+                if (upDownToggle % 2 == 1)
+                {
+                    flip.up();
+                }
+                if (upDownToggle % 2 == 0)
+                {
+                    flip.down();
+                }
+            }
+
+            if (gamepad2.x)
+            {
+                flip.flip();
+                Thread.sleep(600);
+                flip.up();
+            }
+
             //Dunk
             if (gamepad2.dpad_up) {
                 dunk.dunk();
@@ -155,10 +191,7 @@ public class teleMaster extends LinearOpMode {
                 dunk.down();
             }
 
-            if (gamepad2.x) {
-                mineralSpool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                mineralSpool.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            }
+
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
         }//Close while opModeIsActive loop

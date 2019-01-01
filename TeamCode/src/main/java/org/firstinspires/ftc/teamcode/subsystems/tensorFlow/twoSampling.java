@@ -61,14 +61,14 @@ public class twoSampling implements TensorFlow {
     private int RUNTIME = 5000;
 
 //    enum goldMineral  = threesampling.goldMineral;
-    private goldMineral location = TensorFlow.goldMineral.UNKNOWN;
+    private goldMineral location = goldMineral.UNKNOWN;
 
     @Override
     public void initVuforia() {
         //Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
         VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
         parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.FRONT;
+        parameters.cameraDirection = CameraDirection.BACK;
 
         //  Instantiate the Vuforia engine
         vuforia = ClassFactory.getInstance().createVuforia(parameters);
@@ -123,20 +123,21 @@ public class twoSampling implements TensorFlow {
                     if (goldMineralX < silverMineral1X) {
                         telemetry.addData("Gold Mineral Position", "Left");
                         location = goldMineral.LEFT;
-                    } else if (goldMineralX > silverMineral1X) {
+                    }
+                    else if (goldMineralX > silverMineral1X) {
                         telemetry.addData("Gold Mineral Position", "Center");
                         location = goldMineral.CENTER;
                     }
-                    //If it sees two silvers, the gold mineral is on the right
-                    else if ((silverMineral1X != -1 && silverMineral2X != -1)) {
-                        telemetry.addData("Gold Mineral Position", "Right");
-                        location = goldMineral.RIGHT;
-                    }
-                    //Extra condition if it doesn't see any silver minerals. Sets location to center.
-                    else {
-                        telemetry.addData("Gold Mineral Position", "Center");
-                        location = goldMineral.CENTER;
-                    }
+                }
+                //If it sees two silvers, the gold mineral is on the right
+                else if ((silverMineral1X != -1 && silverMineral2X != -1)) {
+                    telemetry.addData("Gold Mineral Position", "Right");
+                    location = goldMineral.RIGHT;
+                }
+                //Extra condition if it doesn't see any silver minerals. Sets location to center.
+                else {
+                    telemetry.addData("Gold Mineral Position", "Right");
+                    location = goldMineral.RIGHT;
                 }
                 telemetry.update();
             }
@@ -160,6 +161,7 @@ public class twoSampling implements TensorFlow {
             Thread.sleep(10);
             count++;
         }
-        return threesampling.goldMineral.UNKNOWN;
+        telemetry.addData("Gold", "is Right");
+        return goldMineral.RIGHT;
     }
 }
