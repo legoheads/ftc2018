@@ -66,7 +66,7 @@ public class autoTensorBox extends LinearOpMode {
         DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         //Initializations
-        functions.initializeMotorsAndSensors();
+        functions.initializeRobotBrake();
 
 
 
@@ -80,10 +80,8 @@ public class autoTensorBox extends LinearOpMode {
         waitForStart();
 
         //Code to run once play is pressed
-        while(opModeIsActive()){
-
-
-
+        while(opModeIsActive())
+        {
             telemetry.addData("GoldPosition", goldMineral);
 
             teamMarker.hold();

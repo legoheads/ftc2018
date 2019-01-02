@@ -10,10 +10,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
-import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
-import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
-import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.TensorFlow;
-import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.twoSampling;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
+import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.*;
+import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 
 @Autonomous(name="AutoTensorCrater") //Name the program
 public class autoTensoCrater extends LinearOpMode {
@@ -45,7 +44,9 @@ public class autoTensoCrater extends LinearOpMode {
 
     private TensorFlow.goldMineral goldMineral;
 
-    //***************************************************************************************************************************
+    private Dunk dunk;
+
+//***************************************************************************************************************************
     //MAIN BELOW
 
     @Override
@@ -68,10 +69,12 @@ public class autoTensoCrater extends LinearOpMode {
         DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         //Initializations
-        functions.initializeMotorsAndSensors();
+        functions.initializeRobotBrake();
 
         //Find Gold Mineral after Initialization but before game starts
         goldMineral = tensor.getMineral();
+
+        dunk = new servoArmDunk(hanger, dunker);
 
         waitForStart();
 
@@ -95,23 +98,24 @@ public class autoTensoCrater extends LinearOpMode {
                 functions.leftShiftAutonomous(shiftPower, 100);
             }
             if (goldMineral == TensorFlow.goldMineral.CENTER){
-                functions.rightShiftAutonomous(shiftPower, 100);
+                functions.rightShiftAutonomous(shiftPower, 200);
             }
             if (goldMineral == TensorFlow.goldMineral.RIGHT){
-                functions.rightShiftAutonomous(shiftPower, 300);
+                functions.rightShiftAutonomous(shiftPower, 500);
 
             }
 
             functions.driveAutonomous(drivePower, 550);
 
+            functions.driveAutonomous(-drivePower, -600);
 
             functions.leftTurnAutonomous(turnPower, 1000);
 
-            functions.driveAutonomous(drivePower, 1000);
+            functions.driveAutonomous(drivePower, 1150);
 
-            functions.leftTurnAutonomous(turnPower, 450);
+            functions.leftTurnAutonomous(turnPower, 480);
 
-            functions.driveAutonomous(drivePower, 3100);
+            functions.driveAutonomous(drivePower, 3000);
 
             teamMarker.drop();
 
@@ -123,6 +127,12 @@ public class autoTensoCrater extends LinearOpMode {
 
             //Go to Our crater
             functions.driveAutonomous(drivePower, 3800);
+
+            mineralSpool.setPower(0.5);
+            Thread.sleep(1500);
+            mineralSpool.setPower(0.0);
+
+            dunk.down();
 
             idle();
             break;

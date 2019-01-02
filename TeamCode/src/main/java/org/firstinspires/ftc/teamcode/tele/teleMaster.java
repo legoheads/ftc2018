@@ -60,7 +60,7 @@ public class teleMaster extends LinearOpMode {
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
+        functions.initializeRobotFloat();
 
         //Intialize Subsystems
         flip = new mineralFlip(mineralFlipper);
@@ -81,8 +81,8 @@ public class teleMaster extends LinearOpMode {
         while (opModeIsActive()) {
             float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.5);
             float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.5);
-            float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.3);
-            float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.3);
+            float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
+            float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
             float spoolPower = gamepad1.right_stick_y;
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
@@ -111,9 +111,9 @@ public class teleMaster extends LinearOpMode {
             if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
                 functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
 
-            if (gamepad1.dpad_down) { hang.down(); }
+            if (gamepad1.y) { hang.down(); }
 
-            if (gamepad1.dpad_up) { hang.up(); }
+            if (gamepad1.a) { hang.up(); }
 
             if (gamepad1.right_bumper || gamepad2.right_bumper) {
                 intake.reverse();
@@ -141,12 +141,14 @@ public class teleMaster extends LinearOpMode {
             if (gamepad2.a) {
                 if (currFlipPos == flipPositions.DOWN) {
                     flip.up();
+                    intake.stop();
                     functions.oneMotorEncoder(mineralSpool, (float) -0.5, -1000);
                     currFlipPos = flipPositions.UP;
                 }
                 else if (currFlipPos == flipPositions.UP) {
                     functions.oneMotorEncoder(mineralSpool, (float) 0.5, 1000);
                     flip.down();
+                    intake.start();
                     currFlipPos=flipPositions.DOWN;
                 }
             }
@@ -181,16 +183,11 @@ public class teleMaster extends LinearOpMode {
             }
 
             //Dunk
-            if (gamepad2.dpad_up) {
-                dunk.dunk();
-
-            }
-
-            if (gamepad2.dpad_down)
+            if (gamepad2.dpad_up)
             {
+                dunk.dunk();
                 dunk.down();
             }
-
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

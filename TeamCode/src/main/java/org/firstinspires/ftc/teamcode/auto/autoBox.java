@@ -77,19 +77,7 @@ public class autoBox extends LinearOpMode
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
-
-        //Vuforia Initialization
-        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-        parameters.vuforiaLicenseKey = "Adp/KFX/////AAAAGYMHgTasR0y/o1XMGBLR4bwahfNzuw2DQMMYq7vh4UvYHleflzPtt5rN2kFp7NCyO6Ikkqhj/20qTYc9ex+340/hvC49r4mphdmd6lI/Ip64CbMTB8Vo53jBHlGMkGr0xq/+C0SKL1hRXj5EkXtSe6q9F9T/nAIcg9Jr+OfAcifXPH9UJYG8WmbLlvpqN+QuVA5KQ6ve1USpxYhcimV9xWCBrq5hFk1hGLbeveHrKDG3wYRdwBeYv3Yo5qYTsotfB4CgJT9CX/fDR/0JUL7tE29d1v1eEF/VXCgQP4EPUoDNBtNE6jpKJhtQ8HJ2KjmJnW55f9OqNc6SsULV3bkQ52PY+lPLt1y4muyMrixCT7Lu";
-        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
-        telemetry.addData(">", "Press Play to start");
-        telemetry.update();
-
-        //Set the sensor to active mode
-        //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
+        functions.initializeRobotBrake();
 
         teamMarker = new claiming(markerDropper);
 

@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode.test_programs;
 
 //Import necessary items
 
-import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -74,11 +72,11 @@ public class colorSensorTest extends LinearOpMode
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
+        functions.initializeRobotFloat();
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
+        functions.initializeRobotFloat();
 
         //Wait for start button to be clicked
         waitForStart();

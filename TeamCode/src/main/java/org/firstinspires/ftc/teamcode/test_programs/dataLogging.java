@@ -6,7 +6,6 @@ package org.firstinspires.ftc.teamcode.test_programs;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
@@ -68,7 +67,7 @@ public class dataLogging extends LinearOpMode
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeMotorsAndSensors();
+        functions.initializeRobotFloat();
 
         waitForStart();
 
