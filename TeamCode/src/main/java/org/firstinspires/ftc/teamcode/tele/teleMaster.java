@@ -166,7 +166,7 @@ public class teleMaster extends LinearOpMode {
             }
 
             if (gamepad2.b)
-            {sharma123
+            {
                     
                 upDownToggle++;
                 if (upDownToggle % 2 == 1)
