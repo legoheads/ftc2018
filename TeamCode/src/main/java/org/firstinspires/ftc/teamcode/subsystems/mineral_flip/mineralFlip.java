@@ -8,13 +8,14 @@ public class mineralFlip implements Flip {
 
     final double UP_POSITION = 0.3;
     final double DOWN_POSITION = 0.0;
-    final double FLIP_POSITION = 0.6;
+    final double FLIP_POSITION = 0.5;
 
     public mineralFlip(Servo mineralFlip) { this.flip = mineralFlip; }
 
     @Override
-    public void up(){
+    public void up() throws InterruptedException {
         flip.setPosition(UP_POSITION);
+        Thread.sleep(500);
     }
 
     @Override

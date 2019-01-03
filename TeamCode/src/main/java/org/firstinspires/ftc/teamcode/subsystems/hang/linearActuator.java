@@ -6,7 +6,7 @@ import org.firstinspires.ftc.teamcode.DriveFunctions;
 public class linearActuator implements Hang{
 
     private final float HANG_POWER = (float) 1.0;
-    private final int HANG_DISTANCE = 2925;
+    private final int HANG_DISTANCE = 3100;
     private final int MAX_DISTANCE = 3100;
 
     private DcMotor hanger;

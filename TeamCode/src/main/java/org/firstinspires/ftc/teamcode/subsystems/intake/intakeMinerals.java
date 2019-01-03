@@ -8,7 +8,7 @@ public class intakeMinerals implements Intake{
     DcMotor spinner;
     DcMotor spool;
     final double SPIN_POWER = (float) 1.0;
-    final float SPOOL_POWER = (float) 0.5;
+    final float SPOOL_POWER = (float) 1.0;
 
     public intakeMinerals(DcMotor intakeMotor, DcMotor spoolMotor){spinner = intakeMotor; spool = spoolMotor;}
 

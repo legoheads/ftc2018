@@ -66,6 +66,10 @@ public class servoArmDunk implements Dunk {
         Thread.sleep(500);
         hanger.setPower(0.0);
 
+        dunker.setPosition(DUNK_POSITION+0.22);
+
+        Thread.sleep(1500);
+
         dunker.setPosition(DUNK_POSITION);
     }
 
@@ -106,6 +110,53 @@ public class servoArmDunk implements Dunk {
         hanger.setPower(0.0);
 
         dunker.setPosition(DOWN_POSTITION);
+    }
+
+    //Dunk
+    @Override
+    public void dunkNoPause() throws InterruptedException {
+
+
+        //Use the encoder
+        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //Reset the encoder
+        hanger.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //Use the encoder
+        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //Set up the motor to run to the given position
+        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Set the target position as the value entered
+        hanger.setTargetPosition(-DUNK_DISTANCE);
+
+        //Turn the motor on at the corresponding power
+        hanger.setPower(-DUNK_POWER);
+
+        //Empty while loop while the motor is moving
+        while ((hanger.isBusy())) {
+//            dunker.setPosition(DUNK_POSITION+0.25);
+//            Thread.sleep(1000);
+//            dunker.setPosition(DUNK_POSITION);
+        }
+
+        //Stop the motor
+        hanger.setPower(0.0);
+
+        //Use the encoder in the future
+        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        hanger.setPower(-DUNK_POWER);
+        Thread.sleep(500);
+        hanger.setPower(0.0);
+
+//        dunker.setPosition(DUNK_POSITION+0.22);
+
+//        Thread.sleep(1500);
+
+        dunker.setPosition(DUNK_POSITION);
     }
 }
 

@@ -133,20 +133,27 @@ public class teleMaster extends LinearOpMode {
                 intake.stop();
             }
 
-            if (gamepad1.x) {
+            if (gamepad1.x || gamepad2.x) {
                 mineralSpool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 mineralSpool.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             if (gamepad2.a) {
                 if (currFlipPos == flipPositions.DOWN) {
+                    intake.reverse();
+                    Thread.sleep(1000);
+                    intake.start();
                     flip.up();
                     intake.stop();
-                    functions.oneMotorEncoder(mineralSpool, (float) -0.5, -1000);
+//                    functions.oneMotorEncoder(mineralSpool, (float) -1.0, -1200);
                     currFlipPos = flipPositions.UP;
+                    functions.oneMotorEncoder(mineralSpool, (float) -1.0, -Math.abs(mineralSpool.getCurrentPosition()));
+                    flip.flip();
+                    Thread.sleep(500);
+                    functions.oneMotorEncoder(mineralSpool, (float) 0.8, 300);
                 }
                 else if (currFlipPos == flipPositions.UP) {
-                    functions.oneMotorEncoder(mineralSpool, (float) 0.5, 1000);
+                    functions.oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
                     flip.down();
                     intake.start();
                     currFlipPos=flipPositions.DOWN;
@@ -154,16 +161,13 @@ public class teleMaster extends LinearOpMode {
             }
 
             if (gamepad2.y) {
-                intake.stop();
-                functions.oneMotorEncoder(mineralSpool, (float) -0.5, -Math.abs(mineralSpool.getCurrentPosition()));
-                flip.flip();
-                Thread.sleep(500);
-                functions.oneMotorEncoder(mineralSpool, (float) 0.5, 300);
-                flip.up();
+                intake.start();
+                flip.down();
             }
 
             if (gamepad2.b)
-            {
+            {sharma123
+                    
                 upDownToggle++;
                 if (upDownToggle % 2 == 1)
                 {
@@ -186,7 +190,14 @@ public class teleMaster extends LinearOpMode {
             if (gamepad2.dpad_up)
             {
                 dunk.dunk();
+            }
+            if (gamepad2.dpad_down)
+            {
                 dunk.down();
+            }
+            if (gamepad2.dpad_left)
+            {
+                dunk.dunkNoPause();
             }
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
