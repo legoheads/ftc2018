@@ -68,7 +68,7 @@ public class servoArmDunk implements Dunk {
 
         dunker.setPosition(DUNK_POSITION+0.22);
 
-        Thread.sleep(1500);
+        Thread.sleep(1300);
 
         dunker.setPosition(DUNK_POSITION);
     }

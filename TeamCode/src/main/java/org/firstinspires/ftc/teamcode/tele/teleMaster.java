@@ -83,7 +83,7 @@ public class teleMaster extends LinearOpMode {
             float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.5);
             float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
             float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
-            float spoolPower = gamepad1.right_stick_y;
+            float spoolPower = gamepad1.right_stick_y + gamepad2.right_stick_y;
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
             if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -128,10 +128,7 @@ public class teleMaster extends LinearOpMode {
             if (Math.abs(spoolPower) <=0.1)
                 mineralSpool.setPower(0.0);
 
-            if (gamepad1.b)
-            {
-                intake.stop();
-            }
+            if (gamepad1.b) { intake.stop(); }
 
             if (gamepad1.x || gamepad2.x) {
                 mineralSpool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -140,8 +137,12 @@ public class teleMaster extends LinearOpMode {
 
             if (gamepad2.a) {
                 if (currFlipPos == flipPositions.DOWN) {
+                    leftMotorFront.setPower(0.0);
+                    leftMotorBack.setPower(0.0);
+                    rightMotorBack.setPower(0.0);
+                    rightMotorFront.setPower(0.0);
                     intake.reverse();
-                    Thread.sleep(1000);
+                    Thread.sleep(500);
                     intake.start();
                     flip.up();
                     intake.stop();
@@ -165,19 +166,9 @@ public class teleMaster extends LinearOpMode {
                 flip.down();
             }
 
-            if (gamepad2.b)
-            {
-                    
-                upDownToggle++;
-                if (upDownToggle % 2 == 1)
-                {
-                    flip.up();
-                }
-                if (upDownToggle % 2 == 0)
-                {
-                    flip.down();
-                }
-            }
+            if (gamepad2.y) { flip.up(); }
+            if (gamepad2.x) { flip.down(); }
+            if (gamepad2.b) { flip.flip(); }
 
             if (gamepad2.x)
             {
