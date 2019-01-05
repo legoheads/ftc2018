@@ -11,20 +11,24 @@ public class linearActuator implements Hang{
 
     private DcMotor hanger;
 
-    public linearActuator(DcMotor linearActuator){
+    public linearActuator(DcMotor linearActuator)
+    {
         hanger = linearActuator;
     }
 
-    public void up(){
+    public void up() throws InterruptedException
+    {
         DriveFunctions.oneMotorEncoder(hanger, HANG_POWER, HANG_DISTANCE);
+        hanger.setPower(HANG_POWER);
+        Thread.sleep(1500);
+        hanger.setPower(0.0);
     }
-    public void down(){
-        DriveFunctions.oneMotorEncoder(hanger, HANG_POWER, -HANG_DISTANCE);
-    }
-    public void maxUp(){
-        DriveFunctions.oneMotorEncoder(hanger, HANG_POWER, MAX_DISTANCE);
-    }
-    public void maxDown(){
-        DriveFunctions.oneMotorEncoder(hanger, HANG_POWER, -MAX_DISTANCE);
+
+    public void down() throws InterruptedException
+    {
+        DriveFunctions.oneMotorEncoder(hanger, -HANG_POWER/2, -HANG_DISTANCE);
+        hanger.setPower(-HANG_POWER);
+        Thread.sleep(1500);
+        hanger.setPower(0.0);
     }
 }

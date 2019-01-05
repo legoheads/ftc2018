@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -33,10 +34,12 @@ public class autoTensoCrater extends LinearOpMode {
 
     TeamMarker teamMarker;
 
+    ColorSensor colorSensor;
+
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.6;
-    float shiftPower = (float) 0.6;
-    float turnPower = (float) 0.6;
+    float drivePower = (float) 0.3;
+    float shiftPower = (float) 0.3;
+    float turnPower = (float) 0.3;
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
@@ -63,18 +66,19 @@ public class autoTensoCrater extends LinearOpMode {
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
+
         //Construct Subsystems
         teamMarker = new claiming(markerDropper);
         tensor = new twoSampling(telemetry, hardwareMap, vuforia, tfod);
         DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        dunk = new servoArmDunk(hanger, dunker);
 
         //Initializations
         functions.initializeRobotBrake();
 
         //Find Gold Mineral after Initialization but before game starts
         goldMineral = tensor.getMineral();
-
-        dunk = new servoArmDunk(hanger, dunker);
 
         waitForStart();
 
@@ -90,24 +94,30 @@ public class autoTensoCrater extends LinearOpMode {
             Thread.sleep(1500);
             hanger.setPower(0.0);
 
-            functions.leftShiftAutonomous(shiftPower, 250);
+            functions.leftShiftAutonomous(shiftPower, 200);
 
             functions.driveAutonomous(drivePower, 400);
 
-            if (goldMineral == TensorFlow.goldMineral.LEFT){
+            if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
+            {
+                goldMineral = TensorFlow.goldMineral.RIGHT;
+            }
+            if (goldMineral == TensorFlow.goldMineral.LEFT)
+            {
                 functions.leftShiftAutonomous(shiftPower, 100);
             }
-            if (goldMineral == TensorFlow.goldMineral.CENTER){
+            if (goldMineral == TensorFlow.goldMineral.CENTER)
+            {
                 functions.rightShiftAutonomous(shiftPower, 200);
             }
-            if (goldMineral == TensorFlow.goldMineral.RIGHT){
+            if (goldMineral == TensorFlow.goldMineral.RIGHT)
+            {
                 functions.rightShiftAutonomous(shiftPower, 500);
-
             }
 
             functions.driveAutonomous(drivePower, 550);
 
-            functions.driveAutonomous(-drivePower, -600);
+            functions.driveAutonomous(-drivePower, -550);
 
             functions.leftTurnAutonomous(turnPower, 1000);
 

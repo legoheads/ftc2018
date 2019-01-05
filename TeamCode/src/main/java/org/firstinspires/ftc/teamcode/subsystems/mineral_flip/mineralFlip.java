@@ -8,7 +8,7 @@ public class mineralFlip implements Flip {
 
     final double UP_POSITION = 0.3;
     final double DOWN_POSITION = 0.0;
-    final double FLIP_POSITION = 0.5;
+    final double FLIP_POSITION = 0.47;
 
     public mineralFlip(Servo mineralFlip) { this.flip = mineralFlip; }
 

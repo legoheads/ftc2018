@@ -9,6 +9,15 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.subsystems.dunk.Dunk;
+import org.firstinspires.ftc.teamcode.subsystems.dunk.servoArmDunk;
+import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
+import org.firstinspires.ftc.teamcode.subsystems.hang.linearActuator;
+import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.intake.intakeMinerals;
+import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.Flip;
+import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -48,10 +57,14 @@ public class autoBox extends LinearOpMode
     location mineralLocation;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.6;
-    float shiftPower = (float) 0.6;
-    float turnPower = (float) 0.6;
+    float drivePower = (float) 0.3;
+    float shiftPower = (float) 0.3;
+    float turnPower = (float) 0.3;
 
+    Flip flip;
+    Dunk dunk;
+    Intake intake;
+    Hang hang;
 
 
 //***************************************************************************************************************************
@@ -80,6 +93,10 @@ public class autoBox extends LinearOpMode
         functions.initializeRobotBrake();
 
         teamMarker = new claiming(markerDropper);
+        flip = new mineralFlip(mineralFlipper);
+        dunk = new servoArmDunk(hanger, dunker);
+        intake = new intakeMinerals(spinner, mineralSpool);
+        hang = new linearActuator(hanger);
 
         //Wait for start button to be clicked
         waitForStart();
@@ -96,25 +113,28 @@ public class autoBox extends LinearOpMode
             Thread.sleep(1500);
             hanger.setPower(0.0);
 
-            functions.leftShiftAutonomous(shiftPower, 250);
+            functions.leftShiftAutonomous(shiftPower, 150);
 
-            functions.driveAutonomous(drivePower, 2500);
+            functions.driveAutonomous(drivePower, 300);
 
-            functions.leftTurnAutonomous(turnPower, 960);
+            functions.rightShiftAutonomous(shiftPower, 150);
+
+            functions.driveAutonomous(drivePower, 2300);
+
+            functions.leftTurnAutonomous(turnPower, 515);
 
             teamMarker.drop();
 
             Thread.sleep(500);
 
-            functions.leftTurnAutonomous(turnPower, 480);
+            functions.driveAutonomous(-drivePower, -3500);
 
-            functions.driveAutonomous(drivePower, 3500);
+            dunker.setPosition(0.25);
+            mineralSpool.setPower(0.5);
+            Thread.sleep(2000);
+            mineralSpool.setPower(0.0);
+            flip.up();
 
-//            mineralSpool.setPower(-0.5);
-//
-//            Thread.sleep(1500);
-//
-//            mineralSpool.setPower(0.0);
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

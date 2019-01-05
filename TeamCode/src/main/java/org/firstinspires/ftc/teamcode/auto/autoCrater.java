@@ -9,6 +9,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
+import org.firstinspires.ftc.teamcode.subsystems.dunk.Dunk;
+import org.firstinspires.ftc.teamcode.subsystems.dunk.servoArmDunk;
+import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
+import org.firstinspires.ftc.teamcode.subsystems.hang.linearActuator;
+import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.intake.intakeMinerals;
+import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.Flip;
+import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -47,10 +55,15 @@ public class autoCrater extends LinearOpMode
     autoBox.location mineralLocation;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.6;
-    float shiftPower = (float) 0.6;
-    float turnPower = (float) 0.6;
+    float drivePower = (float) 0.3;
+    float shiftPower = (float) 0.3;
+    float turnPower = (float) 0.3;
 
+    //Subsystems
+    Flip flip;
+    Dunk dunk;
+    Intake intake;
+    Hang hang;
 
     //claiming teamMarker = new claiming(markerDropper);
 
@@ -76,6 +89,10 @@ public class autoCrater extends LinearOpMode
         DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         teamMarker = new claiming(markerDropper);
+        flip = new mineralFlip(mineralFlipper);
+        dunk = new servoArmDunk(hanger, dunker);
+        intake = new intakeMinerals(spinner, mineralSpool);
+        hang = new linearActuator(hanger);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -95,33 +112,42 @@ public class autoCrater extends LinearOpMode
             Thread.sleep(1500);
             hanger.setPower(0.0);
 
-            functions.leftShiftAutonomous(shiftPower, 250);
+            functions.leftShiftAutonomous(shiftPower, 150);
 
             functions.driveAutonomous(drivePower, 950);
 
+            functions.leftTurnAutonomous(turnPower, 950);
 
-            functions.leftTurnAutonomous(turnPower, 1000);
+            functions.driveAutonomous(drivePower, 1350);
 
-            functions.driveAutonomous(drivePower, 1000);
+            functions.leftTurnAutonomous(turnPower, 470);
 
-            functions.leftTurnAutonomous(turnPower, 450);
+            functions.driveAutonomous(drivePower, 2650);
 
-            functions.driveAutonomous(drivePower, 3100);
+            functions.leftTurnAutonomous(turnPower, 500);
 
             teamMarker.drop();
 
-            Thread.sleep(1000);
+            Thread.sleep(500);
 
-            functions.driveAutonomous(-drivePower, -200);
-
-            functions.leftTurnAutonomous(turnPower, 1950);
+            functions.leftTurnAutonomous(turnPower, 1600);
 
             //Go to Our crater
-            functions.driveAutonomous(drivePower, 3800);
+            functions.driveAutonomous(drivePower, 1500);
 
-//            mineralSpool.setPower(-0.5);
-//            Thread.sleep(1500);
-//            mineralSpool.setPower(0.0);
+            functions.rightTurnAutonomous(turnPower, 100);
+
+            functions.driveAutonomous(drivePower, 1700);
+
+            dunk.dunkNoPause();
+            mineralSpool.setPower(0.5);
+            Thread.sleep(1000);
+            mineralSpool.setPower(0.0);
+            flip.up();
+            mineralSpool.setPower(0.5);
+            Thread.sleep(2000);
+            mineralSpool.setPower(0.0);
+            dunk.down();
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

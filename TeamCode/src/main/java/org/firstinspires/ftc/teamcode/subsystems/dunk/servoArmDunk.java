@@ -15,8 +15,10 @@ public class servoArmDunk implements Dunk {
     final double DUNK_POWER = 1.0;
 
     //Dunk Servo Variables
-    final double DUNK_POSITION = 0.2;
+    final double DUNK_POSITION = 0.23;
     final double DOWN_POSTITION = 0.85;
+    final double WIGGLE_POSITION1 = 0.23;
+    final double WIGGLE_POSITION2 = 0.2;
 
     public servoArmDunk(DcMotor verticalMotion, Servo dunkArm)
     {
@@ -26,10 +28,8 @@ public class servoArmDunk implements Dunk {
 
     //Dunk
     @Override
-    public void dunk() throws InterruptedException
+    public void dunkWithPause() throws InterruptedException
     {
-
-
         //Use the encoder
         hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -157,6 +157,16 @@ public class servoArmDunk implements Dunk {
 //        Thread.sleep(1500);
 
         dunker.setPosition(DUNK_POSITION);
+    }
+
+    @Override
+    public void wiggle()
+    {
+        for (int n = 0; n <= 3; n++)
+        {
+            dunker.setPosition(WIGGLE_POSITION1);
+            dunker.setPosition(WIGGLE_POSITION2);
+        }
     }
 }
 

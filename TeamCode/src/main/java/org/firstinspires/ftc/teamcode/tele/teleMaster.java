@@ -2,7 +2,9 @@ package org.firstinspires.ftc.teamcode.tele;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
 
@@ -27,6 +29,8 @@ public class teleMaster extends LinearOpMode {
 
     DcMotor hanger;
     Servo markerDropper;
+
+    ColorSensor colorSensor;
 
     enum flipPositions { DOWN, UP }
     flipPositions currFlipPos;
@@ -54,6 +58,8 @@ public class teleMaster extends LinearOpMode {
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
+
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
         DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
@@ -109,34 +115,55 @@ public class teleMaster extends LinearOpMode {
 
             //If the joysticks are not pushed significantly shut off the wheels
             if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
+            {
                 functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+            }
 
-            if (gamepad1.y) { hang.down(); }
+            if (gamepad1.y)
+            {
+                hang.down();
+            }
 
-            if (gamepad1.a) { hang.up(); }
-
-            if (gamepad1.right_bumper || gamepad2.right_bumper) {
-                intake.reverse();
+            if (gamepad1.a)
+            {
+                hang.up();
             }
 
             if (gamepad1.left_bumper || gamepad2.left_bumper)
+            {
                 intake.start();
+            }
+
+            if (gamepad1.right_bumper || gamepad2.right_bumper)
+            {
+                intake.reverse();
+            }
 
             if (Math.abs(spoolPower) > 0.1)
-                mineralSpool.setPower(-spoolPower);
+            {
+                mineralSpool.setPower(- spoolPower);
+            }
 
             if (Math.abs(spoolPower) <=0.1)
+            {
                 mineralSpool.setPower(0.0);
+            }
 
-            if (gamepad1.b) { intake.stop(); }
+            if (gamepad1.b)
+            {
+                intake.stop();
+            }
 
-            if (gamepad1.x || gamepad2.x) {
+            if (gamepad1.x)
+            {
                 mineralSpool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 mineralSpool.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
-            if (gamepad2.a) {
-                if (currFlipPos == flipPositions.DOWN) {
+            if (gamepad2.a)
+            {
+                if (currFlipPos == flipPositions.DOWN)
+                {
                     leftMotorFront.setPower(0.0);
                     leftMotorBack.setPower(0.0);
                     rightMotorBack.setPower(0.0);
@@ -148,12 +175,11 @@ public class teleMaster extends LinearOpMode {
                     intake.stop();
 //                    functions.oneMotorEncoder(mineralSpool, (float) -1.0, -1200);
                     currFlipPos = flipPositions.UP;
-                    functions.oneMotorEncoder(mineralSpool, (float) -1.0, -Math.abs(mineralSpool.getCurrentPosition()));
+                    functions.spoolInFully(colorSensor, mineralSpool);
                     flip.flip();
-                    Thread.sleep(500);
-                    functions.oneMotorEncoder(mineralSpool, (float) 0.8, 300);
                 }
-                else if (currFlipPos == flipPositions.UP) {
+                else if (currFlipPos == flipPositions.UP)
+                {
                     functions.oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
                     flip.down();
                     intake.start();
@@ -161,26 +187,26 @@ public class teleMaster extends LinearOpMode {
                 }
             }
 
-            if (gamepad2.y) {
-                intake.start();
-                flip.down();
+            if (gamepad2.y)
+            {
+                flip.up();
             }
-
-            if (gamepad2.y) { flip.up(); }
-            if (gamepad2.x) { flip.down(); }
-            if (gamepad2.b) { flip.flip(); }
-
             if (gamepad2.x)
             {
+                mineralSpool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                mineralSpool.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                flip.down();
+            }
+            if (gamepad2.b)
+            {
                 flip.flip();
-                Thread.sleep(600);
-                flip.up();
             }
 
             //Dunk
             if (gamepad2.dpad_up)
             {
-                dunk.dunk();
+                functions.driveAutonomous((float) 0.5, 25);
+                dunk.dunkNoPause();
             }
             if (gamepad2.dpad_down)
             {
@@ -188,7 +214,13 @@ public class teleMaster extends LinearOpMode {
             }
             if (gamepad2.dpad_left)
             {
-                dunk.dunkNoPause();
+                functions.driveAutonomous((float) 0.5, 25);
+                dunk.dunkWithPause();
+            }
+
+            if (gamepad2.dpad_right)
+            {
+                dunk.wiggle();
             }
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop

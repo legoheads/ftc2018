@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.test_programs;
 
 //Import necessary items
 
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -11,7 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
 
-@Disabled
+//@Disabled
 @TeleOp(name="Color Sensor Test") //Name the class
 public class colorSensorTest extends LinearOpMode
 {
@@ -32,15 +34,7 @@ public class colorSensorTest extends LinearOpMode
 
     ColorSensor colorSensor;
 
-//    private GoldMineralDetector genericDetector = null;
-
-    //Define possible mineral locations in enum
-    enum location {
-        LEFT, CENTER, RIGHT, UNKNOWN
-    };
-
-    //Create goldPos object to store the mineral goldPos data
-//    autoBox.goldPos mineralLocation;
+    float hsvValues[] = {0F, 0F, 0F};
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
@@ -87,20 +81,20 @@ public class colorSensorTest extends LinearOpMode
         //Note we use opModeIsActive() as our loop condition because it is an interruptible method.
         while (opModeIsActive())
         {
-//            //Convert the color sensor values from RGB to HSV
-//            Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
-//
-//            //Display the sensor outputs on the screen
-//            telemetry.addData("Clear ", colorSensor.alpha());
-//            telemetry.addData("Red ", colorSensor.red());
-//            telemetry.addData("Green ", colorSensor.green());
-//            telemetry.addData("Blue ", colorSensor.blue());
-//            telemetry.addData("Hue ", hsvValues[0]);
-//            telemetry.addData("Saturation ", hsvValues[1]);
-//            telemetry.addData("Value ", hsvValues[2]);
-//
-//            //Update the data if/when it changes
-//            telemetry.update();
+            //Convert the color sensor values from RGB to HSV
+            Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
+
+            //Display the sensor outputs on the screen
+            telemetry.addData("Clear ", colorSensor.alpha());
+            telemetry.addData("Red ", colorSensor.red());
+            telemetry.addData("Green ", colorSensor.green());
+            telemetry.addData("Blue ", colorSensor.blue());
+            telemetry.addData("Hue ", hsvValues[0]);
+            telemetry.addData("Saturation ", hsvValues[1]);
+            telemetry.addData("Value ", hsvValues[2]);
+
+            //Update the data if/when it changes
+            telemetry.update();
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

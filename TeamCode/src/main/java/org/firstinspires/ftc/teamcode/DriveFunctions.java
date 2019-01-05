@@ -296,6 +296,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //Everything in the same direction creates linear driving
         moveDriveMotorsWithEncoders(-degrees, -degrees, -degrees, -degrees, -power, -power, -power, -power);
+        Thread.sleep(100);
     }
 
     /**
@@ -306,6 +307,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //Left motors backwards and right motors forwards gives us a left turn
         moveDriveMotorsWithEncoders(degrees, degrees, -degrees, -degrees, power, power, -power, -power);
+        Thread.sleep(100);
     }
 
     /**
@@ -316,6 +318,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //Right motors backwards and left motors forwards gives us a right turn
         moveDriveMotorsWithEncoders(-degrees, -degrees, degrees, degrees, -power, -power, power, power);
+        Thread.sleep(100);
     }
 
     /**
@@ -326,6 +329,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //This sequence of backwards, forwards, forwards, backwards makes the robot shift left
         moveDriveMotorsWithEncoders(degrees, -degrees, -degrees, degrees, power, -power, -power, power);
+        Thread.sleep(100);
     }
 
     /**
@@ -336,6 +340,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //This sequence of forwards, backwards, backwards, forwards makes the robot shift right
         moveDriveMotorsWithEncoders(-degrees, degrees, degrees, -degrees, -power, power, power, -power);
+        Thread.sleep(100);
     }
 
     /**
@@ -368,30 +373,37 @@ public class DriveFunctions extends LinearOpMode
     public String yellowOrWhite(ColorSensor colorSensor)
     {
         //Define float for hue
-        float hue;
+        float alpha = colorSensor.alpha();
 
-        //This is an array that stores the hue[0], saturation[1], and value[2], values
-        float[] hsvValues = {0F, 0F, 0F};
 
-        //Convert from RGB to HSV (red-green-blue to hue-saturation-value)
-        Color.RGBToHSV(colorSensor.red() * 8, colorSensor.green() * 8, colorSensor.blue() * 8, hsvValues);
-
-        //store the first value from the array into hue
-        hue = hsvValues[0]; //NEED TO FIND
-
-        //If hue is greater than 120, we are looking at blue, so return blue
-        if (hue < 70) //SOMETHING
+        //If hue is greater than 120, we are looking at yellow so return yellow
+        if (alpha > 100) //SOMETHING
         {
             return "yellow";
         }
 
-        //Otherwise return red
-        return "white";
+        //Otherwise return not yellow
+        return "not yellow";
     }
 
     public void hang(float power, int degrees)
     {
         oneMotorEncoder(hanger, power, degrees);
+    }
+
+    public void spoolInFully(ColorSensor colorSensor, DcMotor motor)
+    {
+        while (!iSeeAColor(colorSensor))
+        {
+            motor.setPower(-1.0);
+        }
+
+        while (yellowOrWhite(colorSensor).equals("not yellow"))
+        {
+            motor.setPower(-0.5);
+        }
+
+        motor.setPower(0.0);
     }
 
 

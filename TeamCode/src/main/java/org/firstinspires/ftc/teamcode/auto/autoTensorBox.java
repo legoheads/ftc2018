@@ -2,8 +2,11 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 //Import necessary items
+import android.graphics.Color;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -32,6 +35,8 @@ public class autoTensorBox extends LinearOpMode {
 
     TeamMarker teamMarker;
 
+    ColorSensor colorSensor;
+
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.6;
     float shiftPower = (float) 0.6;
@@ -42,7 +47,6 @@ public class autoTensorBox extends LinearOpMode {
     private TensorFlow tensor;
 
     private TensorFlow.goldMineral goldMineral;
-
     //***************************************************************************************************************************
     //MAIN BELOW
 
@@ -59,6 +63,7 @@ public class autoTensorBox extends LinearOpMode {
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
+        colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Construct Subsystems
         teamMarker = new claiming(markerDropper);
@@ -67,8 +72,6 @@ public class autoTensorBox extends LinearOpMode {
 
         //Initializations
         functions.initializeRobotBrake();
-
-
 
 //        /** Wait for the game to begin */
 //        telemetry.addData(">", "Press Play to start");

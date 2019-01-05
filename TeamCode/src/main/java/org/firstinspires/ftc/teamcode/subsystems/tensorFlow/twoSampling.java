@@ -162,6 +162,6 @@ public class twoSampling implements TensorFlow {
             count++;
         }
         telemetry.addData("Gold", "is Right");
-        return goldMineral.RIGHT;
+        return location;
     }
 }
