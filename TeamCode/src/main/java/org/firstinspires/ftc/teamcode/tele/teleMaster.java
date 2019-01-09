@@ -119,12 +119,12 @@ public class teleMaster extends LinearOpMode {
                 functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
             }
 
-            if (gamepad1.y)
+            if (gamepad1.a)
             {
                 hang.down();
             }
 
-            if (gamepad1.a)
+            if (gamepad1.y)
             {
                 hang.up();
             }
@@ -162,12 +162,9 @@ public class teleMaster extends LinearOpMode {
 
             if (gamepad2.a)
             {
+                functions.setDriveMotorPowers(0.0f, 0.0f, 0.0f, 0.0f);
                 if (currFlipPos == flipPositions.DOWN)
                 {
-                    leftMotorFront.setPower(0.0);
-                    leftMotorBack.setPower(0.0);
-                    rightMotorBack.setPower(0.0);
-                    rightMotorFront.setPower(0.0);
                     intake.reverse();
                     Thread.sleep(500);
                     intake.start();
@@ -220,7 +217,7 @@ public class teleMaster extends LinearOpMode {
 
             if (gamepad2.dpad_right)
             {
-                dunk.wiggle();
+                dunker.setPosition(0.85);
             }
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop

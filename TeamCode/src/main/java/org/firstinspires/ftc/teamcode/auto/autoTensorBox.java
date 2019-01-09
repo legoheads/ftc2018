@@ -13,6 +13,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
 
+import org.firstinspires.ftc.teamcode.subsystems.dunk.Dunk;
+import org.firstinspires.ftc.teamcode.subsystems.dunk.servoArmDunk;
+import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
+import org.firstinspires.ftc.teamcode.subsystems.hang.linearActuator;
+import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.intake.intakeMinerals;
+import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.Flip;
+import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
 import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.*;
 
@@ -47,6 +55,12 @@ public class autoTensorBox extends LinearOpMode {
     private TensorFlow tensor;
 
     private TensorFlow.goldMineral goldMineral;
+
+    //Subsystems
+    Flip flip;
+    Dunk dunk;
+    Intake intake;
+    Hang hang;
     //***************************************************************************************************************************
     //MAIN BELOW
 
@@ -70,6 +84,12 @@ public class autoTensorBox extends LinearOpMode {
         tensor = new twoSampling(telemetry, hardwareMap, vuforia, tfod);
         DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
+        //Intialize Subsystems
+        flip = new mineralFlip(mineralFlipper);
+        dunk = new servoArmDunk(hanger, dunker);
+        intake = new intakeMinerals(spinner, mineralSpool);
+        hang = new linearActuator(hanger);
+
         //Initializations
         functions.initializeRobotBrake();
 
@@ -78,43 +98,76 @@ public class autoTensorBox extends LinearOpMode {
 //        telemetry.update();
 
         //Find Gold Mineral after Initialization but before game starts
-        goldMineral = tensor.getMineral();
 
         waitForStart();
 
         //Code to run once play is pressed
         while(opModeIsActive())
         {
+            goldMineral = tensor.getMineral();
+
             telemetry.addData("GoldPosition", goldMineral);
 
             teamMarker.hold();
 
-            functions.hang((float) -1.0, -2500);
+            functions.hang((float) -1.0, -10000);
 
             hanger.setPower(-1.0);
-            Thread.sleep(1500);
+            Thread.sleep(2500);
             hanger.setPower(0.0);
 
-            functions.leftShiftAutonomous(shiftPower, 250);
+            functions.leftShiftAutonomous(shiftPower, 200);
 
-            functions.driveAutonomous(drivePower, 2500);
+            functions.driveAutonomous(drivePower, 300);
 
-            functions.leftTurnAutonomous(turnPower, 960);
+            functions.rightShiftAutonomous(shiftPower, 200);
+
+            if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
+            {
+                goldMineral = TensorFlow.goldMineral.RIGHT;
+            }
+            if (goldMineral == TensorFlow.goldMineral.LEFT)
+            {
+                functions.driveAutonomous(drivePower, 300);
+                functions.leftShiftAutonomous(shiftPower, 700);
+                functions.driveAutonomous(drivePower, 1250);
+                functions.rightShiftAutonomous(shiftPower, 700);
+                functions.driveAutonomous(drivePower, 400);
+            }
+            if (goldMineral == TensorFlow.goldMineral.CENTER)
+            {
+                functions.driveAutonomous(drivePower, 1950);
+
+            }
+            if (goldMineral == TensorFlow.goldMineral.RIGHT)
+            {
+                functions.driveAutonomous(drivePower, 300);
+                functions.rightShiftAutonomous(shiftPower, 700);
+                functions.driveAutonomous(drivePower, 1250);
+                functions.leftShiftAutonomous(shiftPower, 700);
+                functions.driveAutonomous(drivePower, 400);
+            }
+
+            functions.leftTurnAutonomous(turnPower, 1100);
 
             teamMarker.drop();
+
+            Thread.sleep(500);
+            functions.leftTurnAutonomous(turnPower, 200);
+
             Thread.sleep(500);
 
-            functions.leftTurnAutonomous(turnPower, 480);
-
-            functions.driveAutonomous(drivePower, 3500);
-
-            mineralSpool.setPower(-0.5);
-
+            functions.driveAutonomous(drivePower, 300);
+            mineralSpool.setPower(0.5);
             Thread.sleep(1500);
-
             mineralSpool.setPower(0.0);
+//
+            dunk.down();
 
+
+            //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
+
             break;
         }
     }

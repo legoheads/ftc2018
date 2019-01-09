@@ -11,7 +11,7 @@ public class servoArmDunk implements Dunk {
     Servo dunker;
 
     //DC Hanger Variables
-    final int DUNK_DISTANCE = 3100;
+    final int DUNK_DISTANCE = 10000;
     final double DUNK_POWER = 1.0;
 
     //Dunk Servo Variables
@@ -49,12 +49,7 @@ public class servoArmDunk implements Dunk {
         hanger.setPower(-DUNK_POWER);
 
         //Empty while loop while the motor is moving
-        while ((hanger.isBusy()))
-        {
-//            dunker.setPosition(DUNK_POSITION+0.25);
-//            Thread.sleep(1000);
-//            dunker.setPosition(DUNK_POSITION);
-        }
+        while ((hanger.isBusy())) { }
 
         //Stop the motor
         hanger.setPower(0.0);
@@ -75,7 +70,8 @@ public class servoArmDunk implements Dunk {
 
     //Dunk return
     @Override
-    public void down() throws InterruptedException{
+    public void down() throws InterruptedException
+    {
         //Use the encoder
         hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -106,7 +102,7 @@ public class servoArmDunk implements Dunk {
         hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         hanger.setPower(DUNK_POWER);
-        Thread.sleep(500);
+        Thread.sleep(2500);
         hanger.setPower(0.0);
 
         dunker.setPosition(DOWN_POSTITION);
@@ -149,7 +145,7 @@ public class servoArmDunk implements Dunk {
         hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         hanger.setPower(-DUNK_POWER);
-        Thread.sleep(500);
+        Thread.sleep(2500);
         hanger.setPower(0.0);
 
 //        dunker.setPosition(DUNK_POSITION+0.22);
