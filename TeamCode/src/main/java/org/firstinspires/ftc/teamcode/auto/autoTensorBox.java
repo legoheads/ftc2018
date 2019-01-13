@@ -8,7 +8,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
@@ -44,6 +47,8 @@ public class autoTensorBox extends LinearOpMode {
     TeamMarker teamMarker;
 
     ColorSensor colorSensor;
+    DistanceSensor distanceSensorLeft;
+    DistanceSensor distanceSensorRight;
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.6;
@@ -78,11 +83,13 @@ public class autoTensorBox extends LinearOpMode {
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "distanceSensorLeft");
+        distanceSensorRight = hardwareMap.get(DistanceSensor.class, "distanceSensorRight");
 
         //Construct Subsystems
         teamMarker = new claiming(markerDropper);
         tensor = new twoSampling(telemetry, hardwareMap, vuforia, tfod);
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         //Intialize Subsystems
         flip = new mineralFlip(mineralFlipper);
@@ -90,24 +97,11 @@ public class autoTensorBox extends LinearOpMode {
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
 
-        //Initializations
-        functions.initializeRobotBrake();
-
-//        /** Wait for the game to begin */
-//        telemetry.addData(">", "Press Play to start");
-//        telemetry.update();
-
-        //Find Gold Mineral after Initialization but before game starts
-
         waitForStart();
 
         //Code to run once play is pressed
         while(opModeIsActive())
         {
-            goldMineral = tensor.getMineral();
-
-            telemetry.addData("GoldPosition", goldMineral);
-
             teamMarker.hold();
 
             functions.hang((float) -1.0, -10000);
@@ -115,6 +109,10 @@ public class autoTensorBox extends LinearOpMode {
             hanger.setPower(-1.0);
             Thread.sleep(2500);
             hanger.setPower(0.0);
+
+            goldMineral = tensor.getMineral();
+
+            telemetry.addData("GoldPosition", goldMineral);
 
             functions.leftShiftAutonomous(shiftPower, 200);
 
@@ -148,20 +146,40 @@ public class autoTensorBox extends LinearOpMode {
                 functions.driveAutonomous(drivePower, 400);
             }
 
-            functions.leftTurnAutonomous(turnPower, 1100);
+
+
+            functions.leftTurnAutonomous(turnPower, 500);
+
+            functions.leftShiftAutonomous(shiftPower, 300);
+
+            while (distanceSensorRight.getDistance(DistanceUnit.INCH) > 8)
+            {
+                functions.shiftTeleop(shiftPower/2);
+            }
+
+            functions.leftTurnAutonomous(turnPower, 400);
+
 
             teamMarker.drop();
 
             Thread.sleep(500);
-            functions.leftTurnAutonomous(turnPower, 200);
+            functions.leftTurnAutonomous(turnPower, 600);
+
+            functions.leftShiftAutonomous(shiftPower, 400);
+
+            while (distanceSensorRight.getDistance(DistanceUnit.INCH) > 8)
+            {
+                functions.shiftTeleop(shiftPower/2);
+            }
 
             Thread.sleep(500);
 
-            functions.driveAutonomous(drivePower, 300);
+            functions.driveAutonomous(drivePower, 3000);
+
+            dunker.setPosition(0.2);
             mineralSpool.setPower(0.5);
             Thread.sleep(1500);
             mineralSpool.setPower(0.0);
-//
             dunk.down();
 
 

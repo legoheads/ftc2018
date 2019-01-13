@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.*;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 
 @Autonomous(name="AutoTensorCrater") //Name the program
-public class autoTensoCrater extends LinearOpMode {
+public class autoTensorCrater extends LinearOpMode {
     //Define drive motors
     DcMotor leftMotorFront;
     DcMotor rightMotorFront;
@@ -71,11 +71,11 @@ public class autoTensoCrater extends LinearOpMode {
         //Construct Subsystems
         teamMarker = new claiming(markerDropper);
         tensor = new twoSampling(telemetry, hardwareMap, vuforia, tfod);
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
         dunk = new servoArmDunk(hanger, dunker);
 
         //Initializations
-        functions.initializeRobotBrake();
+//        functions.initializeRobotBrake();
 
         //Find Gold Mineral after Initialization but before game starts
         goldMineral = tensor.getMineral();

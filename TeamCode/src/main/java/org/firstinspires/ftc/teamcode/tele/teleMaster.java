@@ -42,6 +42,7 @@ public class teleMaster extends LinearOpMode {
     Hang hang;
 
     int upDownToggle = 0;
+
     //***************************************************************************************************************************
     //MAIN BELOW
     @Override
@@ -62,11 +63,11 @@ public class teleMaster extends LinearOpMode {
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeRobotFloat();
+//        functions.initializeRobotFloat();
 
         //Intialize Subsystems
         flip = new mineralFlip(mineralFlipper);

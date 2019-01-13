@@ -110,9 +110,8 @@ public class servoArmDunk implements Dunk {
 
     //Dunk
     @Override
-    public void dunkNoPause() throws InterruptedException {
-
-
+    public void dunkNoPause() throws InterruptedException
+    {
         //Use the encoder
         hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 

@@ -8,8 +8,10 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.Dunk;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.servoArmDunk;
 import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
@@ -44,28 +46,21 @@ public class autoBox extends LinearOpMode
     Servo dunker;
     Servo markerDropper;
 
-    TeamMarker teamMarker;
-
-//    private GoldMineralDetector genericDetector = null;
-
-    //Define possible mineral locations in enum
-    enum location {
-        LEFT, CENTER, RIGHT, UNKNOWN
-    };
-
-    //Create location object to store the mineral location data
-    location mineralLocation;
+    DistanceSensor distanceSensorLeft;
+    DistanceSensor distanceSensorRight;
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
     float shiftPower = (float) 0.3;
     float turnPower = (float) 0.3;
+    TeamMarker teamMarker;
 
     Flip flip;
     Dunk dunk;
     Intake intake;
     Hang hang;
 
+    String direction = "Towards";
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -85,12 +80,15 @@ public class autoBox extends LinearOpMode
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
+        distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "distanceSensorLeft");
+        distanceSensorRight = hardwareMap.get(DistanceSensor.class, "distanceSensorRight");
+
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeRobotBrake();
+//        functions.initializeRobotBrake();
 
         teamMarker = new claiming(markerDropper);
         flip = new mineralFlip(mineralFlipper);
@@ -104,42 +102,58 @@ public class autoBox extends LinearOpMode
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
+            if (direction.equals("Towards"))
+            {
+                shiftPower = -shiftPower;
 
-            teamMarker.hold();
+                while (distanceSensorLeft.getDistance(DistanceUnit.INCH) > 5)
+                {
+                    functions.shiftTeleop(shiftPower);
+                }
+            }
+            else if (direction.equals("Away"))
+            {
+                while (distanceSensorLeft.getDistance(DistanceUnit.INCH) < 5)
+                {
+                    functions.shiftTeleop(shiftPower);
+                }
+            }
+            functions.stopDriving();
 
-            functions.hang((float) -1.0, -2500);
+//            teamMarker.hold();
+//
+//            functions.hang((float) -1.0, -2500);
+//
+//            hanger.setPower(-1.0);
+//            Thread.sleep(1500);
+//            hanger.setPower(0.0);
+//
+//            functions.leftShiftAutonomous(shiftPower, 150);
+//
+//            functions.driveAutonomous(drivePower, 300);
+//
+//            functions.rightShiftAutonomous(shiftPower, 150);
+//
+//            functions.driveAutonomous(drivePower, 2300);
+//
+//            functions.leftTurnAutonomous(turnPower, 515);
+//
+//            teamMarker.drop();
+//
+//            Thread.sleep(500);
+//
+//            functions.driveAutonomous(-drivePower, -3500);
+//
+//            dunker.setPosition(0.25);
+//            mineralSpool.setPower(0.5);
+//            Thread.sleep(2000);
+//            mineralSpool.setPower(0.0);
+//            flip.up();
 
-            hanger.setPower(-1.0);
-            Thread.sleep(1500);
-            hanger.setPower(0.0);
-
-            functions.leftShiftAutonomous(shiftPower, 150);
-
-            functions.driveAutonomous(drivePower, 300);
-
-            functions.rightShiftAutonomous(shiftPower, 150);
-
-            functions.driveAutonomous(drivePower, 2300);
-
-            functions.leftTurnAutonomous(turnPower, 515);
-
-            teamMarker.drop();
-
-            Thread.sleep(500);
-
-            functions.driveAutonomous(-drivePower, -3500);
-
-            dunker.setPosition(0.25);
-            mineralSpool.setPower(0.5);
-            Thread.sleep(2000);
-            mineralSpool.setPower(0.0);
-            flip.up();
-
-
-            //Always call idle() at the bottom of your while(opModeIsActive()) loop
-            idle();
-
-            break;
+//            //Always call idle() at the bottom of your while(opModeIsActive()) loop
+//            idle();
+//
+//            break;
         }//Close while opModeIsActive loop
     } //Close "run Opmode" loop
 } //Close class and end program

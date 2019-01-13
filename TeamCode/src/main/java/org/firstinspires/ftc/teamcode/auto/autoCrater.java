@@ -40,33 +40,17 @@ public class autoCrater extends LinearOpMode
     Servo dunker;
     Servo markerDropper;
 
-    TeamMarker teamMarker;
-
-
-
-//    private GoldMineralDetector genericDetector = null;
-
-    //Define possible mineral locations in enum
-    enum location {
-        LEFT, CENTER, RIGHT, UNKNOWN
-    };
-
-    //Create location object to store the mineral location data
-    autoBox.location mineralLocation;
-
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
     float shiftPower = (float) 0.3;
     float turnPower = (float) 0.3;
 
     //Subsystems
+    TeamMarker teamMarker;
     Flip flip;
     Dunk dunk;
     Intake intake;
     Hang hang;
-
-    //claiming teamMarker = new claiming(markerDropper);
-
     //***************************************************************************************************************************
     //MAIN BELOW
     @Override
@@ -86,7 +70,7 @@ public class autoCrater extends LinearOpMode
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
 
         teamMarker = new claiming(markerDropper);
         flip = new mineralFlip(mineralFlipper);
@@ -96,7 +80,7 @@ public class autoCrater extends LinearOpMode
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-        functions.initializeRobotBrake();
+//        functions.initializeRobotBrake();
 
         waitForStart();
 

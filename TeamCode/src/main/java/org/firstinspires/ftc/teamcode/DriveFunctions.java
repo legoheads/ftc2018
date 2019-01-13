@@ -16,6 +16,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 //import com.disnodeteam.dogecv.CameraViewDisplay;
@@ -48,16 +49,30 @@ public class DriveFunctions extends LinearOpMode
      * Initialize all the hardware
      * This creates a data type DriveFunctions to store all the hardware devices
      */
-    public DriveFunctions(DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor hanger)
+    public DriveFunctions(DcMotor.ZeroPowerBehavior type, DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor hanger)
     {
+
+
         //These lines enable us to store the motors, sensors and CDI without having to write them over and over again
         //Initialize DC motors
         this.leftMotorFront = leftMotorFront;
         this.leftMotorBack = leftMotorBack;
         this.rightMotorFront = rightMotorFront;
         this.rightMotorBack = rightMotorBack;
-
         this.hanger = hanger;
+
+        //Reverse some motors and keep others forward
+        leftMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotorBack.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        //Set the drive motors to brake mode to prevent rolling due to chain
+        leftMotorFront.setZeroPowerBehavior(type);
+        leftMotorBack.setZeroPowerBehavior(type);
+        rightMotorFront.setZeroPowerBehavior(type);
+        rightMotorBack.setZeroPowerBehavior(type);
+
     }
 
     /**
@@ -89,12 +104,6 @@ public class DriveFunctions extends LinearOpMode
 //        colorSensorCenter.enableLed(true);
 //        colorSensorRight.enableLed(true);
 
-        //Reverse some motors and keep others forward
-        leftMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotorBack.setDirection(DcMotorSimple.Direction.FORWARD);
-
         //Set the drive motors to brake mode to prevent rolling due to chain
         leftMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftMotorBack.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -105,13 +114,13 @@ public class DriveFunctions extends LinearOpMode
     /**
      * Takes in motor powers for 4 drive motors
      */
-    public void setDriveMotorPowers(float leftFrontPower, float leftBackPower, float rightFrontPower, float rightBackPower)
+    public void setDriveMotorPowers(double leftFrontPower, double leftBackPower, double rightFrontPower, double rightBackPower)
     {
         //Use the entered powers and feed them to the motors
-        leftMotorFront.setPower(leftFrontPower);
-        leftMotorBack.setPower(leftBackPower);
-        rightMotorFront.setPower(rightFrontPower);
-        rightMotorBack.setPower(rightBackPower);
+        leftMotorFront.setPower((float)leftFrontPower);
+        leftMotorBack.setPower((float)leftBackPower);
+        rightMotorFront.setPower((float)rightFrontPower);
+        rightMotorBack.setPower((float)rightBackPower);
     }
 
     /**
@@ -120,14 +129,14 @@ public class DriveFunctions extends LinearOpMode
     public void stopDriving()
     {
         //Set all drive motor powers as zero
-        setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+        setDriveMotorPowers( 0.0,0.0,0.0,0.0);
     }
 
 
     /**
      * If this function is called, turn on the drive motors at the given powers to make it drive forward or backwards
      */
-    public void driveTeleop(float power)
+    public void driveTeleop(double power)
     {
         //Send all the motors in the same direction
         setDriveMotorPowers(power, power, power, power);
@@ -136,7 +145,7 @@ public class DriveFunctions extends LinearOpMode
     /**
      * If this function is called, turn on the drive motors at the given powers, to make it tank turn left
      */
-    public void leftTurnTeleop(float power)
+    public void leftTurnTeleop(double power)
     {
         //Turn the left motors backwards and the right motors forward so that it turns left
         setDriveMotorPowers(power, power, -power, -power);
@@ -145,7 +154,7 @@ public class DriveFunctions extends LinearOpMode
     /**
      * If this function is called, turn on the drive motors at the given powers, to make it tank turn right
      */
-    public void rightTurnTeleop(float power)
+    public void rightTurnTeleop(double power)
     {
         //Turn the right motors backwards and the left motors forward so that it turns right
         setDriveMotorPowers(-power, -power, power, power);
@@ -155,7 +164,7 @@ public class DriveFunctions extends LinearOpMode
      * If this function is called, turn on the drive motors at the
      * given powers, to make it shift in the desired direction
      */
-    public void shiftTeleop(float power)
+    public void shiftTeleop(double power)
     {
         //This sequence of backwards, forwards, forwards, backwards makes the robot shift
         setDriveMotorPowers(-power, power, power, -power);
@@ -179,7 +188,7 @@ public class DriveFunctions extends LinearOpMode
      * Takes in powers for 4 drive motors, as well as 4 encoder distances
      * Allows us to run at the entered power, for the entered distance
      */
-    public void moveDriveMotorsWithEncoders(int leftFrontDegrees, int leftBackDegrees, int rightFrontDegrees, int rightBackDegrees, float leftFrontPower, float leftBackPower, float rightFrontPower, float rightBackPower)
+    public void moveDriveMotorsWithEncoders(int leftFrontDegrees, int leftBackDegrees, int rightFrontDegrees, int rightBackDegrees, double leftFrontPower, double leftBackPower, double rightFrontPower, double rightBackPower)
     {
         //Reset the encoders
         resetEncoders();
@@ -245,7 +254,7 @@ public class DriveFunctions extends LinearOpMode
      * If this function is called, it enables us to run one continuous rotation servo motor for a specific time
      * without affecting the rest of the robot
      */
-    public void crServoTime(CRServo motor, float power, int time)
+    public void crServoTime(CRServo motor, double power, int time)
     {
         //Define an elapsed time variable to count time in milliseconds
         ElapsedTime count = new ElapsedTime();
@@ -297,6 +306,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //Everything in the same direction creates linear driving
         moveDriveMotorsWithEncoders(-degrees, -degrees, -degrees, -degrees, -power, -power, -power, -power);
+        stopDriving();
         Thread.sleep(100);
     }
 
@@ -308,6 +318,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //Left motors backwards and right motors forwards gives us a left turn
         moveDriveMotorsWithEncoders(degrees, degrees, -degrees, -degrees, power, power, -power, -power);
+        stopDriving();
         Thread.sleep(100);
     }
 
@@ -319,6 +330,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //Right motors backwards and left motors forwards gives us a right turn
         moveDriveMotorsWithEncoders(-degrees, -degrees, degrees, degrees, -power, -power, power, power);
+        stopDriving();
         Thread.sleep(100);
     }
 
@@ -330,6 +342,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //This sequence of backwards, forwards, forwards, backwards makes the robot shift left
         moveDriveMotorsWithEncoders(degrees, -degrees, -degrees, degrees, power, -power, -power, power);
+        stopDriving();
         Thread.sleep(100);
     }
 
@@ -341,6 +354,7 @@ public class DriveFunctions extends LinearOpMode
     {
         //This sequence of forwards, backwards, backwards, forwards makes the robot shift right
         moveDriveMotorsWithEncoders(-degrees, degrees, degrees, -degrees, -power, power, power, -power);
+        stopDriving();
         Thread.sleep(100);
     }
 
