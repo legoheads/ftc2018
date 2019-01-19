@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.auto;
 //Import necessary items
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -23,6 +24,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
 
 @Autonomous(name="Auto Crater") //Name the program
+@Disabled
 public class autoCrater extends LinearOpMode
 {
     //Define drive motors

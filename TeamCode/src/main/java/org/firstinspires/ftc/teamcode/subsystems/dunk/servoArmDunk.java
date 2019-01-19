@@ -30,36 +30,36 @@ public class servoArmDunk implements Dunk {
     @Override
     public void dunkWithPause() throws InterruptedException
     {
-        //Use the encoder
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Reset the encoder
-        hanger.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //Use the encoder
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Set up the motor to run to the given position
-        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Set the target position as the value entered
-        hanger.setTargetPosition(-DUNK_DISTANCE);
-
-        //Turn the motor on at the corresponding power
-        hanger.setPower(-DUNK_POWER);
-
-        //Empty while loop while the motor is moving
-        while ((hanger.isBusy())) { }
-
-        //Stop the motor
-        hanger.setPower(0.0);
-
-        //Use the encoder in the future
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        hanger.setPower(-DUNK_POWER);
-        Thread.sleep(500);
-        hanger.setPower(0.0);
+//        //Use the encoder
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        //Reset the encoder
+//        hanger.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        //Use the encoder
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        //Set up the motor to run to the given position
+//        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        //Set the target position as the value entered
+//        hanger.setTargetPosition(-DUNK_DISTANCE);
+//
+//        //Turn the motor on at the corresponding power
+//        hanger.setPower(-DUNK_POWER);
+//
+//        //Empty while loop while the motor is moving
+//        while ((hanger.isBusy())) { }
+//
+//        //Stop the motor
+//        hanger.setPower(0.0);
+//
+//        //Use the encoder in the future
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        hanger.setPower(-DUNK_POWER);
+//        Thread.sleep(500);
+//        hanger.setPower(0.0);
 
         dunker.setPosition(DUNK_POSITION+0.22);
 
@@ -72,38 +72,38 @@ public class servoArmDunk implements Dunk {
     @Override
     public void down() throws InterruptedException
     {
-        //Use the encoder
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Reset the encoder
-        hanger.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //Use the encoder
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Set up the motor to run to the given position
-        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Set the target position as the value entered
-        hanger.setTargetPosition(DUNK_DISTANCE);
-
-        //Turn the motor on at the corresponding power
-        hanger.setPower(DUNK_POWER);
-
-        //Empty while loop while the motor is moving
-        while ((hanger.isBusy())){
-            dunker.setPosition(DOWN_POSTITION);
-        }
-
-        //Stop the motor
-        hanger.setPower(0.0);
-
-        //Use the encoder in the future
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        hanger.setPower(DUNK_POWER);
-        Thread.sleep(2500);
-        hanger.setPower(0.0);
+//        //Use the encoder
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        //Reset the encoder
+//        hanger.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        //Use the encoder
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        //Set up the motor to run to the given position
+//        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        //Set the target position as the value entered
+//        hanger.setTargetPosition(DUNK_DISTANCE);
+//
+//        //Turn the motor on at the corresponding power
+//        hanger.setPower(DUNK_POWER);
+//
+//        //Empty while loop while the motor is moving
+//        while ((hanger.isBusy())){
+//            dunker.setPosition(DOWN_POSTITION);
+//        }
+//
+//        //Stop the motor
+//        hanger.setPower(0.0);
+//
+//        //Use the encoder in the future
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        hanger.setPower(DUNK_POWER);
+//        Thread.sleep(2500);
+//        hanger.setPower(0.0);
 
         dunker.setPosition(DOWN_POSTITION);
     }
@@ -112,40 +112,40 @@ public class servoArmDunk implements Dunk {
     @Override
     public void dunkNoPause() throws InterruptedException
     {
-        //Use the encoder
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//        //Use the encoder
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        //Reset the encoder
+//        hanger.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//
+//        //Use the encoder
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        //Set up the motor to run to the given position
+//        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//
+//        //Set the target position as the value entered
+//        hanger.setTargetPosition(-DUNK_DISTANCE);
+//
+//        //Turn the motor on at the corresponding power
+//        hanger.setPower(-DUNK_POWER);
+//
+//        //Empty while loop while the motor is moving
+//        while ((hanger.isBusy())) {
+////            dunker.setPosition(DUNK_POSITION+0.25);
+////            Thread.sleep(1000);
+////            dunker.setPosition(DUNK_POSITION);
+//        }
 
-        //Reset the encoder
-        hanger.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        //Use the encoder
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Set up the motor to run to the given position
-        hanger.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Set the target position as the value entered
-        hanger.setTargetPosition(-DUNK_DISTANCE);
-
-        //Turn the motor on at the corresponding power
-        hanger.setPower(-DUNK_POWER);
-
-        //Empty while loop while the motor is moving
-        while ((hanger.isBusy())) {
-//            dunker.setPosition(DUNK_POSITION+0.25);
-//            Thread.sleep(1000);
-//            dunker.setPosition(DUNK_POSITION);
-        }
-
-        //Stop the motor
-        hanger.setPower(0.0);
-
-        //Use the encoder in the future
-        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        hanger.setPower(-DUNK_POWER);
-        Thread.sleep(2500);
-        hanger.setPower(0.0);
+//        //Stop the motor
+//        hanger.setPower(0.0);
+//
+//        //Use the encoder in the future
+//        hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+//
+//        hanger.setPower(-DUNK_POWER);
+//        Thread.sleep(2500);
+//        hanger.setPower(0.0);
 
 //        dunker.setPosition(DUNK_POSITION+0.22);
 

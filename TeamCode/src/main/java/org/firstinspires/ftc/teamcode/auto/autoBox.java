@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.auto;
 //import com.disnodeteam.dogecv.CameraViewDisplay;
 //import com.disnodeteam.dogecv.filters.LeviColorFilter;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -29,6 +30,7 @@ import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
 //import org.opencv.core.Point;
 
 @Autonomous(name="Auto Box") //Name the program
+@Disabled
 public class autoBox extends LinearOpMode
 {
     //Define drive motors

@@ -2,6 +2,7 @@
 package org.firstinspires.ftc.teamcode.test_programs;
 
 //Import necessary items
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -9,8 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
-@TeleOp(name="MOS Program") //Name the class
+@Disabled
+@TeleOp(name="test bot") //Name the class
 public class testBotTele extends LinearOpMode
 {
     //Define drive motors

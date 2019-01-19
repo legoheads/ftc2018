@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.*;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 import org.firstinspires.ftc.teamcode.subsystems.hang.*;
 
-@TeleOp(name="Tele Op") //Name the class
+@TeleOp(name="TeleOp") //Name the class
 public class teleMaster extends LinearOpMode {
     //Define drive motors
     DcMotor leftMotorFront;
@@ -75,11 +75,11 @@ public class teleMaster extends LinearOpMode {
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
 
-        dunker.setPosition(0.85);
+//        dunker.setPosition(0.85);
         mineralSpool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         mineralSpool.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         currFlipPos = flipPositions.UP;
-        flip.up();
+//        flip.up();
 
         //Wait for start button to be clicked
         waitForStart();
@@ -91,6 +91,7 @@ public class teleMaster extends LinearOpMode {
             float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
             float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
             float spoolPower = gamepad1.right_stick_y + gamepad2.right_stick_y;
+            telemetry.addData("dunker", dunker.getPosition());
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
             if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -203,7 +204,6 @@ public class teleMaster extends LinearOpMode {
             //Dunk
             if (gamepad2.dpad_up)
             {
-                functions.driveAutonomous((float) 0.5, 25);
                 dunk.dunkNoPause();
             }
             if (gamepad2.dpad_down)
@@ -212,7 +212,6 @@ public class teleMaster extends LinearOpMode {
             }
             if (gamepad2.dpad_left)
             {
-                functions.driveAutonomous((float) 0.5, 25);
                 dunk.dunkWithPause();
             }
 

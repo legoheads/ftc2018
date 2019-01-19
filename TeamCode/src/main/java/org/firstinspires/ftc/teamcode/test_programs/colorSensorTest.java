@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.DriveFunctions;
 
 //@Disabled
 @TeleOp(name="Color Sensor Test") //Name the class
+@Disabled
 public class colorSensorTest extends LinearOpMode
 {
     //Define drive motors
