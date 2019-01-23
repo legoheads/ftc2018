@@ -56,6 +56,12 @@ public interface IIMU {
      */
     double getZVelo();
 
+    double getXPos();
+
+    double getYPos();
+
+    double getZPos();
+
     /**
      * Calibrate the imu and initialize the parameters
      */
