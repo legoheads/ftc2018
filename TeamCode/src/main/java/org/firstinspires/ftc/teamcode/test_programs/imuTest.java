@@ -124,6 +124,8 @@ public class imuTest extends LinearOpMode
         inertialMeasurementUnit.initialize();
         inertialMeasurementUnit.calibrate();
 
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
+
         // Wait until we're told to go
         waitForStart();
 
