@@ -385,7 +385,7 @@ public class DriveFunctions extends LinearOpMode
      * @param colorSensor take in the correct color sensor
      * @return The string "Blue" if we see the color blue, "Red" if we see the color red
      */
-    public String yellowOrWhite(ColorSensor colorSensor)
+    public Boolean isYellow(ColorSensor colorSensor)
     {
         //Define float for hue
         float alpha = colorSensor.alpha();
@@ -394,11 +394,11 @@ public class DriveFunctions extends LinearOpMode
         //If hue is greater than 120, we are looking at yellow so return yellow
         if (alpha > 100) //SOMETHING
         {
-            return "yellow";
+            return true;
         }
 
         //Otherwise return not yellow
-        return "not yellow";
+        return false;
     }
 
     public void hang(float power, int degrees)
@@ -413,9 +413,9 @@ public class DriveFunctions extends LinearOpMode
             motor.setPower(-1.0);
         }
 
-        while (yellowOrWhite(colorSensor).equals("not yellow"))
+        while (!isYellow(colorSensor))
         {
-            motor.setPower(-0.5);
+            motor.setPower(-1.0);
         }
 
         motor.setPower(0.0);

@@ -4,4 +4,5 @@ public interface Hang {
 
     void up() throws InterruptedException;
     void down() throws InterruptedException;
+    void setDunk() throws InterruptedException;
 }

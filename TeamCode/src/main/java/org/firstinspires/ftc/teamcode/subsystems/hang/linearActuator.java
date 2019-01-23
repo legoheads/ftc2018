@@ -5,8 +5,9 @@ import org.firstinspires.ftc.teamcode.DriveFunctions;
 
 public class linearActuator implements Hang{
 
-    private final float HANG_POWER = (float) 0.7;
+    private final float HANG_POWER = (float) 1.0;
     private final int HANG_DISTANCE = 10000;
+    private final int DUNK_DISTANCE = 5385;
 
     private DcMotor hanger;
 
@@ -28,6 +29,11 @@ public class linearActuator implements Hang{
         DriveFunctions.oneMotorEncoder(hanger, -HANG_POWER, -HANG_DISTANCE);
         hanger.setPower(-HANG_POWER);
         Thread.sleep(2500);
+        hanger.setPower(0.0);
+    }
+
+    public void setDunk() throws InterruptedException {
+        DriveFunctions.oneMotorEncoder(hanger, HANG_POWER, DUNK_DISTANCE);
         hanger.setPower(0.0);
     }
 }

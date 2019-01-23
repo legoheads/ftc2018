@@ -80,6 +80,7 @@ public class teleMaster extends LinearOpMode {
         mineralSpool.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         currFlipPos = flipPositions.UP;
 //        flip.up();
+        dunk.down();
 
         //Wait for start button to be clicked
         waitForStart();
@@ -121,15 +122,9 @@ public class teleMaster extends LinearOpMode {
                 functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
             }
 
-            if (gamepad1.a)
-            {
-                hang.down();
-            }
+            if (gamepad1.a) { hang.down(); }
 
-            if (gamepad1.y)
-            {
-                hang.up();
-            }
+            if (gamepad1.y) { hang.up(); }
 
             if (gamepad1.left_bumper || gamepad2.left_bumper)
             {
@@ -212,13 +207,13 @@ public class teleMaster extends LinearOpMode {
             }
             if (gamepad2.dpad_left)
             {
-                dunk.dunkWithPause();
+                hang.setDunk();
             }
-
-            if (gamepad2.dpad_right)
-            {
-                dunker.setPosition(0.85);
-            }
+//
+//            if (gamepad2.dpad_right)
+//            {
+//                dunker.setPosition(0.85);
+//            }
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
