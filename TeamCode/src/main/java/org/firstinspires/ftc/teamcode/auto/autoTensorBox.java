@@ -27,6 +27,8 @@ import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
 import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.*;
 
+import static org.firstinspires.ftc.teamcode.DriveFunctions.oneMotorEncoder;
+
 @Autonomous(name="AutoTensorBox") //Name the program
 public class autoTensorBox extends LinearOpMode {
     //Define drive motors
@@ -97,18 +99,14 @@ public class autoTensorBox extends LinearOpMode {
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
 
+        teamMarker.hold();
+
         waitForStart();
 
         //Code to run once play is pressed
         while(opModeIsActive())
         {
-            teamMarker.hold();
-
-            functions.hang((float) -1.0, -10000);
-
-            hanger.setPower(-1.0);
-            Thread.sleep(2500);
-            hanger.setPower(0.0);
+            hang.down();
 
             goldMineral = tensor.getMineral();
 
@@ -117,6 +115,16 @@ public class autoTensorBox extends LinearOpMode {
             functions.leftShiftAutonomous(shiftPower, 200);
 
             functions.driveAutonomous(drivePower, 300);
+
+            dunk.dunkNoPause();
+
+            oneMotorEncoder(mineralSpool, (float) 1.0, 2000);
+
+            flip.down();
+
+            dunk.down();
+
+            intake.start();
 
             functions.rightShiftAutonomous(shiftPower, 200);
 
@@ -146,8 +154,6 @@ public class autoTensorBox extends LinearOpMode {
                 functions.driveAutonomous(drivePower, 400);
             }
 
-
-
             functions.leftTurnAutonomous(turnPower, 500);
 
             functions.leftShiftAutonomous(shiftPower, 300);
@@ -158,7 +164,6 @@ public class autoTensorBox extends LinearOpMode {
             }
 
             functions.leftTurnAutonomous(turnPower, 400);
-
 
             teamMarker.drop();
 

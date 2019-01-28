@@ -11,9 +11,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
+import org.firstinspires.ftc.teamcode.subsystems.hang.linearActuator;
+import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
+import org.firstinspires.ftc.teamcode.subsystems.intake.intakeMinerals;
+import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.Flip;
+import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
 import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.*;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
+
+import static org.firstinspires.ftc.teamcode.DriveFunctions.oneMotorEncoder;
 
 @Autonomous(name="AutoTensorCrater") //Name the program
 public class autoTensorCrater extends LinearOpMode {
@@ -43,12 +51,15 @@ public class autoTensorCrater extends LinearOpMode {
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
-    private TensorFlow tensor;
+    TensorFlow tensor;
 
-    private TensorFlow.goldMineral goldMineral;
+    TensorFlow.goldMineral goldMineral;
 
-    private Dunk dunk;
-
+    //Subsystems
+    Flip flip;
+    Dunk dunk;
+    Intake intake;
+    Hang hang;
 //***************************************************************************************************************************
     //MAIN BELOW
 
@@ -72,13 +83,13 @@ public class autoTensorCrater extends LinearOpMode {
         teamMarker = new claiming(markerDropper);
         tensor = new twoSampling(telemetry, hardwareMap, vuforia, tfod);
         DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        //Intialize Subsystems
+        flip = new mineralFlip(mineralFlipper);
         dunk = new servoArmDunk(hanger, dunker);
+        intake = new intakeMinerals(spinner, mineralSpool);
+        hang = new linearActuator(hanger);
 
-        //Initializations
-//        functions.initializeRobotBrake();
-
-        //Find Gold Mineral after Initialization but before game starts
-        goldMineral = tensor.getMineral();
+        teamMarker.hold();
 
         waitForStart();
 
@@ -87,16 +98,24 @@ public class autoTensorCrater extends LinearOpMode {
         {
             teamMarker.hold();
 
-            //Drop down
-            functions.hang((float) -1.0, -2500);
+            hang.down();
 
-            hanger.setPower(-1.0);
-            Thread.sleep(1500);
-            hanger.setPower(0.0);
+            //Find Gold Mineral after Initialization but before game starts
+            goldMineral = tensor.getMineral();
 
             functions.leftShiftAutonomous(shiftPower, 200);
 
             functions.driveAutonomous(drivePower, 400);
+
+            dunk.dunkNoPause();
+
+            oneMotorEncoder(mineralSpool, (float) 0.5, 1000);
+
+            flip.down();
+
+            dunk.down();
+
+            intake.start();
 
             if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
             {
