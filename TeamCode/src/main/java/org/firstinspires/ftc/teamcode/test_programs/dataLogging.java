@@ -63,7 +63,7 @@ public class dataLogging extends LinearOpMode
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.

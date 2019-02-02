@@ -63,7 +63,7 @@ public class teleMaster extends LinearOpMode {
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -143,12 +143,6 @@ public class teleMaster extends LinearOpMode {
             if (gamepad1.b)
             {
                 intake.stop();
-            }
-
-            if (gamepad1.x)
-            {
-                mineralSpool.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                mineralSpool.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             if (gamepad2.a)

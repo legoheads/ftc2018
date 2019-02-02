@@ -82,7 +82,7 @@ public class autoTensorCrater extends LinearOpMode {
         //Construct Subsystems
         teamMarker = new claiming(markerDropper);
         tensor = new twoSampling(telemetry, hardwareMap, vuforia, tfod);
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
         //Intialize Subsystems
         flip = new mineralFlip(mineralFlipper);
         dunk = new servoArmDunk(hanger, dunker);
@@ -123,26 +123,28 @@ public class autoTensorCrater extends LinearOpMode {
             }
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
-                functions.leftShiftAutonomous(shiftPower, 100);
+                functions.leftShiftAutonomous(shiftPower, 200);
             }
             if (goldMineral == TensorFlow.goldMineral.CENTER)
             {
-                functions.rightShiftAutonomous(shiftPower, 200);
+                functions.rightShiftAutonomous(shiftPower, 300);
             }
             if (goldMineral == TensorFlow.goldMineral.RIGHT)
             {
-                functions.rightShiftAutonomous(shiftPower, 500);
+                functions.rightShiftAutonomous(shiftPower, 800);
             }
 
-            functions.driveAutonomous(drivePower, 550);
+            functions.driveAutonomous(drivePower, 750);
 
             functions.driveAutonomous(-drivePower, -550);
 
             functions.leftTurnAutonomous(turnPower, 1000);
 
-            functions.driveAutonomous(drivePower, 1150);
+            functions.driveAutonomous(drivePower, 1550);
 
             functions.leftTurnAutonomous(turnPower, 480);
+
+            functions.rightShiftAutonomous(shiftPower, 300);
 
             functions.driveAutonomous(drivePower, 3000);
 

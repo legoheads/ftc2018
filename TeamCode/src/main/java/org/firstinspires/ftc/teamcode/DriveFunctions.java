@@ -33,9 +33,6 @@ public class DriveFunctions extends LinearOpMode
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
 
-    //Define glyph motors
-    DcMotor hanger;
-
     //TFOD Variables
     private static final String VUFORIA_KEY = "Adp/KFX/////AAAAGYMHgTasR0y/o1XMGBLR4bwahfNzuw2DQMMYq7vh4UvYHleflzPtt5rN2kFp7NCyO6Ikkqhj/20qTYc9ex+340/hvC49r4mphdmd6lI/Ip64CbMTB8Vo53jBHlGMkGr0xq/+C0SKL1hRXj5EkXtSe6q9F9T/nAIcg9Jr+OfAcifXPH9UJYG8WmbLlvpqN+QuVA5KQ6ve1USpxYhcimV9xWCBrq5hFk1hGLbeveHrKDG3wYRdwBeYv3Yo5qYTsotfB4CgJT9CX/fDR/0JUL7tE29d1v1eEF/VXCgQP4EPUoDNBtNE6jpKJhtQ8HJ2KjmJnW55f9OqNc6SsULV3bkQ52PY+lPLt1y4muyMrixCT7Lu";
     private VuforiaLocalizer vuforia;
@@ -49,7 +46,7 @@ public class DriveFunctions extends LinearOpMode
      * Initialize all the hardware
      * This creates a data type DriveFunctions to store all the hardware devices
      */
-    public DriveFunctions(DcMotor.ZeroPowerBehavior type, DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, DcMotor hanger)
+    public DriveFunctions(DcMotor.ZeroPowerBehavior type, DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack)
     {
 
 
@@ -59,7 +56,6 @@ public class DriveFunctions extends LinearOpMode
         this.leftMotorBack = leftMotorBack;
         this.rightMotorFront = rightMotorFront;
         this.rightMotorBack = rightMotorBack;
-        this.hanger = hanger;
 
         //Reverse some motors and keep others forward
         leftMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -225,8 +221,9 @@ public class DriveFunctions extends LinearOpMode
     /**
      * If this function is called, it enables us to run one DC motor to a specific distance
      */
-    public static void oneMotorEncoder(DcMotor motor, float power, int degrees)
-    {
+    public static void oneMotorEncoder(DcMotor motor, float power, int degrees) throws InterruptedException {
+        int firstPos, secondPos;
+
         //Use the encoder
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -241,7 +238,18 @@ public class DriveFunctions extends LinearOpMode
 
         //Empty while loop while the motor is moving
         while ((motor.isBusy()))
-        { }
+        {
+            firstPos = motor.getCurrentPosition();
+
+            Thread.sleep(50);
+
+            secondPos = motor.getCurrentPosition();
+
+            if (Math.abs(firstPos - secondPos) < 15)
+            {
+                break;
+            }
+        }
 
         //Stop the motor
         motor.setPower(0.0);
@@ -400,28 +408,6 @@ public class DriveFunctions extends LinearOpMode
         //Otherwise return not yellow
         return false;
     }
-
-    public void hang(float power, int degrees)
-    {
-        oneMotorEncoder(hanger, power, degrees);
-    }
-
-    public void spoolInFully(ColorSensor colorSensor, DcMotor motor)
-    {
-        while (!iSeeAColor(colorSensor))
-        {
-            motor.setPower(-1.0);
-        }
-
-        while (!isYellow(colorSensor))
-        {
-            motor.setPower(-1.0);
-        }
-
-        motor.setPower(0.0);
-    }
-
-
     //Empty main
     @Override
     public void runOpMode() throws InterruptedException

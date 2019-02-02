@@ -86,7 +86,7 @@ public class autoBox extends LinearOpMode
         distanceSensorRight = hardwareMap.get(DistanceSensor.class, "distanceSensorRight");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.

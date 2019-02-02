@@ -33,7 +33,8 @@ public class linearActuator implements Hang{
         hanger.setPower(0.0);
     }
 
-    public void setDunk() throws InterruptedException {
+    public void setDunk() throws InterruptedException
+    {
         oneMotorEncoder(hanger, HANG_POWER, DUNK_DISTANCE);
         hanger.setPower(0.0);
     }

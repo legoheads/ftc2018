@@ -72,7 +72,7 @@ public class autoCrater extends LinearOpMode
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, hanger);
+        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
 
         teamMarker = new claiming(markerDropper);
         flip = new mineralFlip(mineralFlipper);
@@ -90,13 +90,7 @@ public class autoCrater extends LinearOpMode
         while (opModeIsActive())
         {
             teamMarker.hold();
-
-            //Drop down
-            functions.hang((float) -1.0, -2500);
-
-            hanger.setPower(-1.0);
-            Thread.sleep(1500);
-            hanger.setPower(0.0);
+            hang.down();
 
             functions.leftShiftAutonomous(shiftPower, 150);
 
