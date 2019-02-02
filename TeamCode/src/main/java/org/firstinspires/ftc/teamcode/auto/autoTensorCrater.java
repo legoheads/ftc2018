@@ -45,9 +45,9 @@ public class autoTensorCrater extends LinearOpMode {
     ColorSensor colorSensor;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
+    float drivePower = (float) 0.7;
+    float shiftPower = (float) 0.7;
+    float turnPower = (float) 0.7;
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
@@ -98,7 +98,7 @@ public class autoTensorCrater extends LinearOpMode {
         {
             teamMarker.hold();
 
-            hang.down();
+//            hang.down();
 
             //Find Gold Mineral after Initialization but before game starts
             goldMineral = tensor.getMineral();
@@ -144,9 +144,9 @@ public class autoTensorCrater extends LinearOpMode {
 
             functions.leftTurnAutonomous(turnPower, 480);
 
-            functions.rightShiftAutonomous(shiftPower, 300);
+            functions.rightShiftAutonomous(shiftPower, 800);
 
-            functions.driveAutonomous(drivePower, 3000);
+            functions.driveAutonomous(drivePower, 2500);
 
             teamMarker.drop();
 
