@@ -245,7 +245,7 @@ public class DriveFunctions extends LinearOpMode
 
             secondPos = motor.getCurrentPosition();
 
-            if (Math.abs(firstPos - secondPos) < 15)
+            if (Math.abs(firstPos - secondPos) < 5)
             {
                 break;
             }

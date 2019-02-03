@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
@@ -12,6 +13,8 @@ import org.firstinspires.ftc.teamcode.subsystems.intake.*;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.*;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 import org.firstinspires.ftc.teamcode.subsystems.hang.*;
+
+import static org.firstinspires.ftc.teamcode.DriveFunctions.oneMotorEncoder;
 
 @TeleOp(name="TeleOp") //Name the class
 public class teleMaster extends LinearOpMode {
@@ -65,6 +68,8 @@ public class teleMaster extends LinearOpMode {
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
         DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
 
+        mineralSpool.setDirection(DcMotorSimple.Direction.REVERSE);
+
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
 //        functions.initializeRobotFloat();
@@ -82,10 +87,10 @@ public class teleMaster extends LinearOpMode {
 
 //***************************************************************************************************************************
         while (opModeIsActive()) {
-            float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.5);
-            float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.5);
-            float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
-            float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
+            float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
+            float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
+            float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
+            float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
             float spoolPower = gamepad1.right_stick_y + gamepad2.right_stick_y;
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
@@ -118,7 +123,10 @@ public class teleMaster extends LinearOpMode {
 
             if (gamepad1.a) { hang.down(); }
 
-            if (gamepad1.y) { hang.up(); }
+            if (gamepad1.y)
+            {
+                hang.up();
+            }
 
             if (gamepad1.left_bumper || gamepad2.left_bumper)
             {
@@ -159,10 +167,10 @@ public class teleMaster extends LinearOpMode {
                     currFlipPos = flipPositions.UP;
                     while (!functions.iSeeAColor(colorSensor))
                     {
-                        drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.5);
-                        shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.5);
-                        leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
-                        rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
+                        drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
+                        shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
+                        leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
+                        rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
 
                         //Drive if joystick pushed more Y than X on gamepad1 (fast)
                         if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -192,13 +200,15 @@ public class teleMaster extends LinearOpMode {
                             functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
                         }
                         mineralSpool.setPower(-1.0);
+                        Thread.sleep(6000);
+                        break;
                     }
                     while (!functions.isYellow(colorSensor))
                     {
-                        drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.5);
-                        shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.5);
-                        leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
-                        rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
+                        drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
+                        shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
+                        leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
+                        rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
 
                         //Drive if joystick pushed more Y than X on gamepad1 (fast)
                         if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -228,12 +238,15 @@ public class teleMaster extends LinearOpMode {
                             functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
                         }
                         mineralSpool.setPower(-1.0);
+                        Thread.sleep(6000);
+                        break;
                     }
-                    mineralSpool.setPower(0.0);                    flip.flip();
+                    mineralSpool.setPower(0.0);
+                    flip.flip();
                 }
                 else if (currFlipPos == flipPositions.UP)
                 {
-                    functions.oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
+                    oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
                     flip.down();
                     intake.start();
                     currFlipPos=flipPositions.DOWN;

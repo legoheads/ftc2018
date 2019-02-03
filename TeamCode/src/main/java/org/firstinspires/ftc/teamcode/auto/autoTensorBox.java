@@ -8,10 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.DriveFunctions;
@@ -49,13 +47,11 @@ public class autoTensorBox extends LinearOpMode {
     TeamMarker teamMarker;
 
     ColorSensor colorSensor;
-    DistanceSensor distanceSensorLeft;
-    DistanceSensor distanceSensorRight;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.6;
-    float shiftPower = (float) 0.6;
-    float turnPower = (float) 0.6;
+    float drivePower = (float) 0.7;
+    float shiftPower = (float) 0.7;
+    float turnPower = (float) 0.7;
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
@@ -85,8 +81,6 @@ public class autoTensorBox extends LinearOpMode {
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "distanceSensorLeft");
-        distanceSensorRight = hardwareMap.get(DistanceSensor.class, "distanceSensorRight");
 
         //Construct Subsystems
         teamMarker = new claiming(markerDropper);
@@ -99,14 +93,28 @@ public class autoTensorBox extends LinearOpMode {
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
 
-        teamMarker.hold();
+        //Initializations
+        functions.initializeRobotBrake();
 
+//        /** Wait for the game to begin */
+//        telemetry.addData(">", "Press Play to start");
+//        telemetry.update();
+
+        //Find Gold Mineral after Initialization but before game starts
+        mineralSpool.setDirection(DcMotorSimple.Direction.REVERSE);
+
+
+        teamMarker.hold();
         waitForStart();
 
         //Code to run once play is pressed
         while(opModeIsActive())
         {
-            hang.down();
+            teamMarker.hold();
+
+            hanger.setPower(-1.0);
+            Thread.sleep(7000);
+            hanger.setPower(0.0);
 
             goldMineral = tensor.getMineral();
 
@@ -114,17 +122,15 @@ public class autoTensorBox extends LinearOpMode {
 
             functions.leftShiftAutonomous(shiftPower, 200);
 
-            functions.driveAutonomous(drivePower, 300);
+            functions.driveAutonomous(drivePower, 250);
 
             dunk.dunkNoPause();
 
-            oneMotorEncoder(mineralSpool, (float) 1.0, 2000);
+            oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
 
             flip.down();
 
             dunk.down();
-
-            intake.start();
 
             functions.rightShiftAutonomous(shiftPower, 200);
 
@@ -135,10 +141,10 @@ public class autoTensorBox extends LinearOpMode {
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
                 functions.driveAutonomous(drivePower, 300);
-                functions.leftShiftAutonomous(shiftPower, 700);
-                functions.driveAutonomous(drivePower, 1250);
-                functions.rightShiftAutonomous(shiftPower, 700);
-                functions.driveAutonomous(drivePower, 400);
+                functions.leftShiftAutonomous(shiftPower, 850);
+                functions.driveAutonomous(drivePower, 1350);
+                functions.rightShiftAutonomous(shiftPower, 850);
+                functions.driveAutonomous(drivePower, 300);
             }
             if (goldMineral == TensorFlow.goldMineral.CENTER)
             {
@@ -154,38 +160,28 @@ public class autoTensorBox extends LinearOpMode {
                 functions.driveAutonomous(drivePower, 400);
             }
 
-            functions.leftTurnAutonomous(turnPower, 500);
-
-            functions.leftShiftAutonomous(shiftPower, 300);
-
-            while (distanceSensorRight.getDistance(DistanceUnit.INCH) > 8)
-            {
-                functions.shiftTeleop(shiftPower/2);
-            }
-
-            functions.leftTurnAutonomous(turnPower, 400);
+            functions.leftTurnAutonomous(turnPower, 1100);
 
             teamMarker.drop();
 
-            Thread.sleep(500);
-            functions.leftTurnAutonomous(turnPower, 600);
+            functions.leftTurnAutonomous(turnPower, 200);
 
-            functions.leftShiftAutonomous(shiftPower, 400);
+            functions.driveAutonomous(drivePower, 300);
 
-            while (distanceSensorRight.getDistance(DistanceUnit.INCH) > 8)
-            {
-                functions.shiftTeleop(shiftPower/2);
-            }
+            functions.rightShiftAutonomous(shiftPower, 800);
 
-            Thread.sleep(500);
+            functions.driveAutonomous(drivePower, 2700);
 
-            functions.driveAutonomous(drivePower, 3000);
-
-            dunker.setPosition(0.2);
-            mineralSpool.setPower(0.5);
-            Thread.sleep(1500);
-            mineralSpool.setPower(0.0);
             dunk.down();
+
+
+            mineralSpool.setPower(0.5);
+            Thread.sleep(2500);
+            mineralSpool.setPower(0.0);
+
+//            hang.setDunk();
+
+
 
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
