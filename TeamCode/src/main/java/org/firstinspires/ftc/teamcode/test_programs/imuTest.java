@@ -59,6 +59,7 @@ import java.util.Locale;
  *
  * @see <a href="http://www.adafruit.com/products/2472">Adafruit IMU</a>
  */
+//@Disabled
 @TeleOp(name = "imu test")
 public class imuTest extends LinearOpMode
 {
@@ -84,7 +85,7 @@ public class imuTest extends LinearOpMode
 
     // The IMU sensor object
     IIMU inertialMeasurementUnit;
-    BNO055IMU imu;
+    BNO055IMU bosch;
 
     // State used for updating telemetry
     Orientation angles;
@@ -118,13 +119,13 @@ public class imuTest extends LinearOpMode
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        bosch = hardwareMap.get(BNO055IMU.class, "boschIMU");
 
-        inertialMeasurementUnit = new BoschIMU(imu);
+        inertialMeasurementUnit = new BoschIMU(bosch);
         inertialMeasurementUnit.initialize();
         inertialMeasurementUnit.calibrate();
 
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 100);
+        bosch.startAccelerationIntegration(new Position(), new Velocity(), 100);
 
         // Wait until we're told to go
         waitForStart();

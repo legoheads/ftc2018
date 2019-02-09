@@ -1,5 +1,5 @@
 //Run from the package
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.subsystems;
 
 //Import necessary items
 
@@ -7,16 +7,13 @@ import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.teamcode.subsystems.imu.*;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 
 
 //import com.disnodeteam.dogecv.CameraViewDisplay;
@@ -33,6 +30,10 @@ public class DriveFunctions extends LinearOpMode
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
 
+    BNO055IMU boschIMU;
+
+    IIMU imu;
+
     //TFOD Variables
     private static final String VUFORIA_KEY = "Adp/KFX/////AAAAGYMHgTasR0y/o1XMGBLR4bwahfNzuw2DQMMYq7vh4UvYHleflzPtt5rN2kFp7NCyO6Ikkqhj/20qTYc9ex+340/hvC49r4mphdmd6lI/Ip64CbMTB8Vo53jBHlGMkGr0xq/+C0SKL1hRXj5EkXtSe6q9F9T/nAIcg9Jr+OfAcifXPH9UJYG8WmbLlvpqN+QuVA5KQ6ve1USpxYhcimV9xWCBrq5hFk1hGLbeveHrKDG3wYRdwBeYv3Yo5qYTsotfB4CgJT9CX/fDR/0JUL7tE29d1v1eEF/VXCgQP4EPUoDNBtNE6jpKJhtQ8HJ2KjmJnW55f9OqNc6SsULV3bkQ52PY+lPLt1y4muyMrixCT7Lu";
     private VuforiaLocalizer vuforia;
@@ -46,7 +47,7 @@ public class DriveFunctions extends LinearOpMode
      * Initialize all the hardware
      * This creates a data type DriveFunctions to store all the hardware devices
      */
-    public DriveFunctions(DcMotor.ZeroPowerBehavior type, DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack)
+    public DriveFunctions(DcMotor.ZeroPowerBehavior type, DcMotor leftMotorFront, DcMotor rightMotorFront, DcMotor leftMotorBack, DcMotor rightMotorBack, BNO055IMU boschIMU)
     {
 
 
@@ -56,6 +57,8 @@ public class DriveFunctions extends LinearOpMode
         this.leftMotorBack = leftMotorBack;
         this.rightMotorFront = rightMotorFront;
         this.rightMotorBack = rightMotorBack;
+
+        this.boschIMU = boschIMU;
 
         //Reverse some motors and keep others forward
         leftMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -68,6 +71,9 @@ public class DriveFunctions extends LinearOpMode
         leftMotorBack.setZeroPowerBehavior(type);
         rightMotorFront.setZeroPowerBehavior(type);
         rightMotorBack.setZeroPowerBehavior(type);
+
+        imu = new BoschIMU(boschIMU);
+        imu.initialize();
 
     }
 
@@ -241,11 +247,11 @@ public class DriveFunctions extends LinearOpMode
         {
             firstPos = motor.getCurrentPosition();
 
-            Thread.sleep(50);
+            Thread.sleep(75);
 
             secondPos = motor.getCurrentPosition();
 
-            if (Math.abs(firstPos - secondPos) < 5)
+            if (Math.abs(firstPos - secondPos) < 10)
             {
                 break;
             }
@@ -259,54 +265,6 @@ public class DriveFunctions extends LinearOpMode
     }
 
     /**
-     * If this function is called, it enables us to run one continuous rotation servo motor for a specific time
-     * without affecting the rest of the robot
-     */
-    public void crServoTime(CRServo motor, double power, int time)
-    {
-        //Define an elapsed time variable to count time in milliseconds
-        ElapsedTime count = new ElapsedTime();
-
-        //Reset the time counter
-        count.reset();
-
-        //Turn on the continuous rotation servo motor at the given power
-        motor.setPower(power);
-
-        //If the time counter passes the time given, shut off the robot
-        if (count.time() > time)
-        {
-            //Turn off the motor
-            motor.setPower(0.0);
-        }
-    }
-
-    /**
-     * If this function is called, it enables us to run one servo motor for a specific time
-     * without affecting the rest of the robot
-     */
-    public void servoTime(Servo motor, double position1, double position2, int time)
-    {
-        //Define an elapsed time variable to count time in milliseconds
-        ElapsedTime counter = new ElapsedTime();
-
-        //Set the servo motor to the first position entered
-        motor.setPosition(position1);
-
-        //Reset the time counter
-        counter.reset();
-
-        //While the timecounter is less than the entered time, delay
-        if (counter.time() <= time)
-        {
-
-        }
-
-        //After the entered time has elapsed, move the servo to the second position
-        motor.setPosition(position2);
-    }
-
-    /**
      * Drive for the given distance at the given power
      * @param degrees distance
      */
@@ -315,7 +273,8 @@ public class DriveFunctions extends LinearOpMode
         //Everything in the same direction creates linear driving
         moveDriveMotorsWithEncoders(-degrees, -degrees, -degrees, -degrees, -power, -power, -power, -power);
         stopDriving();
-        Thread.sleep(100);
+        Thread.sleep(10);
+        stopDriving();
     }
 
     /**
@@ -327,7 +286,8 @@ public class DriveFunctions extends LinearOpMode
         //Left motors backwards and right motors forwards gives us a left turn
         moveDriveMotorsWithEncoders(degrees, degrees, -degrees, -degrees, power, power, -power, -power);
         stopDriving();
-        Thread.sleep(100);
+        Thread.sleep(10);
+        stopDriving();
     }
 
     /**
@@ -339,8 +299,42 @@ public class DriveFunctions extends LinearOpMode
         //Right motors backwards and left motors forwards gives us a right turn
         moveDriveMotorsWithEncoders(-degrees, -degrees, degrees, degrees, -power, -power, power, power);
         stopDriving();
-        Thread.sleep(100);
+        Thread.sleep(10);
+        stopDriving();
     }
+
+
+    public void rightTurnIMU(float power, int degrees)
+    {
+        double startAngle =  boschIMU.getAngularOrientation().firstAngle;
+        while(boschIMU.getAngularOrientation().firstAngle > startAngle - degrees)
+        {
+            rightTurnTeleop(power);
+        }
+        stopDriving();
+        while (boschIMU.getAngularOrientation().firstAngle < startAngle - degrees)
+        {
+            leftTurnTeleop(0.2);
+        }
+        stopDriving();
+
+    }
+
+    public void leftTurnIMU(float power, int degrees)
+    {
+        double startAngle =  boschIMU.getAngularOrientation().firstAngle;
+        while(boschIMU.getAngularOrientation().firstAngle < startAngle + degrees)
+        {
+            leftTurnTeleop(power);
+        }
+        stopDriving();
+        while (boschIMU.getAngularOrientation().firstAngle > startAngle + degrees)
+        {
+            rightTurnTeleop(0.2);
+        }
+        stopDriving();
+    }
+
 
     /**
      * Shift left for the given distance at the given power
@@ -351,7 +345,8 @@ public class DriveFunctions extends LinearOpMode
         //This sequence of backwards, forwards, forwards, backwards makes the robot shift left
         moveDriveMotorsWithEncoders(degrees, -degrees, -degrees, degrees, power, -power, -power, power);
         stopDriving();
-        Thread.sleep(100);
+        Thread.sleep(10);
+        stopDriving();
     }
 
     /**
@@ -363,7 +358,8 @@ public class DriveFunctions extends LinearOpMode
         //This sequence of forwards, backwards, backwards, forwards makes the robot shift right
         moveDriveMotorsWithEncoders(-degrees, degrees, degrees, -degrees, -power, power, power, -power);
         stopDriving();
-        Thread.sleep(100);
+        Thread.sleep(10);
+        stopDriving();
     }
 
     /**

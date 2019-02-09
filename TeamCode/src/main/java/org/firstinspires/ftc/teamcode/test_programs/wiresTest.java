@@ -5,7 +5,9 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.DriveFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
+
+import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
 @Disabled
 @TeleOp(name="wires test ") //Name the class
@@ -47,13 +49,6 @@ public class wiresTest extends LinearOpMode
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
 
-        //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
-
-        //Set the sensor to active mode
-        //Set the directions and modes of the motors.
-        functions.initializeRobotFloat();
-
         //Wait for start button to be clicked
         waitForStart();
 
@@ -62,43 +57,43 @@ public class wiresTest extends LinearOpMode
         {
             if (gamepad1.y)
             {
-                functions.oneMotorEncoder(leftMotorFront, power, 300);
+                oneMotorEncoder(leftMotorFront, power, 300);
                 telemetry.addData("motor forwards", leftMotorFront);
             }
             if (gamepad1.b)
             {
-                functions.oneMotorEncoder(rightMotorFront, power, 300);
+                oneMotorEncoder(rightMotorFront, power, 300);
                 telemetry.addData("motor forwards", rightMotorFront);
             }
             if (gamepad1.a)
             {
-                functions.oneMotorEncoder(leftMotorBack, power, 300);
+                oneMotorEncoder(leftMotorBack, power, 300);
                 telemetry.addData("motor forwards", leftMotorBack);
             }
             if (gamepad1.x)
             {
-                functions.oneMotorEncoder(rightMotorBack, power, 300);
+                oneMotorEncoder(rightMotorBack, power, 300);
                 telemetry.addData("motor forwards", rightMotorBack);
             }
 
             if (gamepad1.dpad_up)
             {
-                functions.oneMotorEncoder(leftMotorFront, -power, -300);
+                oneMotorEncoder(leftMotorFront, -power, -300);
                 telemetry.addData("motor backwards", leftMotorFront);
             }
             if (gamepad1.dpad_right)
             {
-                functions.oneMotorEncoder(rightMotorFront, -power, -300);
+                oneMotorEncoder(rightMotorFront, -power, -300);
                 telemetry.addData("motor backwards", rightMotorFront);
             }
             if (gamepad1.dpad_down)
             {
-                functions.oneMotorEncoder(leftMotorBack, -power, -300);
+                oneMotorEncoder(leftMotorBack, -power, -300);
                 telemetry.addData("motor backwards", leftMotorBack);
             }
             if (gamepad1.dpad_left)
             {
-                functions.oneMotorEncoder(rightMotorBack, -power, -300);
+                oneMotorEncoder(rightMotorBack, -power, -300);
                 telemetry.addData("motor backwards", rightMotorBack);
             }
 

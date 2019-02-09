@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.teamcode.DriveFunctions;
 
 public class intakeMinerals implements Intake{
 

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.DriveFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
 @Disabled
 @TeleOp(name = "Data Logging Program") //Name the program
@@ -61,13 +61,6 @@ public class dataLogging extends LinearOpMode
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
-
-        //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
-
-        //Set the sensor to active mode
-        //Set the directions and modes of the motors.
-        functions.initializeRobotFloat();
 
         waitForStart();
 

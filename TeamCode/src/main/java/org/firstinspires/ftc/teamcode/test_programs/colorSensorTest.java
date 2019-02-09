@@ -5,13 +5,14 @@ package org.firstinspires.ftc.teamcode.test_programs;
 
 import android.graphics.Color;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import org.firstinspires.ftc.teamcode.DriveFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
 //@Disabled
 @TeleOp(name="Color Sensor Test") //Name the class
@@ -61,17 +62,6 @@ public class colorSensorTest extends LinearOpMode
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
-
-        //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
-
-        //Set the sensor to active mode
-        //Set the directions and modes of the motors.
-//        functions.initializeRobotFloat();
-
-        //Set the sensor to active mode
-        //Set the directions and modes of the motors.
-        functions.initializeRobotFloat();
 
         //Wait for start button to be clicked
         waitForStart();

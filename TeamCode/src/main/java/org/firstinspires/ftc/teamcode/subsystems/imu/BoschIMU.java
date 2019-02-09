@@ -11,7 +11,7 @@ import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 import java.io.File;
 
 /**
- * Created by Sarthak on 8/1/2018.
+ * Created by Rohan on 8/1/2018.
  */
 public class BoschIMU implements IIMU{
 

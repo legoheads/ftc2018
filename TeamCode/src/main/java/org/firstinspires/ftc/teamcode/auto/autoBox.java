@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 //import com.disnodeteam.dogecv.CameraViewDisplay;
 //import com.disnodeteam.dogecv.filters.LeviColorFilter;
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -23,8 +24,7 @@ import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.Flip;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.DriveFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
 //import org.firstinspires.ftc.teamcode.subsystems.threesampling.GoldMineralDetector;
 //import org.opencv.core.Point;
@@ -50,6 +50,8 @@ public class autoBox extends LinearOpMode
 
     DistanceSensor distanceSensorLeft;
     DistanceSensor distanceSensorRight;
+
+    BNO055IMU boschIMU;
 
     //Define drive powers to avoid magic numbers
     float drivePower = (float) 0.3;
@@ -85,8 +87,10 @@ public class autoBox extends LinearOpMode
         distanceSensorLeft = hardwareMap.get(DistanceSensor.class, "distanceSensorLeft");
         distanceSensorRight = hardwareMap.get(DistanceSensor.class, "distanceSensorRight");
 
+        boschIMU = hardwareMap.get(BNO055IMU.class, "boschIMU");
+
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        DriveFunctions chasis = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, boschIMU);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
@@ -110,17 +114,17 @@ public class autoBox extends LinearOpMode
 
                 while (distanceSensorLeft.getDistance(DistanceUnit.INCH) > 5)
                 {
-                    functions.shiftTeleop(shiftPower);
+                    chasis.shiftTeleop(shiftPower);
                 }
             }
             else if (direction.equals("Away"))
             {
                 while (distanceSensorLeft.getDistance(DistanceUnit.INCH) < 5)
                 {
-                    functions.shiftTeleop(shiftPower);
+                    chasis.shiftTeleop(shiftPower);
                 }
             }
-            functions.stopDriving();
+            chasis.stopDriving();
 
 //            teamMarker.hold();
 //

@@ -1,20 +1,20 @@
 package org.firstinspires.ftc.teamcode.tele;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.DriveFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
 import org.firstinspires.ftc.teamcode.subsystems.intake.*;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.*;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 import org.firstinspires.ftc.teamcode.subsystems.hang.*;
 
-import static org.firstinspires.ftc.teamcode.DriveFunctions.oneMotorEncoder;
+import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
 @TeleOp(name="TeleOp") //Name the class
 public class teleMaster extends LinearOpMode {
@@ -34,6 +34,8 @@ public class teleMaster extends LinearOpMode {
     Servo markerDropper;
 
     ColorSensor colorSensor;
+
+    BNO055IMU boschIMU;
 
     enum flipPositions { DOWN, UP }
     flipPositions currFlipPos;
@@ -66,13 +68,14 @@ public class teleMaster extends LinearOpMode {
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.FLOAT, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        boschIMU = hardwareMap.get(BNO055IMU.class, "boschIMU");
 
-        mineralSpool.setDirection(DcMotorSimple.Direction.REVERSE);
+        //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
+        DriveFunctions chasis = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, boschIMU);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-//        functions.initializeRobotFloat();
+        chasis.initializeRobotFloat();
 
         //Intialize Subsystems
         flip = new mineralFlip(mineralFlipper);
@@ -96,29 +99,29 @@ public class teleMaster extends LinearOpMode {
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
             if (Math.abs(drivePower) > Math.abs(shiftPower))
             {
-                functions.driveTeleop(drivePower);
+                chasis.driveTeleop(drivePower);
             }
 
             //Shift if pushed more on X than Y on gamepad1 (fast)
             if (Math.abs(shiftPower) > Math.abs(drivePower))
             {
-                functions.shiftTeleop(shiftPower);
+                chasis.shiftTeleop(shiftPower);
             }
 
             //If the left trigger is pushed on gamepad1, turn left at that power (fast)
             if (leftTurnPower > 0)
             {
-                functions.leftTurnTeleop(leftTurnPower);
+                chasis.leftTurnTeleop(leftTurnPower);
             }
 
             //If the right trigger is pushed on gamepad1, turn right at that power (fast)
             if (rightTurnPower > 0)
-                functions.rightTurnTeleop(rightTurnPower);
+                chasis.rightTurnTeleop(rightTurnPower);
 
             //If the joysticks are not pushed significantly shut off the wheels
             if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
             {
-                functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+                chasis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
             }
 
             if (gamepad1.a) { hang.down(); }
@@ -155,7 +158,7 @@ public class teleMaster extends LinearOpMode {
 
             if (gamepad2.a)
             {
-                functions.setDriveMotorPowers(0.0f, 0.0f, 0.0f, 0.0f);
+                chasis.setDriveMotorPowers(0.0f, 0.0f, 0.0f, 0.0f);
                 if (currFlipPos == flipPositions.DOWN)
                 {
                     intake.reverse();
@@ -163,9 +166,9 @@ public class teleMaster extends LinearOpMode {
                     intake.start();
                     flip.up();
                     intake.stop();
-//                    functions.oneMotorEncoder(mineralSpool, (float) -1.0, -1200);
+//                    chasis.oneMotorEncoder(mineralSpool, (float) -1.0, -1200);
                     currFlipPos = flipPositions.UP;
-                    while (!functions.iSeeAColor(colorSensor))
+                    while (!chasis.iSeeAColor(colorSensor))
                     {
                         drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
                         shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
@@ -175,35 +178,35 @@ public class teleMaster extends LinearOpMode {
                         //Drive if joystick pushed more Y than X on gamepad1 (fast)
                         if (Math.abs(drivePower) > Math.abs(shiftPower))
                         {
-                            functions.driveTeleop(drivePower);
+                            chasis.driveTeleop(drivePower);
                         }
 
                         //Shift if pushed more on X than Y on gamepad1 (fast)
                         if (Math.abs(shiftPower) > Math.abs(drivePower))
                         {
-                            functions.shiftTeleop(shiftPower);
+                            chasis.shiftTeleop(shiftPower);
                         }
 
                         //If the left trigger is pushed on gamepad1, turn left at that power (fast)
                         if (leftTurnPower > 0)
                         {
-                            functions.leftTurnTeleop(leftTurnPower);
+                            chasis.leftTurnTeleop(leftTurnPower);
                         }
 
                         //If the right trigger is pushed on gamepad1, turn right at that power (fast)
                         if (rightTurnPower > 0)
-                            functions.rightTurnTeleop(rightTurnPower);
+                            chasis.rightTurnTeleop(rightTurnPower);
 
                         //If the joysticks are not pushed significantly shut off the wheels
                         if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
                         {
-                            functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+                            chasis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
                         }
                         mineralSpool.setPower(-1.0);
                         Thread.sleep(6000);
                         break;
                     }
-                    while (!functions.isYellow(colorSensor))
+                    while (!chasis.isYellow(colorSensor))
                     {
                         drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
                         shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
@@ -213,29 +216,29 @@ public class teleMaster extends LinearOpMode {
                         //Drive if joystick pushed more Y than X on gamepad1 (fast)
                         if (Math.abs(drivePower) > Math.abs(shiftPower))
                         {
-                            functions.driveTeleop(drivePower);
+                            chasis.driveTeleop(drivePower);
                         }
 
                         //Shift if pushed more on X than Y on gamepad1 (fast)
                         if (Math.abs(shiftPower) > Math.abs(drivePower))
                         {
-                            functions.shiftTeleop(shiftPower);
+                            chasis.shiftTeleop(shiftPower);
                         }
 
                         //If the left trigger is pushed on gamepad1, turn left at that power (fast)
                         if (leftTurnPower > 0)
                         {
-                            functions.leftTurnTeleop(leftTurnPower);
+                            chasis.leftTurnTeleop(leftTurnPower);
                         }
 
                         //If the right trigger is pushed on gamepad1, turn right at that power (fast)
                         if (rightTurnPower > 0)
-                            functions.rightTurnTeleop(rightTurnPower);
+                            chasis.rightTurnTeleop(rightTurnPower);
 
                         //If the joysticks are not pushed significantly shut off the wheels
                         if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
                         {
-                            functions.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+                            chasis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
                         }
                         mineralSpool.setPower(-1.0);
                         Thread.sleep(6000);
@@ -273,10 +276,6 @@ public class teleMaster extends LinearOpMode {
             if (gamepad2.dpad_down)
             {
                 dunk.down();
-            }
-            if (gamepad2.dpad_left)
-            {
-                hang.setDunk();
             }
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

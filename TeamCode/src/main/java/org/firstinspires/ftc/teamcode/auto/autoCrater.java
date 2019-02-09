@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 //Import necessary items
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -14,17 +15,18 @@ import org.firstinspires.ftc.teamcode.subsystems.dunk.Dunk;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.servoArmDunk;
 import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
 import org.firstinspires.ftc.teamcode.subsystems.hang.linearActuator;
+import org.firstinspires.ftc.teamcode.subsystems.imu.BoschIMU;
+import org.firstinspires.ftc.teamcode.subsystems.imu.IIMU;
 import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.intake.intakeMinerals;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.Flip;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
 
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.teamcode.DriveFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
 @Autonomous(name="Auto Crater") //Name the program
-@Disabled
+//@Disabled
 public class autoCrater extends LinearOpMode
 {
     //Define drive motors
@@ -33,26 +35,8 @@ public class autoCrater extends LinearOpMode
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
 
-    //Define glyph motors
-    DcMotor mineralSpool;
-    DcMotor spinner;
-    DcMotor hanger;
-
-    Servo mineralFlipper;
-    Servo dunker;
-    Servo markerDropper;
-
-    //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
-
-    //Subsystems
-    TeamMarker teamMarker;
-    Flip flip;
-    Dunk dunk;
-    Intake intake;
-    Hang hang;
+    BNO055IMU boschIMU;
+    IIMU imu;
     //***************************************************************************************************************************
     //MAIN BELOW
     @Override
@@ -63,71 +47,81 @@ public class autoCrater extends LinearOpMode
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
-        mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
-        spinner = hardwareMap.dcMotor.get("spinner");
-        hanger = hardwareMap.dcMotor.get("hanger");
-
-        mineralFlipper = hardwareMap.servo.get("mineralFlipper");
-        dunker = hardwareMap.servo.get("dunker");
-        markerDropper = hardwareMap.servo.get("markerDropper");
+        boschIMU = hardwareMap.get(BNO055IMU.class, "boschIMU");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions functions = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack);
+        DriveFunctions chasis = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, boschIMU);
 
-        teamMarker = new claiming(markerDropper);
-        flip = new mineralFlip(mineralFlipper);
-        dunk = new servoArmDunk(hanger, dunker);
-        intake = new intakeMinerals(spinner, mineralSpool);
-        hang = new linearActuator(hanger);
+        imu = new BoschIMU(boschIMU);
 
         //Set the sensor to active mode
         //Set the directions and modes of the motors.
-//        functions.initializeRobotBrake();
+//        chasis.initializeRobotBrake();
 
         waitForStart();
 
 //***************************************************************************************************************************
         while (opModeIsActive())
         {
-            teamMarker.hold();
-            hang.down();
 
-            functions.leftShiftAutonomous(shiftPower, 150);
+            chasis.rightTurnIMU((float) 0.6, 90);
 
-            functions.driveAutonomous(drivePower, 950);
+//            Thread.sleep(1000);
+//
+//            chasis.leftTurnIMU((float) 0.6, 90);
 
-            functions.leftTurnAutonomous(turnPower, 950);
 
-            functions.driveAutonomous(drivePower, 1350);
 
-            functions.leftTurnAutonomous(turnPower, 470);
 
-            functions.driveAutonomous(drivePower, 2650);
+//            teamMarker.hold();
+//            hang.down();
+//
+//            chasis.leftShiftAutonomous(shiftPower, 150);
+//
+//            chasis.driveAutonomous(drivePower, 950);
 
-            functions.leftTurnAutonomous(turnPower, 500);
-
-            teamMarker.drop();
-
-            Thread.sleep(500);
-
-            functions.leftTurnAutonomous(turnPower, 1600);
-
-            //Go to Our crater
-            functions.driveAutonomous(drivePower, 1500);
-
-            functions.rightTurnAutonomous(turnPower, 100);
-
-            functions.driveAutonomous(drivePower, 1700);
-
-            dunk.dunkNoPause();
-            mineralSpool.setPower(0.5);
-            Thread.sleep(1000);
-            mineralSpool.setPower(0.0);
-            flip.up();
-            mineralSpool.setPower(0.5);
-            Thread.sleep(2000);
-            mineralSpool.setPower(0.0);
-            dunk.down();
+//            chasis.leftTurnIMU(turnPower, 90);
+//
+////            chasis.leftTurnAutonomous(turnPower, 950);
+//
+//            chasis.driveAutonomous(drivePower, 1350);
+//
+////            chasis.leftTurnAutonomous(turnPower, 470);
+//
+//            chasis.leftTurnIMU(turnPower, 45);
+//
+//            chasis.driveAutonomous(drivePower, 2650);
+//
+////            chasis.leftTurnAutonomous(turnPower, 500);
+//
+//            chasis.leftTurnIMU(turnPower, 45);
+//
+//            teamMarker.drop();
+//
+//            Thread.sleep(500);
+//
+////            chasis.leftTurnAutonomous(turnPower, 1600);
+//
+//            chasis.leftTurnIMU(turnPower, 135);
+//
+//            //Go to Our crater
+//            chasis.driveAutonomous(drivePower, 1500);
+//
+////            chasis.rightTurnAutonomous(turnPower, 100);
+//
+//            chasis.rightTurnIMU(turnPower, 20);
+//
+//            chasis.driveAutonomous(drivePower, 1700);
+//
+//            dunk.dunkNoPause();
+//            mineralSpool.setPower(0.5);
+//            Thread.sleep(1000);
+//            mineralSpool.setPower(0.0);
+//            flip.up();
+//            mineralSpool.setPower(0.5);
+//            Thread.sleep(2000);
+//            mineralSpool.setPower(0.0);
+//            dunk.down();
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
