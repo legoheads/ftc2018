@@ -1,15 +1,22 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-public class intakeMinerals implements Intake{
+import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
-    DcMotor spinner;
+public class intakeMinerals implements Intake
+{
+    CRServo spinner;
     DcMotor spool;
     final double SPIN_POWER = (float) 1.0;
     final float SPOOL_POWER = (float) 1.0;
 
-    public intakeMinerals(DcMotor intakeMotor, DcMotor spoolMotor){spinner = intakeMotor; spool = spoolMotor;}
+    public intakeMinerals(CRServo spinner, DcMotor spool)
+    {
+        this.spinner = spinner;
+        this.spool = spool;
+    }
 
     @Override
     public void start(){ spinner.setPower(SPIN_POWER); }
@@ -21,18 +28,21 @@ public class intakeMinerals implements Intake{
 
 
     @Override
-    public void spoolIn() {
-//        DriveFunctions.oneMotorEncoder(spool, SPOOL_POWER, degrees);
+    public void spoolIn(int degrees) throws InterruptedException
+    {
+        oneMotorEncoder(spool, SPOOL_POWER, degrees);
     }
 
     @Override
-    public void spoolOut() {
-
+    public void spoolOut(int degrees) throws InterruptedException
+    {
+        oneMotorEncoder(spool, -SPOOL_POWER, -degrees);
     }
 
     @Override
-    public void returnSpool() {
-
+    public void returnSpool()
+    {
+        //fill in
     }
 }
 

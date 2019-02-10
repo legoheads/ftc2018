@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -15,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
 import org.firstinspires.ftc.teamcode.subsystems.dunk.Dunk;
-import org.firstinspires.ftc.teamcode.subsystems.dunk.servoArmDunk;
+import org.firstinspires.ftc.teamcode.subsystems.dunk.dunkMinerals;
 import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
 import org.firstinspires.ftc.teamcode.subsystems.hang.linearActuator;
 import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
@@ -28,7 +29,8 @@ import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.*;
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
 @Autonomous(name="AutoTensorBox") //Name the program
-public class autoTensorBox extends LinearOpMode {
+public class autoTensorBox extends LinearOpMode
+{
     //Define drive motors
     DcMotor leftMotorFront;
     DcMotor rightMotorFront;
@@ -37,12 +39,13 @@ public class autoTensorBox extends LinearOpMode {
 
     //Define glyph motors
     DcMotor mineralSpool;
-    DcMotor spinner;
+    DcMotor lifter;
     DcMotor hanger;
 
     Servo mineralFlipper;
     Servo dunker;
     Servo markerDropper;
+    CRServo spinner;
 
     TeamMarker teamMarker;
 
@@ -76,18 +79,22 @@ public class autoTensorBox extends LinearOpMode {
         rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
+
         mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
-        spinner = hardwareMap.dcMotor.get("spinner");
+        spinner = hardwareMap.crservo.get("spinner");
+        lifter = hardwareMap.dcMotor.get("lifter");
         hanger = hardwareMap.dcMotor.get("hanger");
+
         mineralFlipper = hardwareMap.servo.get("mineralFlipper");
         dunker = hardwareMap.servo.get("dunker");
         markerDropper = hardwareMap.servo.get("markerDropper");
+
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
 
         boschIMU = hardwareMap.get(BNO055IMU.class, "boschIMU");
 
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
-        DriveFunctions chasis = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, boschIMU);
+        DriveFunctions chassis = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, boschIMU);
 
         //Construct Subsystems
         teamMarker = new claiming(markerDropper);
@@ -95,20 +102,18 @@ public class autoTensorBox extends LinearOpMode {
 
         //Intialize Subsystems
         flip = new mineralFlip(mineralFlipper);
-        dunk = new servoArmDunk(hanger, dunker);
+        dunk = new dunkMinerals(hanger, dunker);
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
 
         //Initializations
-        chasis.initializeRobotBrake();
+        chassis.initializeRobotBrake();
 
 //        /** Wait for the game to begin */
 //        telemetry.addData(">", "Press Play to start");
 //        telemetry.update();
 
         //Find Gold Mineral after Initialization but before game starts
-        mineralSpool.setDirection(DcMotorSimple.Direction.REVERSE);
-
 
         teamMarker.hold();
         waitForStart();
@@ -124,9 +129,9 @@ public class autoTensorBox extends LinearOpMode {
 
             telemetry.addData("GoldPosition", goldMineral);
 
-            chasis.leftShiftAutonomous(shiftPower, 200);
+            chassis.leftShiftAutonomous(shiftPower, 200);
 
-            chasis.driveAutonomous(drivePower, 250);
+            chassis.driveAutonomous(drivePower, 250);
 
             oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
 
@@ -134,7 +139,7 @@ public class autoTensorBox extends LinearOpMode {
 
             intake.start();
 
-            chasis.rightShiftAutonomous(shiftPower, 200);
+            chassis.rightShiftAutonomous(shiftPower, 200);
 
             if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
             {
@@ -142,41 +147,41 @@ public class autoTensorBox extends LinearOpMode {
             }
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
-                chasis.driveAutonomous(drivePower, 300);
-                chasis.leftShiftAutonomous(shiftPower, 850);
-                chasis.driveAutonomous(drivePower, 1350);
-                chasis.rightShiftAutonomous(shiftPower, 850);
-                chasis.driveAutonomous(drivePower, 300);
+                chassis.driveAutonomous(drivePower, 300);
+                chassis.leftShiftAutonomous(shiftPower, 850);
+                chassis.driveAutonomous(drivePower, 1350);
+                chassis.rightShiftAutonomous(shiftPower, 850);
+                chassis.driveAutonomous(drivePower, 300);
             }
             if (goldMineral == TensorFlow.goldMineral.CENTER)
             {
-                chasis.driveAutonomous(drivePower, 1950);
+                chassis.driveAutonomous(drivePower, 1950);
 
             }
             if (goldMineral == TensorFlow.goldMineral.RIGHT)
             {
-                chasis.driveAutonomous(drivePower, 300);
-                chasis.rightShiftAutonomous(shiftPower, 700);
-                chasis.driveAutonomous(drivePower, 1250);
-                chasis.leftShiftAutonomous(shiftPower, 700);
-                chasis.driveAutonomous(drivePower, 400);
+                chassis.driveAutonomous(drivePower, 300);
+                chassis.rightShiftAutonomous(shiftPower, 700);
+                chassis.driveAutonomous(drivePower, 1250);
+                chassis.leftShiftAutonomous(shiftPower, 700);
+                chassis.driveAutonomous(drivePower, 400);
             }
 
             intake.stop();
 
             oneMotorEncoder(mineralSpool, -(float) 1.0, -800);
 
-            chasis.leftTurnIMU(turnPower, 90);
+            chassis.leftTurnIMU(turnPower, 90);
 
             teamMarker.drop();
 
-            chasis.leftTurnIMU(turnPower, 15);
+            chassis.leftTurnIMU(turnPower, 15);
 
-            chasis.driveAutonomous(drivePower, 300);
+            chassis.driveAutonomous(drivePower, 300);
 
-            chasis.rightShiftAutonomous(shiftPower, 800);
+            chassis.rightShiftAutonomous(shiftPower, 800);
 
-            chasis.driveAutonomous(drivePower, 2700);
+            chassis.driveAutonomous(drivePower, 2700);
 
             oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
 

@@ -5,7 +5,7 @@ public interface Intake {
     void start();
     void stop();
     void reverse();
-    void spoolOut();
-    void spoolIn();
+    void spoolOut(int degrees) throws InterruptedException;
+    void spoolIn(int degrees) throws InterruptedException;
     void returnSpool();
 }
