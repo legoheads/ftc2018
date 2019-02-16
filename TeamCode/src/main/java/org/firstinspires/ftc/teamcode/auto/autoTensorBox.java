@@ -38,13 +38,13 @@ public class autoTensorBox extends LinearOpMode
 
     //Define glyph motors
     DcMotor mineralSpool;
+    DcMotor spinner;
     DcMotor lifter;
     DcMotor hanger;
 
     Servo mineralFlipper;
     Servo dunker;
     Servo markerDropper;
-    CRServo spinner;
 
     TeamMarker teamMarker;
 
@@ -80,7 +80,7 @@ public class autoTensorBox extends LinearOpMode
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
         mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
-        spinner = hardwareMap.crservo.get("spinner");
+        spinner = hardwareMap.dcMotor.get("spinner");
         lifter = hardwareMap.dcMotor.get("lifter");
         hanger = hardwareMap.dcMotor.get("hanger");
 

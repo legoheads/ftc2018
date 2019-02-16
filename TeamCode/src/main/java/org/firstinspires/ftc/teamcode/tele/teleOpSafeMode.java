@@ -16,8 +16,8 @@ import org.firstinspires.ftc.teamcode.subsystems.hang.*;
 
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
-@TeleOp(name="TeleOp") //Name the class
-public class teleMaster extends LinearOpMode {
+@TeleOp(name=" Safe TeleOp") //Name the class
+public class teleOpSafeMode extends LinearOpMode {
     //Define drive motors
     DcMotor leftMotorFront;
     DcMotor rightMotorFront;
@@ -290,13 +290,13 @@ public class teleMaster extends LinearOpMode {
 
             if (Math.abs(liftPower) > 0.1)
             {
+                dunk.hold();
                 lifter.setPower(liftPower);
             }
             if (Math.abs(liftPower) <= 0.1)
             {
                 lifter.setPower(0.0);
             }
-
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();

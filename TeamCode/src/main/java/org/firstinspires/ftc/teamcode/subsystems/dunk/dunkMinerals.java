@@ -16,7 +16,7 @@ public class dunkMinerals implements Dunk {
     //Dunk Servo Variables
     private final double DUNK_POSITION = 0.25;
     private final double DOWN_POSTITION = 0.78;
-    private final double HOLD_POSITION = 0.7;
+    private final double HOLD_POSITION = 0.73;
 
     final float LIFT_POWER = (float) 0.2;
     final int UP_DISTANCE = 5000;
@@ -45,6 +45,14 @@ public class dunkMinerals implements Dunk {
         dunker.setPosition(DOWN_POSTITION);
 //        oneMotorEncoder(lifter, -LIFT_POWER/2, -DOWN_DISTANCE);
     }
+
+    @Override
+    public void hold() throws InterruptedException {
+
+        dunker.setPosition(HOLD_POSITION);
+    }
+
+
 }
 
 

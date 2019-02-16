@@ -5,4 +5,5 @@ public interface Dunk
     //Dunk
     void dunk() throws InterruptedException;
     void down() throws InterruptedException;
+    void hold() throws InterruptedException;
 }

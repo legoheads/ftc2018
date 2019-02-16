@@ -1,21 +1,22 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake;
 
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
 public class intakeMinerals implements Intake
 {
-    CRServo spinner;
+    DcMotor spinner;
     DcMotor spool;
     final double SPIN_POWER = (float) 1.0;
     final float SPOOL_POWER = (float) 1.0;
 
-    public intakeMinerals(CRServo spinner, DcMotor spool)
+    public intakeMinerals(DcMotor spinner, DcMotor spool)
     {
         this.spinner = spinner;
         this.spool = spool;
+        spool.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
