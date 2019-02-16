@@ -106,7 +106,6 @@ public class autoTensorCrater extends LinearOpMode
 
         mineralSpool.setDirection(DcMotorSimple.Direction.REVERSE);
 
-
         teamMarker.hold();
 
         waitForStart();
@@ -114,14 +113,11 @@ public class autoTensorCrater extends LinearOpMode
         //Code to run once play is pressed
         while(opModeIsActive())
         {
-            teamMarker.hold();
+            hang.down();
 
-//            hang.down();
-
-            //Find Gold Mineral after Initialization but before game starts
             goldMineral = tensor.getMineral();
 
-            chassis.leftShiftAutonomous(shiftPower, 200);
+            chassis.rightShiftAutonomous(shiftPower, 200);
 
             chassis.driveAutonomous(drivePower, 500);
 
@@ -131,7 +127,7 @@ public class autoTensorCrater extends LinearOpMode
             }
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
-                chassis.leftShiftAutonomous(shiftPower, 600);
+                chassis.leftShiftAutonomous(shiftPower, 1000);
                 oneMotorEncoder(mineralSpool, (float) 1.0, 800);
                 flip.down();
                 intake.start();
@@ -144,7 +140,7 @@ public class autoTensorCrater extends LinearOpMode
             }
             if (goldMineral == TensorFlow.goldMineral.CENTER)
             {
-                chassis.rightShiftAutonomous(shiftPower, 200);
+                chassis.leftShiftAutonomous(shiftPower, 200);
                 oneMotorEncoder(mineralSpool, (float) 1.0, 800);
                 flip.down();
                 intake.start();
@@ -157,7 +153,7 @@ public class autoTensorCrater extends LinearOpMode
             }
             if (goldMineral == TensorFlow.goldMineral.RIGHT)
             {
-                chassis.rightShiftAutonomous(shiftPower, 1000);
+                chassis.rightShiftAutonomous(shiftPower, 600);
                 oneMotorEncoder(mineralSpool, (float) 1.0, 800);
                 flip.down();
                 intake.start();

@@ -99,7 +99,8 @@ public class teleMaster extends LinearOpMode {
             float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
             float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
             float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
-            float spoolPower = gamepad1.right_stick_y + gamepad2.right_stick_y;
+            float spoolPower = gamepad2.right_stick_y;
+            float liftPower = gamepad1.right_stick_y;
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
             if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -285,6 +286,17 @@ public class teleMaster extends LinearOpMode {
             {
                 dunk.down();
             }
+
+            if (Math.abs(liftPower) > 0.1)
+            {
+                lifter.setPower(liftPower);
+            }
+            if (Math.abs(liftPower) <= 0.1)
+            {
+                lifter.setPower(0.0);
+            }
+
+
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
         }//Close while opModeIsActive loop

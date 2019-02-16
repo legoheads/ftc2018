@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
@@ -121,15 +120,14 @@ public class autoTensorBox extends LinearOpMode
         //Code to run once play is pressed
         while(opModeIsActive())
         {
-            teamMarker.hold();
 
-//            hang.down();
+            hang.down();
 
             goldMineral = tensor.getMineral();
 
             telemetry.addData("GoldPosition", goldMineral);
 
-            chassis.leftShiftAutonomous(shiftPower, 200);
+            chassis.rightShiftAutonomous(shiftPower, 200);
 
             chassis.driveAutonomous(drivePower, 250);
 
@@ -139,7 +137,7 @@ public class autoTensorBox extends LinearOpMode
 
             intake.start();
 
-            chassis.rightShiftAutonomous(shiftPower, 200);
+            chassis.leftShiftAutonomous(shiftPower, 200);
 
             if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
             {
@@ -171,11 +169,9 @@ public class autoTensorBox extends LinearOpMode
 
             oneMotorEncoder(mineralSpool, -(float) 1.0, -800);
 
-            chassis.leftTurnIMU(turnPower, 90);
-
             teamMarker.drop();
 
-            chassis.leftTurnIMU(turnPower, 15);
+            chassis.leftTurnIMU(turnPower, 115);
 
             chassis.driveAutonomous(drivePower, 300);
 
