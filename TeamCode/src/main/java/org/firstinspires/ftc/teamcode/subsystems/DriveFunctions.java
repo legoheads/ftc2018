@@ -34,13 +34,13 @@ public class DriveFunctions extends LinearOpMode
 
     IIMU imu;
 
-    //TFOD Variables
-    private static final String VUFORIA_KEY = "Adp/KFX/////AAAAGYMHgTasR0y/o1XMGBLR4bwahfNzuw2DQMMYq7vh4UvYHleflzPtt5rN2kFp7NCyO6Ikkqhj/20qTYc9ex+340/hvC49r4mphdmd6lI/Ip64CbMTB8Vo53jBHlGMkGr0xq/+C0SKL1hRXj5EkXtSe6q9F9T/nAIcg9Jr+OfAcifXPH9UJYG8WmbLlvpqN+QuVA5KQ6ve1USpxYhcimV9xWCBrq5hFk1hGLbeveHrKDG3wYRdwBeYv3Yo5qYTsotfB4CgJT9CX/fDR/0JUL7tE29d1v1eEF/VXCgQP4EPUoDNBtNE6jpKJhtQ8HJ2KjmJnW55f9OqNc6SsULV3bkQ52PY+lPLt1y4muyMrixCT7Lu";
-    private VuforiaLocalizer vuforia;
-    private TFObjectDetector tfod;
-    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
-    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
-    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
+//    //TFOD Variables
+//    private static final String VUFORIA_KEY = "Adp/KFX/////AAAAGYMHgTasR0y/o1XMGBLR4bwahfNzuw2DQMMYq7vh4UvYHleflzPtt5rN2kFp7NCyO6Ikkqhj/20qTYc9ex+340/hvC49r4mphdmd6lI/Ip64CbMTB8Vo53jBHlGMkGr0xq/+C0SKL1hRXj5EkXtSe6q9F9T/nAIcg9Jr+OfAcifXPH9UJYG8WmbLlvpqN+QuVA5KQ6ve1USpxYhcimV9xWCBrq5hFk1hGLbeveHrKDG3wYRdwBeYv3Yo5qYTsotfB4CgJT9CX/fDR/0JUL7tE29d1v1eEF/VXCgQP4EPUoDNBtNE6jpKJhtQ8HJ2KjmJnW55f9OqNc6SsULV3bkQ52PY+lPLt1y4muyMrixCT7Lu";
+//    private VuforiaLocalizer vuforia;
+//    private TFObjectDetector tfod;
+//    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
+//    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
+//    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
 
 
     /**
@@ -251,7 +251,7 @@ public class DriveFunctions extends LinearOpMode
 
             secondPos = motor.getCurrentPosition();
 
-            if (Math.abs(firstPos - secondPos) < 10)
+            if (Math.abs(firstPos - secondPos) < 3)
             {
                 break;
             }
@@ -268,7 +268,7 @@ public class DriveFunctions extends LinearOpMode
      * Drive for the given distance at the given power
      * @param degrees distance
      */
-    public void driveAutonomous(float power, int degrees) throws InterruptedException
+    public void driveAutonomous(double power, int degrees) throws InterruptedException
     {
         //Everything in the same direction creates linear driving
         moveDriveMotorsWithEncoders(-degrees, -degrees, -degrees, -degrees, -power, -power, -power, -power);
@@ -304,7 +304,7 @@ public class DriveFunctions extends LinearOpMode
     }
 
 
-    public void rightTurnIMU(float power, int degrees)
+    public void rightTurnIMU(double power, int degrees)
     {
         double startAngle =  boschIMU.getAngularOrientation().firstAngle;
         while(boschIMU.getAngularOrientation().firstAngle > startAngle - degrees)
@@ -320,20 +320,44 @@ public class DriveFunctions extends LinearOpMode
 
     }
 
-    public void leftTurnIMU(float power, int degrees)
+    public void  leftTurnIMU(double power, int degrees)
     {
         double startAngle =  boschIMU.getAngularOrientation().firstAngle;
-        while(boschIMU.getAngularOrientation().firstAngle < startAngle + degrees)
-        {
-            leftTurnTeleop(power);
+
+        double target = startAngle + degrees;
+//        double target = degrees;
+
+        if (target >= 180){
+            double diff = target - 180;
+            target = -(180 - diff);
+
+            while(boschIMU.getAngularOrientation().firstAngle > target)
+            {
+
+                leftTurnTeleop(power);
+            }
+
+            while (boschIMU.getAngularOrientation().firstAngle < target)
+            {
+                rightTurnTeleop(0.2);
+            }
         }
-        stopDriving();
-        while (boschIMU.getAngularOrientation().firstAngle > startAngle + degrees)
-        {
-            rightTurnTeleop(0.2);
+        else{
+            while(boschIMU.getAngularOrientation().firstAngle < target)
+            {
+
+                leftTurnTeleop(power);
+            }
+
+            stopDriving();
+            while (boschIMU.getAngularOrientation().firstAngle > target)
+            {
+                rightTurnTeleop(0.2);
+            }
         }
         stopDriving();
     }
+
 
 
     /**

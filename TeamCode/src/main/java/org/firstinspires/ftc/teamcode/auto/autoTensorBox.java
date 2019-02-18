@@ -121,64 +121,85 @@ public class autoTensorBox extends LinearOpMode
         while(opModeIsActive())
         {
 
+            //Drop down
             hang.down();
 
+            //Set goldMineral object to output of getMineral function
             goldMineral = tensor.getMineral();
 
+            //Display gold mineral position
             telemetry.addData("GoldPosition", goldMineral);
 
+            //Shift off lander
             chassis.rightShiftAutonomous(shiftPower, 200);
 
+            //Move forward
             chassis.driveAutonomous(drivePower, 250);
 
-            oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
-
+            //Put intake on ground
             flip.down();
 
+            //Start intake
             intake.start();
 
+            //Center the robot
             chassis.leftShiftAutonomous(shiftPower, 200);
 
+            //Default is RIGHT
             if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
             {
                 goldMineral = TensorFlow.goldMineral.RIGHT;
             }
-            if (goldMineral == TensorFlow.goldMineral.LEFT)
-            {
-                chassis.driveAutonomous(drivePower, 300);
-                chassis.leftShiftAutonomous(shiftPower, 850);
-                chassis.driveAutonomous(drivePower, 1350);
-                chassis.rightShiftAutonomous(shiftPower, 850);
-                chassis.driveAutonomous(drivePower, 300);
-            }
-            if (goldMineral == TensorFlow.goldMineral.CENTER)
-            {
-                chassis.driveAutonomous(drivePower, 1950);
 
-            }
-            if (goldMineral == TensorFlow.goldMineral.RIGHT)
-            {
-                chassis.driveAutonomous(drivePower, 300);
-                chassis.rightShiftAutonomous(shiftPower, 700);
-                chassis.driveAutonomous(drivePower, 1250);
-                chassis.leftShiftAutonomous(shiftPower, 700);
-                chassis.driveAutonomous(drivePower, 400);
+            if (goldMineral == TensorFlow.goldMineral.RIGHT){
+                //Turn to right mineral
+                chassis.rightTurnIMU(0.6, 45);
+                //Move to mineral and intake
+                chassis.driveAutonomous( 0.5, 250);
+                //Move back to starting spot
+                chassis.driveAutonomous( -0.5, -250);
+                //Become parallel with lander
+                chassis.leftTurnIMU(0.6, 135);
             }
 
-            intake.stop();
+            if (goldMineral == TensorFlow.goldMineral.LEFT){
+                //Turn to left mineral
+                chassis.leftTurnIMU(0.6, 45);
 
-            oneMotorEncoder(mineralSpool, -(float) 1.0, -800);
+                //Move forward and intake
+                chassis.driveAutonomous( 0.5, 250);
 
+                //Move back to starting spot
+                chassis.driveAutonomous( -0.5, -250);
+
+                //Become parallel with lander
+                chassis.leftTurnIMU(0.6, 45);
+            }
+            if (goldMineral == TensorFlow.goldMineral.CENTER){
+                //Move forward and intake gold
+                chassis.driveAutonomous( 0.5, 250);
+                //Move back to starting spot
+                chassis.driveAutonomous( -0.5, -250);
+                //Become parallel with lander
+                chassis.leftTurnIMU(0.6, 90);
+            }
+
+            //Move forward towards the wall
+            chassis.driveAutonomous(drivePower, 1300);
+
+            //Become parallel with wall facing crater
+            chassis.leftTurnIMU(0.6, 45);
+
+            //Back into depot
+            chassis.driveAutonomous(-drivePower, -1000);
+
+            //Drop team marker
             teamMarker.drop();
 
-            chassis.leftTurnIMU(turnPower, 115);
-
-            chassis.driveAutonomous(drivePower, 300);
-
-            chassis.rightShiftAutonomous(shiftPower, 800);
-
+            //Drive to crater
             chassis.driveAutonomous(drivePower, 2700);
 
+            //Spool out into crater
             oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
