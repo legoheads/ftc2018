@@ -445,7 +445,9 @@ public class DriveFunctions extends LinearOpMode
     /**
      * If this function is called, it enables us to run one DC motor to a specific distance
      */
-    public static void oneMotorEncoder(DcMotor motor, float power, int degrees) throws InterruptedException {
+    public static void oneMotorEncoder(DcMotor motor, float power, int degrees) throws InterruptedException
+    {
+        int firstPos, secondPos;
 
         //Use the encoder
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -462,7 +464,14 @@ public class DriveFunctions extends LinearOpMode
         //Empty while loop while the motor is moving
         while ((motor.isBusy()))
         {
+            firstPos = motor.getCurrentPosition();
+            Thread.sleep(75);
+            secondPos = motor.getCurrentPosition();
 
+            if (Math.abs(firstPos - secondPos) < 5)
+            {
+                break;
+            }
         }
 
         //Stop the motor
