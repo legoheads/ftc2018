@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.tele;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.hang.*;
 
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
+@Disabled
 @TeleOp(name=" Safe TeleOp") //Name the class
 public class teleOpSafeMode extends LinearOpMode {
     //Define drive motors
@@ -89,7 +91,7 @@ public class teleOpSafeMode extends LinearOpMode {
         hang = new linearActuator(hanger);
 
         currFlipPos = flipPositions.UP;
-        dunk.down();
+        dunk.dunkDown();
 
         //Wait for start button to be clicked
         waitForStart();
@@ -285,12 +287,12 @@ public class teleOpSafeMode extends LinearOpMode {
             }
             if (gamepad1.dpad_down || gamepad2.dpad_down)
             {
-                dunk.down();
+                dunk.dunkDown();
             }
 
             if (Math.abs(liftPower) > 0.1)
             {
-                dunk.hold();
+                dunk.dunkHold();
                 lifter.setPower(liftPower);
             }
             if (Math.abs(liftPower) <= 0.1)

@@ -115,6 +115,7 @@ public class autoTensorBox extends LinearOpMode
         //Find Gold Mineral after Initialization but before game starts
 
         teamMarker.hold();
+
         waitForStart();
 
         //Code to run once play is pressed

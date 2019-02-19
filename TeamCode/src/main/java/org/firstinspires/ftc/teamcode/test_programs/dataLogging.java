@@ -6,11 +6,11 @@ package org.firstinspires.ftc.teamcode.test_programs;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
-@Disabled
 @TeleOp(name = "Data Logging Program") //Name the program
 public class dataLogging extends LinearOpMode
 {
@@ -22,6 +22,7 @@ public class dataLogging extends LinearOpMode
 
     //Define glyph motors
     DcMotor mineralSpool;
+    DcMotor lifter;
     DcMotor spinner;
     DcMotor hanger;
 
@@ -29,22 +30,7 @@ public class dataLogging extends LinearOpMode
     Servo dunker;
     Servo markerDropper;
 
-//    private GoldMineralDetector genericDetector = null;
-
-    //Define possible mineral locations in enum
-    enum location {
-        LEFT, CENTER, RIGHT, UNKNOWN
-    };
-
-    //Create goldPos object to store the mineral goldPos data
-//    autoBox.goldPos mineralLocation;
-
-    //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
-
-    //***************************************************************************************************************************
+//***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException
@@ -55,6 +41,7 @@ public class dataLogging extends LinearOpMode
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
         mineralSpool = hardwareMap.dcMotor.get("mineralSpool");
+        lifter = hardwareMap.dcMotor.get("lifter");
         spinner = hardwareMap.dcMotor.get("spinner");
         hanger = hardwareMap.dcMotor.get("hanger");
 
@@ -77,12 +64,16 @@ public class dataLogging extends LinearOpMode
                 leftMotorBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightMotorFront.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 rightMotorBack.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                hanger.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                lifter.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
                 //Use the encoders
                 leftMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 leftMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightMotorFront.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 rightMotorBack.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                hanger.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             //Show all the encoder values on the driver station
@@ -90,6 +81,8 @@ public class dataLogging extends LinearOpMode
             telemetry.addData("left back", leftMotorBack.getCurrentPosition());
             telemetry.addData("right front", rightMotorFront.getCurrentPosition());
             telemetry.addData("right back", rightMotorBack.getCurrentPosition());
+            telemetry.addData("hanger", hanger.getCurrentPosition());
+            telemetry.addData("lifter", lifter.getCurrentPosition());
 
             //Update the data if/when it changes
             telemetry.update();

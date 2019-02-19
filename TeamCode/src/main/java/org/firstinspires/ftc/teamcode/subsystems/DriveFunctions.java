@@ -225,46 +225,6 @@ public class DriveFunctions extends LinearOpMode
     }
 
     /**
-     * If this function is called, it enables us to run one DC motor to a specific distance
-     */
-    public static void oneMotorEncoder(DcMotor motor, float power, int degrees) throws InterruptedException {
-        int firstPos, secondPos;
-
-        //Use the encoder
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //Set up the motor to run to the given position
-        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Set the target position as the value entered
-        motor.setTargetPosition(motor.getCurrentPosition() + degrees);
-
-        //Turn the motor on at the corresponding power
-        motor.setPower(power);
-
-        //Empty while loop while the motor is moving
-        while ((motor.isBusy()))
-        {
-            firstPos = motor.getCurrentPosition();
-
-            Thread.sleep(75);
-
-            secondPos = motor.getCurrentPosition();
-
-            if (Math.abs(firstPos - secondPos) < 3)
-            {
-                break;
-            }
-        }
-
-        //Stop the motor
-        motor.setPower(0.0);
-
-        //Use the encoder in the future
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    }
-
-    /**
      * Drive for the given distance at the given power
      * @param degrees distance
      */
@@ -427,6 +387,89 @@ public class DriveFunctions extends LinearOpMode
 
         //Otherwise return not yellow
         return false;
+    }
+
+    public void chassisTeleOp()
+    {
+        float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
+        float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
+        float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
+        float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
+
+        //Drive if joystick pushed more Y than X on gamepad1 (fast)
+        if (Math.abs(drivePower) > Math.abs(shiftPower))
+        {
+            driveTeleop(drivePower);
+        }
+
+        //Shift if pushed more on X than Y on gamepad1 (fast)
+        if (Math.abs(shiftPower) > Math.abs(drivePower))
+        {
+            shiftTeleop(shiftPower);
+        }
+
+        //If the left trigger is pushed on gamepad1, turn left at that power (fast)
+        if (leftTurnPower > 0)
+        {
+            leftTurnTeleop(leftTurnPower);
+        }
+
+        //If the right trigger is pushed on gamepad1, turn right at that power (fast)
+        if (rightTurnPower > 0)
+        {
+            rightTurnTeleop(rightTurnPower);
+        }
+
+        //If the joysticks are not pushed significantly shut off the wheels
+        if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
+        {
+            setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+        }
+    }
+
+    public void spoolInFully(DcMotor mineralSpool, ColorSensor colorSensor)
+    {
+        while (!iSeeAColor(colorSensor))
+        {
+            chassisTeleOp();
+            mineralSpool.setPower(-1.0);
+        }
+        while (!isYellow(colorSensor))
+        {
+            chassisTeleOp();
+            mineralSpool.setPower(-1.0);
+        }
+        mineralSpool.setPower(0.0);
+    }
+
+    /**
+     * If this function is called, it enables us to run one DC motor to a specific distance
+     */
+    public static void oneMotorEncoder(DcMotor motor, float power, int degrees) throws InterruptedException {
+
+        //Use the encoder
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //Set up the motor to run to the given position
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Set the target position as the value entered
+        motor.setTargetPosition(motor.getCurrentPosition() + degrees);
+
+        //Turn the motor on at the corresponding power
+        motor.setPower(power);
+
+        //Empty while loop while the motor is moving
+        while ((motor.isBusy()))
+        {
+
+        }
+
+        //Stop the motor
+        motor.setPower(0.0);
+
+        //Use the encoder in the future
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
     //Empty main
     @Override

@@ -61,6 +61,7 @@ import java.util.Locale;
  */
 //@Disabled
 @TeleOp(name = "imu test")
+@Disabled
 public class imuTest extends LinearOpMode
 {
 

@@ -16,7 +16,6 @@ import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
 //@Disabled
 @TeleOp(name="Color Sensor Test") //Name the class
-@Disabled
 public class colorSensorTest extends LinearOpMode
 {
     //Define drive motors
@@ -37,11 +36,6 @@ public class colorSensorTest extends LinearOpMode
     ColorSensor colorSensor;
 
     float hsvValues[] = {0F, 0F, 0F};
-
-    //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.3;
-    float shiftPower = (float) 0.3;
-    float turnPower = (float) 0.3;
 
     //***************************************************************************************************************************
     //MAIN BELOW

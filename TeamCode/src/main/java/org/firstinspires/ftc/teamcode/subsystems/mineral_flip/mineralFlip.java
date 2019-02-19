@@ -4,25 +4,31 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class mineralFlip implements Flip {
 
-    Servo flip;
+    Servo mineralFlip;
 
-    final double UP_POSITION = 0.4;
+    final double UP_POSITION = 0.55;
     final double DOWN_POSITION = 0.75;
-    final double FLIP_POSITION = 0.3;
+    final double FLIP_POSITION = 0.2;
 
-    public mineralFlip(Servo mineralFlip) { this.flip = mineralFlip; }
+    public mineralFlip(Servo mineralFlip)
+    {
+        this.mineralFlip = mineralFlip; }
 
     @Override
-    public void up() throws InterruptedException {
-        flip.setPosition(UP_POSITION);
-        Thread.sleep(500);
+    public void up() throws InterruptedException
+    {
+        mineralFlip.setPosition(UP_POSITION);
     }
 
     @Override
-    public void down(){ flip.setPosition(DOWN_POSITION); }
+    public void down()
+    {
+        mineralFlip.setPosition(DOWN_POSITION);
+    }
 
     @Override
-    public void flip() {
-        flip.setPosition(FLIP_POSITION);
+    public void flip()
+    {
+        mineralFlip.setPosition(FLIP_POSITION);
     }
 }

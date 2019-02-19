@@ -8,19 +8,19 @@ import org.firstinspires.ftc.teamcode.subsystems.hang.linearActuator;
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
 
-public class dunkMinerals implements Dunk {
-
+public class dunkMinerals implements Dunk
+{
     private DcMotor lifter;
     private Servo dunker;
 
     //Dunk Servo Variables
-    private final double DUNK_POSITION = 0.25;
+    private final double DUNK_POSITION = 0.22;
     private final double DOWN_POSTITION = 0.78;
-    private final double HOLD_POSITION = 0.73;
+    private final double HOLD_POSITION = 0.68;
 
-    final float LIFT_POWER = (float) 0.2;
-    final int UP_DISTANCE = 5000;
-    final int DOWN_DISTANCE = 4000;
+    final float LIFT_POWER = (float) 1.0;
+    final int UP_DISTANCE = 4450;
+    final int DOWN_DISTANCE = 4400;
 
     public dunkMinerals(DcMotor lifter, Servo dunker)
     {
@@ -31,28 +31,35 @@ public class dunkMinerals implements Dunk {
 
     //Dunk
     @Override
-    public void dunk() throws InterruptedException
+    public void dunk()
     {
-//        dunker.setPosition(HOLD_POSITION);
-//        oneMotorEncoder(lifter, LIFT_POWER, UP_DISTANCE);
         dunker.setPosition(DUNK_POSITION);
     }
 
-    //Dunk return
     @Override
-    public void down() throws InterruptedException
+    public void dunkDown()
     {
         dunker.setPosition(DOWN_POSTITION);
-//        oneMotorEncoder(lifter, -LIFT_POWER/2, -DOWN_DISTANCE);
     }
 
     @Override
-    public void hold() throws InterruptedException {
-
+    public void dunkHold()
+    {
         dunker.setPosition(HOLD_POSITION);
     }
 
+    @Override
+    public void liftUp() throws InterruptedException
+    {
+        dunkHold();
+        oneMotorEncoder(lifter, LIFT_POWER, UP_DISTANCE);
+    }
 
+    @Override
+    public void liftDown() throws InterruptedException
+    {
+        oneMotorEncoder(lifter, -LIFT_POWER/2, -DOWN_DISTANCE);
+    }
 }
 
 

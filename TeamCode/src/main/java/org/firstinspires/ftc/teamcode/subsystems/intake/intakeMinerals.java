@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.intake;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
@@ -8,14 +9,15 @@ import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorE
 public class intakeMinerals implements Intake
 {
     DcMotor spinner;
-    DcMotor spool;
+    DcMotor mineralSpool;
+
     final double SPIN_POWER = (float) 1.0;
     final float SPOOL_POWER = (float) 1.0;
 
     public intakeMinerals(DcMotor spinner, DcMotor spool)
     {
         this.spinner = spinner;
-        this.spool = spool;
+        this.mineralSpool = spool;
         spool.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
@@ -31,17 +33,17 @@ public class intakeMinerals implements Intake
     @Override
     public void spoolIn(int degrees) throws InterruptedException
     {
-        oneMotorEncoder(spool, SPOOL_POWER, degrees);
+        oneMotorEncoder(mineralSpool, SPOOL_POWER, degrees);
     }
 
     @Override
     public void spoolOut(int degrees) throws InterruptedException
     {
-        oneMotorEncoder(spool, -SPOOL_POWER, -degrees);
+        oneMotorEncoder(mineralSpool, -SPOOL_POWER, -degrees);
     }
 
     @Override
-    public void returnSpool()
+    public void spoolInFully()
     {
         //fill in
     }

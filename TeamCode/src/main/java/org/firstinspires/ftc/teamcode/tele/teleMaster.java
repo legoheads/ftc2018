@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
@@ -88,8 +89,10 @@ public class teleMaster extends LinearOpMode {
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
 
+        lifter.setDirection(DcMotorSimple.Direction.REVERSE);
+
         currFlipPos = flipPositions.UP;
-        dunk.down();
+        dunk.dunkDown();
 
         //Wait for start button to be clicked
         waitForStart();
@@ -176,7 +179,6 @@ public class teleMaster extends LinearOpMode {
                     intake.start();
                     flip.up();
                     intake.stop();
-//                    chassis.oneMotorEncoder(mineralSpool, (float) -1.0, -1200);
                     currFlipPos = flipPositions.UP;
                     while (!chassis.iSeeAColor(colorSensor))
                     {
@@ -213,8 +215,6 @@ public class teleMaster extends LinearOpMode {
                             chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
                         }
                         mineralSpool.setPower(-1.0);
-                        Thread.sleep(6000);
-                        break;
                     }
                     while (!chassis.isYellow(colorSensor))
                     {
@@ -251,11 +251,69 @@ public class teleMaster extends LinearOpMode {
                             chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
                         }
                         mineralSpool.setPower(-1.0);
-                        Thread.sleep(6000);
-                        break;
                     }
                     mineralSpool.setPower(0.0);
                     flip.flip();
+                    Thread.sleep(600);
+                    flip.down();
+
+                    dunk.dunkHold();
+
+                    Thread.sleep(200);
+                    //Use the encoder
+                    lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                    //Set up the motor to run to the given position
+                    lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                    //Set the target position as the value entered
+                    lifter.setTargetPosition(lifter.getCurrentPosition() + 4450);
+
+                    //Turn the motor on at the corresponding power
+                    lifter.setPower(1.0);
+
+                    //Empty while loop while the motor is moving
+                    while ((lifter.isBusy()))
+                    {
+                        drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
+                        shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
+                        leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
+                        rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
+
+                        //Drive if joystick pushed more Y than X on gamepad1 (fast)
+                        if (Math.abs(drivePower) > Math.abs(shiftPower))
+                        {
+                            chassis.driveTeleop(drivePower);
+                        }
+
+                        //Shift if pushed more on X than Y on gamepad1 (fast)
+                        if (Math.abs(shiftPower) > Math.abs(drivePower))
+                        {
+                            chassis.shiftTeleop(shiftPower);
+                        }
+
+                        //If the left trigger is pushed on gamepad1, turn left at that power (fast)
+                        if (leftTurnPower > 0)
+                        {
+                            chassis.leftTurnTeleop(leftTurnPower);
+                        }
+
+                        //If the right trigger is pushed on gamepad1, turn right at that power (fast)
+                        if (rightTurnPower > 0)
+                            chassis.rightTurnTeleop(rightTurnPower);
+
+                        //If the joysticks are not pushed significantly shut off the wheels
+                        if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
+                        {
+                            chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+                        }
+                    }
+
+                    //Stop the motor
+                    lifter.setPower(0.0);
+
+                    //Use the encoder in the future
+                    lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
                 }
                 else if (currFlipPos == flipPositions.UP)
                 {
@@ -279,24 +337,82 @@ public class teleMaster extends LinearOpMode {
                 flip.flip();
             }
             //Dunk
-            if (gamepad1.dpad_up || gamepad2.dpad_up)
+            if (gamepad2.dpad_up)
             {
                 dunk.dunk();
+                Thread.sleep(2000);
+
+                dunk.dunkDown();
+
+                //Use the encoder
+                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+                //Set up the motor to run to the given position
+                lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+                //Set the target position as the value entered
+                lifter.setTargetPosition(lifter.getCurrentPosition() - 4400);
+
+                //Turn the motor on at the corresponding power
+                lifter.setPower(-0.5);
+
+                //Empty while loop while the motor is moving
+                while ((lifter.isBusy()))
+                {
+                    drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
+                    shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
+                    leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
+                    rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
+
+                    //Drive if joystick pushed more Y than X on gamepad1 (fast)
+                    if (Math.abs(drivePower) > Math.abs(shiftPower))
+                    {
+                        chassis.driveTeleop(drivePower);
+                    }
+
+                    //Shift if pushed more on X than Y on gamepad1 (fast)
+                    if (Math.abs(shiftPower) > Math.abs(drivePower))
+                    {
+                        chassis.shiftTeleop(shiftPower);
+                    }
+
+                    //If the left trigger is pushed on gamepad1, turn left at that power (fast)
+                    if (leftTurnPower > 0)
+                    {
+                        chassis.leftTurnTeleop(leftTurnPower);
+                    }
+
+                    //If the right trigger is pushed on gamepad1, turn right at that power (fast)
+                    if (rightTurnPower > 0)
+                        chassis.rightTurnTeleop(rightTurnPower);
+
+                    //If the joysticks are not pushed significantly shut off the wheels
+                    if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
+                    {
+                        chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+                    }
+                }
+
+                //Stop the motor
+                lifter.setPower(0.0);
+
+                //Use the encoder in the future
+                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
-            if (gamepad1.dpad_down || gamepad2.dpad_down)
+            if (gamepad2.dpad_down)
             {
-                dunk.down();
+                dunk.dunkDown();
             }
 
             if (Math.abs(liftPower) > 0.1)
             {
+                dunk.dunkHold();
                 lifter.setPower(liftPower);
             }
             if (Math.abs(liftPower) <= 0.1)
             {
                 lifter.setPower(0.0);
             }
-
 
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
