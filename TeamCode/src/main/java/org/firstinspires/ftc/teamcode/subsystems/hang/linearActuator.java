@@ -24,5 +24,7 @@ public class linearActuator implements Hang{
     public void down() throws InterruptedException
     {
         oneMotorEncoder(hanger, -HANG_POWER, -HANG_DISTANCE);
+
+
     }
 }

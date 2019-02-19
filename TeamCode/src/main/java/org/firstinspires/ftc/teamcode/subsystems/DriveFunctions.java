@@ -318,6 +318,23 @@ public class DriveFunctions extends LinearOpMode
         stopDriving();
     }
 
+    public void pidIMULeft(int target, float power)
+    {
+        double startAngle = boschIMU.getAngularOrientation().firstAngle;
+            while(boschIMU.getAngularOrientation().firstAngle < target)
+            {
+
+                leftTurnTeleop(power);
+            }
+
+            stopDriving();
+            while (boschIMU.getAngularOrientation().firstAngle > target)
+            {
+                rightTurnTeleop(0.2);
+            }
+        stopDriving();
+    }
+
 
 
     /**
