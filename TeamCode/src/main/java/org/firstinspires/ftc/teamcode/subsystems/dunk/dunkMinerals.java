@@ -58,7 +58,7 @@ public class dunkMinerals implements Dunk
     @Override
     public void liftDown() throws InterruptedException
     {
-        oneMotorEncoder(lifter, -LIFT_POWER/2, -DOWN_DISTANCE);
+        oneMotorEncoder(lifter, -LIFT_POWER, -DOWN_DISTANCE);
     }
 }
 

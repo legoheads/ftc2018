@@ -172,6 +172,13 @@ public class DriveFunctions extends LinearOpMode
         setDriveMotorPowers(-power, power, power, -power);
     }
 
+    public void coeffShiftTeleop(double power)
+    {
+        double leftPower = 0.8 * power;
+        double rightPower = power;
+        setDriveMotorPowers(-leftPower, leftPower, rightPower, -rightPower);
+    }
+
     public void resetEncoders()
     {
         //Reset the encoders
@@ -250,6 +257,13 @@ public class DriveFunctions extends LinearOpMode
         stopDriving();
     }
 
+    public void encoderCoeffLeftTurn(float power, int degrees) throws InterruptedException
+    {
+        double factor = 21.7;
+        int newDegrees = (int) factor * degrees;
+        leftTurnAutonomous(power, newDegrees);
+    }
+
     /**
      * Turn right for the given distance at the given power
      * @param degrees distance
@@ -263,78 +277,79 @@ public class DriveFunctions extends LinearOpMode
         stopDriving();
     }
 
-
-    public void rightTurnIMU(double power, int degrees)
+    public void encoderCoeffRightTurn(float power, int degrees) throws InterruptedException
     {
-        double startAngle =  boschIMU.getAngularOrientation().firstAngle;
-        while(boschIMU.getAngularOrientation().firstAngle > startAngle - degrees)
+        double factor = 21.7;
+        int newDegrees = (int) factor * degrees;
+        rightTurnAutonomous(power, newDegrees);
+    }
+
+
+    public void rightTurnIMU(double power, int target)
+    {
+        while(boschIMU.getAngularOrientation().firstAngle > target)
         {
             rightTurnTeleop(power);
         }
         stopDriving();
-        while (boschIMU.getAngularOrientation().firstAngle < startAngle - degrees)
+        while (boschIMU.getAngularOrientation().firstAngle < target)
         {
-            leftTurnTeleop(0.2);
+            leftTurnTeleop(0.15);
         }
         stopDriving();
 
     }
 
-    public void  leftTurnIMU(double power, int degrees)
+    public void  leftTurnIMU(double power, int target)
     {
-        double startAngle =  boschIMU.getAngularOrientation().firstAngle;
-
-        double target = startAngle + degrees;
-//        double target = degrees;
-
-        if (target >= 180){
-            double diff = target - 180;
-            target = -(180 - diff);
-
-            while(boschIMU.getAngularOrientation().firstAngle > target)
-            {
-
-                leftTurnTeleop(power);
-            }
-
-            while (boschIMU.getAngularOrientation().firstAngle < target)
-            {
-                rightTurnTeleop(0.2);
-            }
+        while(boschIMU.getAngularOrientation().firstAngle < target)
+        {
+            leftTurnTeleop(power);
         }
-        else{
-            while(boschIMU.getAngularOrientation().firstAngle < target)
-            {
 
-                leftTurnTeleop(power);
-            }
-
-            stopDriving();
-            while (boschIMU.getAngularOrientation().firstAngle > target)
-            {
-                rightTurnTeleop(0.2);
-            }
+        stopDriving();
+        while (boschIMU.getAngularOrientation().firstAngle > target)
+        {
+            rightTurnTeleop(0.15);
         }
         stopDriving();
     }
 
-    public void pidIMULeft(int target, float power)
+    public void pidIMULeft(float power, int degrees)
     {
-        double startAngle = boschIMU.getAngularOrientation().firstAngle;
-            while(boschIMU.getAngularOrientation().firstAngle < target)
+        while (Math.abs((double) degrees - boschIMU.getAngularOrientation().firstAngle) > 1)
+        {
+            while (boschIMU.getAngularOrientation().firstAngle < degrees)
             {
-
                 leftTurnTeleop(power);
             }
-
             stopDriving();
-            while (boschIMU.getAngularOrientation().firstAngle > target)
+            while (boschIMU.getAngularOrientation().firstAngle > degrees)
             {
-                rightTurnTeleop(0.2);
+                rightTurnTeleop(power);
             }
+            stopDriving();
+        }
         stopDriving();
     }
 
+    public void pidIMURight(float power, int degrees)
+    {
+        while (Math.abs((double) degrees - boschIMU.getAngularOrientation().firstAngle) > 1)
+        {
+            while (boschIMU.getAngularOrientation().firstAngle > degrees)
+            {
+                rightTurnTeleop(power);
+            }
+            stopDriving();
+            while (boschIMU.getAngularOrientation().firstAngle < degrees)
+            {
+                leftTurnTeleop(power);
+            }
+            stopDriving();
+        }
+        stopDriving();
+    }
 
 
     /**
@@ -501,7 +516,14 @@ public class DriveFunctions extends LinearOpMode
     @Override
     public void runOpMode() throws InterruptedException
     {
-
+        float power = (float) 1.0;
+        rightTurnAutonomous(power, 100);
+        leftTurnAutonomous(power, 100);
+        pidIMULeft(power, 90);
+        pidIMURight(power, 90);
+        coeffShiftTeleop(power);
+        encoderCoeffLeftTurn(power, 90);
+        encoderCoeffRightTurn(power, 90);
     }
 } //Close class and end program
 

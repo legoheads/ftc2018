@@ -343,15 +343,23 @@ public class teleMaster extends LinearOpMode {
                 flip.flip();
             }
             //Dunk
-            if (gamepad2.dpad_up) {
+            if (gamepad2.dpad_up)
+            {
 
                 dunk.dunk();
                 Thread.sleep(2000);
 
                 dunk.dunkDown();
 
-                while (!touch.isPressed()) {
-                    lifter.setPower(-0.5);
+                lifter.setPower(-1.0);
+
+                while (!touch.isPressed())
+                {
+                    lifter.setPower(-1.0);
+                }
+
+                if (touch.isPressed()){
+                    lifter.setPower(0.0);
                 }
 
 //              Stop the motor
