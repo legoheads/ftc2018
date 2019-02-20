@@ -52,9 +52,9 @@ public class autoTensorCrater extends LinearOpMode
     BNO055IMU boschIMU;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.8;
+    float drivePower = (float) 0.4;
     float shiftPower = (float) 0.6;
-    float turnPower = (float) 0.8;
+    float turnPower = (float) 0.6;
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
@@ -201,7 +201,7 @@ public class autoTensorCrater extends LinearOpMode
 
             Thread.sleep(1000);
 
-            chassis.leftTurnIMU(turnPower/2, -45);
+            chassis.rightTurnIMU(turnPower/2, -45);
 
             //Drive into crater
             chassis.driveAutonomous(drivePower, 2800);
