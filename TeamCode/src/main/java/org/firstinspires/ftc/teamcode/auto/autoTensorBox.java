@@ -6,7 +6,6 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -125,8 +124,8 @@ public class autoTensorBox extends LinearOpMode
             //Drop down
             hang.down();
 
-            //Set goldMineral object to output of getMineral function
-            goldMineral = tensor.getMineral();
+            //Set goldMineral object to output of getMineralTime function
+            goldMineral = tensor.getMineralTime();
 
             //Display gold mineral position
             telemetry.addData("GoldPosition", goldMineral);

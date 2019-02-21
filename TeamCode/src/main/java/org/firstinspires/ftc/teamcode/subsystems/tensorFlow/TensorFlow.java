@@ -35,6 +35,8 @@ public interface TensorFlow {
      * @return position of gold mineral (LEFT, RIGHT, CENTER, or UNKNOWN)
      * @throws InterruptedException
      */
+    public goldMineral getMineralTime() throws InterruptedException;
+
     public goldMineral getMineral() throws InterruptedException;
 
 

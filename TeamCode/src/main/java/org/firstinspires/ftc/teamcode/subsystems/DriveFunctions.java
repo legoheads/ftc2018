@@ -257,11 +257,11 @@ public class DriveFunctions extends LinearOpMode
         stopDriving();
     }
 
-    public void encoderCoeffLeftTurn(float power, int degrees) throws InterruptedException
+    public void encoderCoeffLeftTurn(double power, int degrees) throws InterruptedException
     {
         double factor = 21.7;
         int newDegrees = (int) factor * degrees;
-        leftTurnAutonomous(power, newDegrees);
+        leftTurnAutonomous((float) power, newDegrees);
     }
 
     /**
@@ -285,7 +285,7 @@ public class DriveFunctions extends LinearOpMode
     }
 
 
-    public void rightTurnIMU(double power, int target)
+    public void rightTurnIMU(double power, int target) throws InterruptedException
     {
         while(boschIMU.getAngularOrientation().firstAngle > target)
         {
@@ -297,10 +297,9 @@ public class DriveFunctions extends LinearOpMode
             leftTurnTeleop(0.15);
         }
         stopDriving();
-
     }
 
-    public void  leftTurnIMU(double power, int target)
+    public void  leftTurnIMU(double power, int target) throws InterruptedException
     {
         while(boschIMU.getAngularOrientation().firstAngle < target)
         {
@@ -313,6 +312,7 @@ public class DriveFunctions extends LinearOpMode
             rightTurnTeleop(0.15);
         }
         stopDriving();
+
     }
 
     public void pidIMULeft(float power, int degrees)
@@ -356,7 +356,7 @@ public class DriveFunctions extends LinearOpMode
      * Shift left for the given distance at the given power
      * @param degrees distance
      */
-    public void leftShiftAutonomous(float power, int degrees) throws InterruptedException
+    public void leftShiftAutonomous(double power, int degrees) throws InterruptedException
     {
         //This sequence of backwards, forwards, forwards, backwards makes the robot shift left
         moveDriveMotorsWithEncoders(degrees, -degrees, -degrees, degrees, power, -power, -power, power);
@@ -463,12 +463,12 @@ public class DriveFunctions extends LinearOpMode
     {
         while (!iSeeAColor(colorSensor))
         {
-            chassisTeleOp();
+//            chassisTeleOp();
             mineralSpool.setPower(-1.0);
         }
         while (!isYellow(colorSensor))
         {
-            chassisTeleOp();
+//            chassisTeleOp();
             mineralSpool.setPower(-1.0);
         }
         mineralSpool.setPower(0.0);
@@ -477,7 +477,7 @@ public class DriveFunctions extends LinearOpMode
     /**
      * If this function is called, it enables us to run one DC motor to a specific distance
      */
-    public static void oneMotorEncoder(DcMotor motor, float power, int degrees) throws InterruptedException
+    public static void oneMotorEncoder(DcMotor motor, double power, int degrees) throws InterruptedException
     {
         int firstPos, secondPos;
 
@@ -491,7 +491,7 @@ public class DriveFunctions extends LinearOpMode
         motor.setTargetPosition(motor.getCurrentPosition() + degrees);
 
         //Turn the motor on at the corresponding power
-        motor.setPower(power);
+        motor.setPower((float)power);
 
         //Empty while loop while the motor is moving
         while ((motor.isBusy()))

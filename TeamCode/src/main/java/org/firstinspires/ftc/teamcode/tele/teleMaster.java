@@ -83,10 +83,6 @@ public class teleMaster extends LinearOpMode {
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
         DriveFunctions chassis = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, boschIMU);
 
-        //Set the sensor to active mode
-        //Set the directions and modes of the motors.
-        chassis.initializeRobotFloat();
-
         lifter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Intialize Subsystems
@@ -94,8 +90,6 @@ public class teleMaster extends LinearOpMode {
         dunk = new dunkMinerals(lifter, dunker);
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
-
-        lifter.setDirection(DcMotorSimple.Direction.REVERSE);
 
         currFlipPos = flipPositions.UP;
         dunk.dunkDown();
@@ -105,12 +99,12 @@ public class teleMaster extends LinearOpMode {
 
 //***************************************************************************************************************************
         while (opModeIsActive()) {
-            float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
-            float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
-            float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
-            float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
-            float spoolPower = gamepad2.right_stick_y;
-            float liftPower = -gamepad1.right_stick_y;
+            float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.4);
+            float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.4);
+            float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
+            float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
+            float spoolPower = gamepad1.right_stick_y;
+            float liftPower = -gamepad2.right_stick_y;
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
             if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -260,7 +254,7 @@ public class teleMaster extends LinearOpMode {
                     }
                     mineralSpool.setPower(0.0);
                     flip.flip();
-                    Thread.sleep(600);
+                    Thread.sleep(1000);
                     flip.down();
 
                     dunk.dunkHold();
@@ -273,7 +267,7 @@ public class teleMaster extends LinearOpMode {
                     lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
                     //Set the target position as the value entered
-                    lifter.setTargetPosition(lifter.getCurrentPosition() + 4450);
+                    lifter.setTargetPosition(lifter.getCurrentPosition() + 4500);
 
                     //Turn the motor on at the corresponding power
                     lifter.setPower(1.0);
@@ -313,6 +307,8 @@ public class teleMaster extends LinearOpMode {
                         {
                             chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
                         }
+                        oneMotorEncoder(mineralSpool, 1.0, 20);
+
                     }
 
                     //Stop the motor
@@ -320,6 +316,7 @@ public class teleMaster extends LinearOpMode {
 
                     //Use the encoder in the future
                     lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
                 }
                 else if (currFlipPos == flipPositions.UP)
                 {
@@ -353,7 +350,7 @@ public class teleMaster extends LinearOpMode {
 
                 lifter.setPower(-1.0);
 
-                while (!touch.isPressed())
+                while (!touch.isPressed()  && lifter.getCurrentPosition() < 0)
                 {
                     lifter.setPower(-1.0);
                 }

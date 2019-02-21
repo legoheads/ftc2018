@@ -6,9 +6,9 @@ public class mineralFlip implements Flip {
 
     Servo mineralFlip;
 
-    final double UP_POSITION = 0.55;
+    final double UP_POSITION = 0.5;
     final double DOWN_POSITION = 0.75;
-    final double FLIP_POSITION = 0.2;
+    final double FLIP_POSITION = 0.25;
 
     public mineralFlip(Servo mineralFlip)
     {

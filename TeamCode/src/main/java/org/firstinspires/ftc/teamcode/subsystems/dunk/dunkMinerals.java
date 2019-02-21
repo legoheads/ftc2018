@@ -16,7 +16,7 @@ public class dunkMinerals implements Dunk
     //Dunk Servo Variables
     private final double DUNK_POSITION = 0.22;
     private final double DOWN_POSTITION = 0.78;
-    private final double HOLD_POSITION = 0.68;
+    private final double HOLD_POSITION = 0.7;
 
     final float LIFT_POWER = (float) 1.0;
     final int UP_DISTANCE = 4450;
@@ -27,6 +27,7 @@ public class dunkMinerals implements Dunk
         this.lifter = lifter;
         this.dunker = dunker;
         lifter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        lifter.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     //Dunk

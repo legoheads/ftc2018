@@ -51,6 +51,10 @@ public class twoSampling implements TensorFlow {
         hardwareMap = myHardwareMap;
         vuforia = myVuforia;
         tfod = mytfod;
+
+        initVuforia();
+        initTfod();
+        tFodActivate();
     }
 
     private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
@@ -144,14 +148,12 @@ public class twoSampling implements TensorFlow {
         }
     }
 
+
+
     @Override
-    public TensorFlow.goldMineral getMineral() throws InterruptedException {
+    public TensorFlow.goldMineral getMineralTime() throws InterruptedException {
         RUNTIME/=10;
         double count=0;
-
-        initVuforia();
-        initTfod();
-        tFodActivate();
 
         while (location == goldMineral.UNKNOWN && count < RUNTIME) {
             lookForMinerals();
@@ -160,6 +162,22 @@ public class twoSampling implements TensorFlow {
             telemetry.update();
             Thread.sleep(10);
             count++;
+        }
+        telemetry.addData("Gold", "is Right");
+        return location;
+    }
+
+    @Override
+    public TensorFlow.goldMineral getMineral() throws InterruptedException {
+//        RUNTIME/=10;
+//        double count=0;
+        while (location == goldMineral.UNKNOWN) {
+            lookForMinerals();
+            telemetry.addData("Gold", "%s position", location);
+//            telemetry.addData("Seconds", count/100);
+            telemetry.update();
+//            Thread.sleep(10);
+//            count++;
         }
         telemetry.addData("Gold", "is Right");
         return location;

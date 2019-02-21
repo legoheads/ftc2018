@@ -4,9 +4,9 @@ package org.firstinspires.ftc.teamcode.auto;
 //Import necessary items
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -48,11 +48,12 @@ public class autoTensorCrater extends LinearOpMode
     TeamMarker teamMarker;
 
     ColorSensor colorSensor;
+    RevTouchSensor touch;
 
     BNO055IMU boschIMU;
 
     //Define drive powers to avoid magic numbers
-    float drivePower = (float) 0.4;
+    float drivePower = (float) 0.6;
     float shiftPower = (float) 0.6;
     float turnPower = (float) 0.6;
 
@@ -89,6 +90,7 @@ public class autoTensorCrater extends LinearOpMode
         markerDropper = hardwareMap.servo.get("markerDropper");
 
         colorSensor = hardwareMap.colorSensor.get("colorSensor");
+        touch = hardwareMap.get(RevTouchSensor.class, "touch");
 
         boschIMU = hardwareMap.get(BNO055IMU.class, "boschIMU");
 
@@ -101,36 +103,62 @@ public class autoTensorCrater extends LinearOpMode
 
         //Intialize Subsystems
         flip = new mineralFlip(mineralFlipper);
-        dunk = new dunkMinerals(hanger, dunker);
+        dunk = new dunkMinerals(lifter, dunker);
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
 
         mineralSpool.setDirection(DcMotorSimple.Direction.REVERSE);
 
         teamMarker.hold();
-//        tensor.initTfod();
-//        tensor.initVuforia();
-//        tensor.tFodActivate();
+
+        while (!isStarted()){
+            //Set goldMineral to gold position found from getMineralTime()
+            goldMineral = tensor.getMineral();
+        }
 
         waitForStart();
 
         //Code to run once play is pressed
         while(opModeIsActive())
         {
+            hanger.setPower(1.0);
+            Thread.sleep(5500);
+            hanger.setPower(0.0);
 //            //Drop down
 //            hang.down();
 
-            //Set goldMineral to gold position found from getMineral()
-            goldMineral = tensor.getMineral();
+
 
             //Shift off lander
             chassis.rightShiftAutonomous(shiftPower, 200);
 
             //Move forward
-            chassis.driveAutonomous(drivePower, 500);
+            chassis.driveAutonomous(drivePower, 450);
 
             //Center robot
             chassis.rightShiftAutonomous(-shiftPower, -200);
+
+            oneMotorEncoder(mineralSpool, 1.0, 700);
+
+            flip.down();
+
+            dunk.dunkDown();
+
+            while (!touch.isPressed())
+            {
+                lifter.setPower(-1.0);
+            }
+
+            if (touch.isPressed()){
+                lifter.setPower(0.0);
+            }
+
+//              Stop the motor
+            lifter.setPower(0.0);
+
+
+            intake.start();
+
 
             //Default to right
             if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
@@ -143,25 +171,23 @@ public class autoTensorCrater extends LinearOpMode
                 //Turn to right mineral
                 chassis.leftTurnIMU(turnPower, 45);
                 //Move to mineral and intake
-                oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
-                flip.down();
-                intake.start();
-                chassis.driveAutonomous( 0.5, 800);
-                //Move back to starting spot
-                chassis.driveAutonomous( -0.5, -800);
+                oneMotorEncoder(mineralSpool, (float) 1.0, 2600);
+                flip.up();
+//                flip.down();
+//                intake.start();
+//                oneMotorEncoder(mineralSpool, (float) -1.0, -2600);
+                chassis.spoolInFully(mineralSpool, colorSensor);
+                flip.flip();
                 chassis.rightTurnIMU(turnPower, -90);
             }
             if (goldMineral == TensorFlow.goldMineral.CENTER)
             {
-                oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
-                flip.down();
-                intake.start();
-                //Move to mineral and intake
-                chassis.driveAutonomous( drivePower, 800);
-                //Move back to starting spot
-                chassis.driveAutonomous( -drivePower, -800);
+                oneMotorEncoder(mineralSpool, (float) 1.0, 900);
+                flip.up();
+                chassis.spoolInFully(mineralSpool, colorSensor);
+//                oneMotorEncoder(mineralSpool, (float) -1.0, -900);
+                flip.flip();
                 chassis.rightTurnIMU(turnPower, -90);
-
             }
             if (goldMineral == TensorFlow.goldMineral.RIGHT)
             {
@@ -169,42 +195,50 @@ public class autoTensorCrater extends LinearOpMode
                 //Turn to right mineral
                 chassis.rightTurnIMU(turnPower, -50);
 
-                oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
-                flip.down();
-                intake.start();
-                //Move to mineral and intake
-                chassis.driveAutonomous( drivePower, 800);
-                //Move back to starting spot
-                chassis.driveAutonomous( -drivePower, -550);
+                oneMotorEncoder(mineralSpool, (float) 1.0, 2600);
+                flip.up();
+                chassis.spoolInFully(mineralSpool, colorSensor);
+//                oneMotorEncoder(mineralSpool, (float) -1.0, -2600);
+                flip.flip();
                 chassis.rightTurnIMU(turnPower, -90);
             }
 
             intake.stop();
 
+            chassis.leftShiftAutonomous(0.4, 200);
+
+
             //Back up towards wall
-            chassis.driveAutonomous(-drivePower, -2500);
+            chassis.driveAutonomous(-drivePower, -2200);
 
             //Become parallel with wall facing crater
-            chassis.leftTurnIMU(turnPower, -45);
+            chassis.rightTurnIMU(turnPower, -45);
+
+            chassis.leftShiftAutonomous(0.4, 200);
 
             //Back into depot
-            chassis.driveAutonomous(-drivePower, -1200);
+            chassis.driveAutonomous(-drivePower, -1100);
 
+//            chassis.rightTurnIMU(turnPower/2, -65);
 
-
-            chassis.rightTurnIMU(turnPower/2, -65);
-
-            Thread.sleep(1000);
+//            Thread.sleep(1000);
 
             //Drop marker in depot
             teamMarker.drop();
 
             Thread.sleep(1000);
 
-            chassis.rightTurnIMU(turnPower/2, -45);
+//            chassis.rightTurnIMU(turnPower/2, -48);
 
             //Drive into crater
-            chassis.driveAutonomous(drivePower, 2800);
+            chassis.driveAutonomous(drivePower, 2400);
+
+//            intake.spoolOut(1500);
+
+            oneMotorEncoder(mineralSpool,1.0, 1000);
+
+            flip.down();
+            intake.start();
 
             //Spool into crater
 

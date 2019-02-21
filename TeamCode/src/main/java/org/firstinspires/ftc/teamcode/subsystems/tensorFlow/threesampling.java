@@ -131,7 +131,7 @@ public class threesampling implements TensorFlow {
     }
 
     @Override
-    public goldMineral getMineral() throws InterruptedException {
+    public goldMineral getMineralTime() throws InterruptedException {
         RUNTIME/=10;
         double count=0;
 
@@ -148,5 +148,22 @@ public class threesampling implements TensorFlow {
             count++;
         }
         return goldMineral.UNKNOWN;
+    }
+
+    @Override
+    public TensorFlow.goldMineral getMineral() throws InterruptedException {
+//        RUNTIME/=10;
+//        double count=0;
+
+        while (location == goldMineral.UNKNOWN) {
+            lookForMinerals();
+            telemetry.addData("Gold", "%s position", location);
+//            telemetry.addData("Seconds", count/100);
+            telemetry.update();
+//            Thread.sleep(10);
+//            count++;
+        }
+        telemetry.addData("Gold", "is Right");
+        return location;
     }
 }
