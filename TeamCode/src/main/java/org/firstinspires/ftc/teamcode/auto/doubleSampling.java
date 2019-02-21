@@ -11,23 +11,27 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
+import org.firstinspires.ftc.teamcode.subsystems.dunk.Dunk;
+import org.firstinspires.ftc.teamcode.subsystems.dunk.dunkMinerals;
 import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
 import org.firstinspires.ftc.teamcode.subsystems.hang.linearActuator;
 import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.intake.intakeMinerals;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.Flip;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
-import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
-import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.*;
-import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
+import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.TensorFlow;
+import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.twoSampling;
 
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
-@Autonomous(name="AutoTensorCrater") //Name the program
-public class autoTensorCrater extends LinearOpMode
+@Autonomous(name="DoubleSampling") //Name the program
+public class doubleSampling extends LinearOpMode
 {
     //Define drive motors
     DcMotor leftMotorFront;
@@ -212,26 +216,43 @@ public class autoTensorCrater extends LinearOpMode
 
             chassis.rightShiftAutonomous(shiftPower, 100);
 
-
-
             //Back into depot
-            chassis.driveAutonomous(-drivePower, -1100);
+            chassis.driveAutonomous(-drivePower, -1500);
 
-//            chassis.rightTurnIMU(turnPower/2, -65);
+            if (goldMineral == TensorFlow.goldMineral.LEFT)
+            {
+                //Turn to right mineral
+                chassis.rightTurnIMU(turnPower, -112);
+                //Move to mineral and intake
+//                oneMotorEncoder(mineralSpool, (float) 1.0, 1500);
 
-//            Thread.sleep(1000);
+            }
+            if (goldMineral == TensorFlow.goldMineral.CENTER)
+            {
+                chassis.rightTurnIMU(turnPower, -90);
+//                oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
+            }
+            if (goldMineral == TensorFlow.goldMineral.RIGHT)
+            {
+                //Turn to right mineral
+                chassis.rightTurnIMU(turnPower, -67);
+//                oneMotorEncoder(mineralSpool, (float) 1.0, 500);
+            }
+
+            chassis.driveAutonomous(drivePower, 800);
+
+            chassis.driveAutonomous(-drivePower, -800);
 
             //Drop marker in depot
             teamMarker.drop();
 
             Thread.sleep(1000);
 
-//            chassis.rightTurnIMU(turnPower/2, -48);
+            chassis.leftTurnIMU(turnPower, -45);
 
-            //Drive into crater
+            chassis.leftShiftAutonomous(shiftPower, 150);
+
             chassis.driveAutonomous(drivePower, 2400);
-
-//            intake.spoolOut(1500);
 
             oneMotorEncoder(mineralSpool,1.0, 1000);
 

@@ -14,6 +14,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.subsystems.imu.*;
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 //import com.disnodeteam.dogecv.CameraViewDisplay;
@@ -421,7 +423,7 @@ public class DriveFunctions extends LinearOpMode
         return false;
     }
 
-    public void chassisTeleOp()
+    public void chassisTeleOp(Gamepad gamepad1, Gamepad gamepad2)
     {
         float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
         float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
@@ -459,18 +461,20 @@ public class DriveFunctions extends LinearOpMode
         }
     }
 
-    public void spoolInFully(DcMotor mineralSpool, ColorSensor colorSensor)
+    public void spoolInFully(DcMotor mineralSpool, ColorSensor colorSensor, Gamepad gamepad1, Gamepad gamepad2)
     {
         while (!iSeeAColor(colorSensor))
         {
-//            chassisTeleOp();
+            chassisTeleOp(gamepad1, gamepad2);
             mineralSpool.setPower(-1.0);
         }
+        stopDriving();
         while (!isYellow(colorSensor))
         {
-//            chassisTeleOp();
+            chassisTeleOp(gamepad1, gamepad2);
             mineralSpool.setPower(-1.0);
         }
+        stopDriving();
         mineralSpool.setPower(0.0);
     }
 
@@ -505,6 +509,37 @@ public class DriveFunctions extends LinearOpMode
                 break;
             }
         }
+
+        //Stop the motor
+        motor.setPower(0.0);
+
+        //Use the encoder in the future
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void omeWithDriveMotors(DcMotor motor, double power, int degrees, Gamepad gamepad1, Gamepad gamepad2)
+    {
+        ElapsedTime runTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+        runTime.reset();
+
+        //Use the encoder
+        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        //Set up the motor to run to the given position
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Set the target position as the value entered
+        motor.setTargetPosition(motor.getCurrentPosition() + degrees);
+
+        //Turn the motor on at the corresponding power
+        motor.setPower((float)power);
+
+        //Empty while loop while the motor is moving
+        while ((motor.isBusy()) && runTime.time() < 7000)
+        {
+            chassisTeleOp(gamepad1, gamepad2);
+        }
+        stopDriving();
 
         //Stop the motor
         motor.setPower(0.0);

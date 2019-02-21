@@ -54,9 +54,9 @@ public class teleMaster extends LinearOpMode {
     Intake intake;
     Hang hang;
 
-    int upDownToggle = 0;
-
-    //***************************************************************************************************************************
+    double MAX_POWER = 1.0;
+    double STOP_POWER = 0.0;
+//***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException {
@@ -131,7 +131,7 @@ public class teleMaster extends LinearOpMode {
             //If the joysticks are not pushed significantly shut off the wheels
             if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
             {
-                chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+                chassis.stopDriving();
             }
 
             if (gamepad1.a)
@@ -161,7 +161,7 @@ public class teleMaster extends LinearOpMode {
 
             if (Math.abs(spoolPower) <= 0.1)
             {
-                mineralSpool.setPower(0.0);
+                mineralSpool.setPower(STOP_POWER);
             }
 
             if (gamepad1.b)
@@ -171,7 +171,7 @@ public class teleMaster extends LinearOpMode {
 
             if (gamepad2.a)
             {
-                chassis.setDriveMotorPowers(0.0f, 0.0f, 0.0f, 0.0f);
+                chassis.stopDriving();
                 if (currFlipPos == flipPositions.DOWN)
                 {
                     intake.reverse();
@@ -180,147 +180,17 @@ public class teleMaster extends LinearOpMode {
                     flip.up();
                     intake.stop();
                     currFlipPos = flipPositions.UP;
-                    while (!chassis.iSeeAColor(colorSensor))
-                    {
-                        drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
-                        shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
-                        leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
-                        rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
-
-                        //Drive if joystick pushed more Y than X on gamepad1 (fast)
-                        if (Math.abs(drivePower) > Math.abs(shiftPower))
-                        {
-                            chassis.driveTeleop(drivePower);
-                        }
-
-                        //Shift if pushed more on X than Y on gamepad1 (fast)
-                        if (Math.abs(shiftPower) > Math.abs(drivePower))
-                        {
-                            chassis.shiftTeleop(shiftPower);
-                        }
-
-                        //If the left trigger is pushed on gamepad1, turn left at that power (fast)
-                        if (leftTurnPower > 0)
-                        {
-                            chassis.leftTurnTeleop(leftTurnPower);
-                        }
-
-                        //If the right trigger is pushed on gamepad1, turn right at that power (fast)
-                        if (rightTurnPower > 0)
-                            chassis.rightTurnTeleop(rightTurnPower);
-
-                        //If the joysticks are not pushed significantly shut off the wheels
-                        if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
-                        {
-                            chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
-                        }
-                        mineralSpool.setPower(-1.0);
-                    }
-                    while (!chassis.isYellow(colorSensor))
-                    {
-                        drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
-                        shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
-                        leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
-                        rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
-
-                        //Drive if joystick pushed more Y than X on gamepad1 (fast)
-                        if (Math.abs(drivePower) > Math.abs(shiftPower))
-                        {
-                            chassis.driveTeleop(drivePower);
-                        }
-
-                        //Shift if pushed more on X than Y on gamepad1 (fast)
-                        if (Math.abs(shiftPower) > Math.abs(drivePower))
-                        {
-                            chassis.shiftTeleop(shiftPower);
-                        }
-
-                        //If the left trigger is pushed on gamepad1, turn left at that power (fast)
-                        if (leftTurnPower > 0)
-                        {
-                            chassis.leftTurnTeleop(leftTurnPower);
-                        }
-
-                        //If the right trigger is pushed on gamepad1, turn right at that power (fast)
-                        if (rightTurnPower > 0)
-                            chassis.rightTurnTeleop(rightTurnPower);
-
-                        //If the joysticks are not pushed significantly shut off the wheels
-                        if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
-                        {
-                            chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
-                        }
-                        mineralSpool.setPower(-1.0);
-                    }
-                    mineralSpool.setPower(0.0);
+                    chassis.spoolInFully(mineralSpool, colorSensor, gamepad1, gamepad2);
+                    mineralSpool.setPower(STOP_POWER);
                     flip.flip();
                     Thread.sleep(1000);
                     flip.down();
-
                     dunk.dunkHold();
-
-                    Thread.sleep(200);
-                    //Use the encoder
-                    lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-                    //Set up the motor to run to the given position
-                    lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-                    //Set the target position as the value entered
-                    lifter.setTargetPosition(lifter.getCurrentPosition() + 4500);
-
-                    //Turn the motor on at the corresponding power
-                    lifter.setPower(1.0);
-
-                    //Empty while loop while the motor is moving
-                    while ((lifter.isBusy()))
-                    {
-                        drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
-                        shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
-                        leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
-                        rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
-
-                        //Drive if joystick pushed more Y than X on gamepad1 (fast)
-                        if (Math.abs(drivePower) > Math.abs(shiftPower))
-                        {
-                            chassis.driveTeleop(drivePower);
-                        }
-
-                        //Shift if pushed more on X than Y on gamepad1 (fast)
-                        if (Math.abs(shiftPower) > Math.abs(drivePower))
-                        {
-                            chassis.shiftTeleop(shiftPower);
-                        }
-
-                        //If the left trigger is pushed on gamepad1, turn left at that power (fast)
-                        if (leftTurnPower > 0)
-                        {
-                            chassis.leftTurnTeleop(leftTurnPower);
-                        }
-
-                        //If the right trigger is pushed on gamepad1, turn right at that power (fast)
-                        if (rightTurnPower > 0)
-                            chassis.rightTurnTeleop(rightTurnPower);
-
-                        //If the joysticks are not pushed significantly shut off the wheels
-                        if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
-                        {
-                            chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
-                        }
-                        oneMotorEncoder(mineralSpool, 1.0, 20);
-
-                    }
-
-                    //Stop the motor
-                    lifter.setPower(0.0);
-
-                    //Use the encoder in the future
-                    lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
+                    chassis.omeWithDriveMotors(lifter, MAX_POWER, 4500, gamepad1, gamepad2);
                 }
                 else if (currFlipPos == flipPositions.UP)
                 {
-                    oneMotorEncoder(mineralSpool, (float) 1.0, 1000);
+                    chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 1000, gamepad1, gamepad2);
                     flip.down();
                     intake.start();
                     currFlipPos=flipPositions.DOWN;
@@ -342,85 +212,29 @@ public class teleMaster extends LinearOpMode {
             //Dunk
             if (gamepad2.dpad_up)
             {
-
                 dunk.dunk();
-                Thread.sleep(2000);
+                chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 1000, gamepad1, gamepad2);
+
+                Thread.sleep(1500);
 
                 dunk.dunkDown();
 
-                lifter.setPower(-1.0);
+                lifter.setPower(-MAX_POWER);
 
                 while (!touch.isPressed()  && lifter.getCurrentPosition() < 0)
                 {
-                    lifter.setPower(-1.0);
+                    chassis.chassisTeleOp(gamepad1, gamepad2);
+                    lifter.setPower(-MAX_POWER);
                 }
+                chassis.stopDriving();
 
                 if (touch.isPressed()){
-                    lifter.setPower(0.0);
+                    lifter.setPower(STOP_POWER);
                 }
 
 //              Stop the motor
-                lifter.setPower(0.0);
+                lifter.setPower(STOP_POWER);
             }
-
-
-
-
-//
-//                //Use the encoder
-//                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//
-//                //Set up the motor to run to the given position
-//                lifter.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//
-//                //Set the target position as the value entered
-//                lifter.setTargetPosition(lifter.getCurrentPosition() - 4400);
-//
-//                //Turn the motor on at the corresponding power
-//                lifter.setPower(-0.5);
-
-                //Empty while loop while the motor is moving
-//                while ((lifter.isBusy()))
-//                {
-//                    drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
-//                    shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
-//                    leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
-//                    rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
-//
-//                    //Drive if joystick pushed more Y than X on gamepad1 (fast)
-//                    if (Math.abs(drivePower) > Math.abs(shiftPower))
-//                    {
-//                        chassis.driveTeleop(drivePower);
-//                    }
-//
-//                    //Shift if pushed more on X than Y on gamepad1 (fast)
-//                    if (Math.abs(shiftPower) > Math.abs(drivePower))
-//                    {
-//                        chassis.shiftTeleop(shiftPower);
-//                    }
-//
-//                    //If the left trigger is pushed on gamepad1, turn left at that power (fast)
-//                    if (leftTurnPower > 0)
-//                    {
-//                        chassis.leftTurnTeleop(leftTurnPower);
-//                    }
-//
-//                    //If the right trigger is pushed on gamepad1, turn right at that power (fast)
-//                    if (rightTurnPower > 0)
-//                        chassis.rightTurnTeleop(rightTurnPower);
-//
-//                    //If the joysticks are not pushed significantly shut off the wheels
-//                    if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
-//                    {
-//                        chassis.setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
-//                    }
-//                }
-
-
-
-
-                //Use the encoder in the future
-//                lifter.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
             if (gamepad2.dpad_down)
             {
