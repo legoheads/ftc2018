@@ -535,7 +535,7 @@ public class DriveFunctions extends LinearOpMode
         motor.setPower((float)power);
 
         //Empty while loop while the motor is moving
-        while ((motor.isBusy()) && runTime.time() < 7000)
+        while ((motor.isBusy()) && runTime.time() < 3000)
         {
             chassisTeleOp(gamepad1, gamepad2);
         }

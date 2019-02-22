@@ -167,6 +167,7 @@ public class doubleSampling extends LinearOpMode
 
             intake.start();
 
+
             //Default to right
             if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
             {
@@ -176,7 +177,7 @@ public class doubleSampling extends LinearOpMode
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
                 //Turn to right mineral
-                chassis.leftTurnIMU(turnPower, 45);
+                chassis.leftTurnIMU(turnPower, 42);
                 //Move to mineral and intake
                 oneMotorEncoder(mineralSpool, (float) 1.0, 2600);
 
@@ -206,13 +207,13 @@ public class doubleSampling extends LinearOpMode
 
             intake.stop();
 
-            chassis.leftShiftAutonomous(shiftPower / 2, 300);
+            chassis.leftShiftAutonomous(shiftPower / 2, 350);
 
             //Back up towards wall
             chassis.driveAutonomous(-drivePower, -1900);
 
             //Become parallel with wall facing crater
-            chassis.leftTurnIMU(turnPower, -45);
+            chassis.rightTurnIMU(turnPower, -45);
 
             chassis.leftShiftAutonomous(shiftPower / 2, 500);
 
@@ -221,6 +222,11 @@ public class doubleSampling extends LinearOpMode
             //Back into depot
             chassis.driveAutonomous(-drivePower, -1500);
 
+            if (goldMineral == TensorFlow.goldMineral.RIGHT)
+            {
+                teamMarker.drop();
+            }
+
             chassis.driveAutonomous(-drivePower/ 2, -200);
 
             chassis.rightShiftAutonomous(shiftPower/2, 600);
@@ -228,6 +234,7 @@ public class doubleSampling extends LinearOpMode
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
                 chassis.rightTurnIMU(turnPower, -135);
+                teamMarker.drop();
 
             }
             if (goldMineral == TensorFlow.goldMineral.CENTER)
@@ -245,21 +252,7 @@ public class doubleSampling extends LinearOpMode
 
             oneMotorEncoder(mineralSpool, 1.0, 2500);
 
-            flip.up();
-            while (!chassis.iSeeAColor(colorSensor))
-            {
-                mineralSpool.setPower(-1.0);
-            }
-            while (!chassis.isYellow(colorSensor))
-            {
-                mineralSpool.setPower(-1.0);
-            }
-            flip.flip();
-
-            chassis.rightTurnIMU(turnPower, -90);
-
-            teamMarker.drop();
-            Thread.sleep(1000);
+            intake.stop();
 
             //Spool into crater
 

@@ -180,7 +180,7 @@ public class autoTensorBox extends LinearOpMode
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
                 //Turn to right mineral
-                chassis.leftTurnIMU(turnPower, 45);
+                chassis.leftTurnIMU(turnPower, 42);
                 //Move to mineral and intake
                 oneMotorEncoder(mineralSpool, (float) 1.0, 2600);
 

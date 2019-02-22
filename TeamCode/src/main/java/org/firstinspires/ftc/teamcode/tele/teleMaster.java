@@ -19,6 +19,8 @@ import org.firstinspires.ftc.teamcode.subsystems.intake.*;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.*;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 import org.firstinspires.ftc.teamcode.subsystems.hang.*;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
 
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
@@ -54,6 +56,7 @@ public class teleMaster extends LinearOpMode {
     Dunk dunk;
     Intake intake;
     Hang hang;
+    TeamMarker teamMarker;
 
     double MAX_POWER = 1.0;
     double STOP_POWER = 0.0;
@@ -91,9 +94,12 @@ public class teleMaster extends LinearOpMode {
         dunk = new dunkMinerals(lifter, dunker);
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
+        teamMarker = new claiming(markerDropper);
 
         currFlipPos = flipPositions.UP;
         dunk.dunkDown();
+        teamMarker.hold();
+
 
         //Wait for start button to be clicked
         waitForStart();
@@ -188,7 +194,7 @@ public class teleMaster extends LinearOpMode {
                     Thread.sleep(700);
                     flip.down();
                     dunk.dunkHold();
-                    chassis.omeWithDriveMotors(lifter, MAX_POWER, 4500, gamepad1, gamepad2);
+                    chassis.omeWithDriveMotors(lifter, MAX_POWER, 4400, gamepad1, gamepad2);
                     lifter.setPower(0.1);
                 }
                 else if (currFlipPos == flipPositions.UP)
