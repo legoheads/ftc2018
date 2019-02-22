@@ -296,7 +296,7 @@ public class DriveFunctions extends LinearOpMode
         stopDriving();
         while (boschIMU.getAngularOrientation().firstAngle < target)
         {
-            leftTurnTeleop(0.15);
+            leftTurnTeleop(0.2);
         }
         stopDriving();
     }
@@ -311,7 +311,7 @@ public class DriveFunctions extends LinearOpMode
         stopDriving();
         while (boschIMU.getAngularOrientation().firstAngle > target)
         {
-            rightTurnTeleop(0.15);
+            rightTurnTeleop(0.2);
         }
         stopDriving();
 
@@ -547,6 +547,7 @@ public class DriveFunctions extends LinearOpMode
         //Use the encoder in the future
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
+
     //Empty main
     @Override
     public void runOpMode() throws InterruptedException

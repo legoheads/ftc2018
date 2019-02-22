@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.TouchSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
@@ -56,6 +57,7 @@ public class teleMaster extends LinearOpMode {
 
     double MAX_POWER = 1.0;
     double STOP_POWER = 0.0;
+
 //***************************************************************************************************************************
     //MAIN BELOW
     @Override
@@ -83,7 +85,6 @@ public class teleMaster extends LinearOpMode {
         //Set up the DriveFunctions class and give it all the necessary components (motors, sensors)
         DriveFunctions chassis = new DriveFunctions(DcMotor.ZeroPowerBehavior.BRAKE, leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack, boschIMU);
 
-        lifter.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         //Intialize Subsystems
         flip = new mineralFlip(mineralFlipper);
@@ -175,23 +176,26 @@ public class teleMaster extends LinearOpMode {
                 if (currFlipPos == flipPositions.DOWN)
                 {
                     intake.reverse();
-                    Thread.sleep(500);
+                    Thread.sleep(300);
                     intake.start();
                     flip.up();
                     intake.stop();
                     currFlipPos = flipPositions.UP;
+                    dunk.dunkDown();
                     chassis.spoolInFully(mineralSpool, colorSensor, gamepad1, gamepad2);
                     mineralSpool.setPower(STOP_POWER);
                     flip.flip();
-                    Thread.sleep(1000);
+                    Thread.sleep(700);
                     flip.down();
                     dunk.dunkHold();
                     chassis.omeWithDriveMotors(lifter, MAX_POWER, 4500, gamepad1, gamepad2);
+                    lifter.setPower(0.1);
                 }
                 else if (currFlipPos == flipPositions.UP)
                 {
-                    chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 1000, gamepad1, gamepad2);
                     flip.down();
+                    intake.reverse();
+                    chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 500, gamepad1, gamepad2);
                     intake.start();
                     currFlipPos=flipPositions.DOWN;
                 }
@@ -213,24 +217,28 @@ public class teleMaster extends LinearOpMode {
             if (gamepad2.dpad_up)
             {
                 dunk.dunk();
-                chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 1000, gamepad1, gamepad2);
+                chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 200, gamepad1, gamepad2);
+                lifter.setPower(STOP_POWER);
 
-                Thread.sleep(1500);
+                Thread.sleep(750);
 
                 dunk.dunkDown();
 
                 lifter.setPower(-MAX_POWER);
 
-                while (!touch.isPressed()  && lifter.getCurrentPosition() < 0)
+                while (!touch.isPressed())
                 {
                     chassis.chassisTeleOp(gamepad1, gamepad2);
                     lifter.setPower(-MAX_POWER);
+                    mineralSpool.setPower(MAX_POWER / 4);
                 }
                 chassis.stopDriving();
 
                 if (touch.isPressed()){
                     lifter.setPower(STOP_POWER);
                 }
+
+                mineralSpool.setPower(STOP_POWER);
 
 //              Stop the motor
                 lifter.setPower(STOP_POWER);
@@ -243,7 +251,7 @@ public class teleMaster extends LinearOpMode {
 
             if (Math.abs(liftPower) > 0.1)
             {
-                dunk.dunkHold();
+                dunk.dunkDown();
                 lifter.setPower(liftPower);
             }
             if (Math.abs(liftPower) <= 0.1)

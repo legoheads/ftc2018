@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
 
-//@Disabled
+@Disabled
 @TeleOp(name="Color Sensor Test") //Name the class
 public class colorSensorTest extends LinearOpMode
 {

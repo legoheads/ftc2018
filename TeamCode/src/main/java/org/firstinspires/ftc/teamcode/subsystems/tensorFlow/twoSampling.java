@@ -168,18 +168,11 @@ public class twoSampling implements TensorFlow {
     }
 
     @Override
-    public TensorFlow.goldMineral getMineral() throws InterruptedException {
-//        RUNTIME/=10;
-//        double count=0;
-        while (location == goldMineral.UNKNOWN) {
-            lookForMinerals();
-            telemetry.addData("Gold", "%s position", location);
-//            telemetry.addData("Seconds", count/100);
-            telemetry.update();
-//            Thread.sleep(10);
-//            count++;
-        }
-        telemetry.addData("Gold", "is Right");
+    public TensorFlow.goldMineral getMineral() throws InterruptedException
+    {
+        lookForMinerals();
+        telemetry.addData("Gold", "%s position", location);
+        telemetry.update();
         return location;
     }
 }
