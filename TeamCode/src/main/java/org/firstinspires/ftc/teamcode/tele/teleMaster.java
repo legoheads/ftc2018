@@ -60,6 +60,7 @@ public class teleMaster extends LinearOpMode {
 
     double MAX_POWER = 1.0;
     double STOP_POWER = 0.0;
+    private ElapsedTime runTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -232,7 +233,8 @@ public class teleMaster extends LinearOpMode {
 
                 lifter.setPower(-MAX_POWER);
 
-                while (!touch.isPressed())
+                runTime.reset();
+                while (!touch.isPressed() && runTime.time() < 3000)
                 {
                     chassis.chassisTeleOp(gamepad1, gamepad2);
                     lifter.setPower(-MAX_POWER);
