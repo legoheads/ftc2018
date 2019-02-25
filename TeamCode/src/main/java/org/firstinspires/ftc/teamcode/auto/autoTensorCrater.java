@@ -225,11 +225,11 @@ public class autoTensorCrater extends LinearOpMode
             chassis.driveAutonomous(-drivePower, -200);
 
             //Drive into crater
-            chassis.driveAutonomous(drivePower, 2450);
+            chassis.driveAutonomous(drivePower, 2350);
 
 //            intake.spoolOut(1500);
 
-            oneMotorEncoder(mineralSpool,1.0, 1500);
+            oneMotorEncoder(mineralSpool,1.0, 2500);
 
             flip.down();
             intake.reverse();

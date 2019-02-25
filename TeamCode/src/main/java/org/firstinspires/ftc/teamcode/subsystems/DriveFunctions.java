@@ -425,10 +425,10 @@ public class DriveFunctions extends LinearOpMode
 
     public void chassisTeleOp(Gamepad gamepad1, Gamepad gamepad2)
     {
-        float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.65);
-        float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.65);
-        float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.5);
-        float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.5);
+        float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.4);
+        float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.4);
+        float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
+        float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
 
         //Drive if joystick pushed more Y than X on gamepad1 (fast)
         if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -457,7 +457,7 @@ public class DriveFunctions extends LinearOpMode
         //If the joysticks are not pushed significantly shut off the wheels
         if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
         {
-            setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
+            stopDriving();
         }
     }
 
@@ -495,7 +495,7 @@ public class DriveFunctions extends LinearOpMode
         motor.setTargetPosition(motor.getCurrentPosition() + degrees);
 
         //Turn the motor on at the corresponding power
-        motor.setPower((float)power);
+        motor.setPower((float) power);
 
         //Empty while loop while the motor is moving
         while ((motor.isBusy()))
@@ -546,6 +546,15 @@ public class DriveFunctions extends LinearOpMode
 
         //Use the encoder in the future
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void driveTimedWait(Gamepad gamepad1, Gamepad gamepad2, ElapsedTime timer, int waitTime)
+    {
+        timer.reset();
+        while (timer.time() < waitTime)
+        {
+            chassisTeleOp(gamepad1, gamepad2);
+        }
     }
 
     //Empty main

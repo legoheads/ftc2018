@@ -4,13 +4,9 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
@@ -21,8 +17,6 @@ import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 import org.firstinspires.ftc.teamcode.subsystems.hang.*;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
-
-import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
 @TeleOp(name="TeleOp") //Name the class
 public class teleMaster extends LinearOpMode {
@@ -60,7 +54,7 @@ public class teleMaster extends LinearOpMode {
 
     double MAX_POWER = 1.0;
     double STOP_POWER = 0.0;
-    private ElapsedTime runTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+    private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -134,7 +128,9 @@ public class teleMaster extends LinearOpMode {
 
             //If the right trigger is pushed on gamepad1, turn right at that power (fast)
             if (rightTurnPower > 0)
+            {
                 chassis.rightTurnTeleop(rightTurnPower);
+            }
 
             //If the joysticks are not pushed significantly shut off the wheels
             if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
@@ -183,7 +179,7 @@ public class teleMaster extends LinearOpMode {
                 if (currFlipPos == flipPositions.DOWN)
                 {
                     intake.reverse();
-                    Thread.sleep(300);
+                    chassis.driveTimedWait(gamepad1, gamepad2, timer, 300);
                     intake.start();
                     flip.up();
                     intake.stop();
@@ -192,7 +188,7 @@ public class teleMaster extends LinearOpMode {
                     chassis.spoolInFully(mineralSpool, colorSensor, gamepad1, gamepad2);
                     mineralSpool.setPower(STOP_POWER);
                     flip.flip();
-                    Thread.sleep(700);
+                    chassis.driveTimedWait(gamepad1, gamepad2, timer, 1200);
                     flip.down();
                     dunk.dunkHold();
                     chassis.omeWithDriveMotors(lifter, MAX_POWER, 4400, gamepad1, gamepad2);
@@ -227,17 +223,17 @@ public class teleMaster extends LinearOpMode {
                 chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 200, gamepad1, gamepad2);
                 lifter.setPower(STOP_POWER);
 
-                Thread.sleep(750);
+                chassis.driveTimedWait(gamepad1, gamepad2, timer, 750);
 
                 dunk.dunkDown();
 
-                lifter.setPower(-MAX_POWER);
+                lifter.setPower(-0.7);
 
-                runTime.reset();
-                while (!touch.isPressed() && runTime.time() < 3000)
+                timer.reset();
+                while (!touch.isPressed() && timer.time() < 4000)
                 {
                     chassis.chassisTeleOp(gamepad1, gamepad2);
-                    lifter.setPower(-MAX_POWER);
+                    lifter.setPower(-0.7);
                     mineralSpool.setPower(MAX_POWER / 4);
                 }
                 chassis.stopDriving();
@@ -257,7 +253,12 @@ public class teleMaster extends LinearOpMode {
                 dunk.dunkDown();
             }
 
-            if (Math.abs(liftPower) > 0.1)
+            if (liftPower > 0.1)
+            {
+                dunk.dunkHold();
+                lifter.setPower(liftPower);
+            }
+            if (liftPower < -0.1)
             {
                 dunk.dunkDown();
                 lifter.setPower(liftPower);
