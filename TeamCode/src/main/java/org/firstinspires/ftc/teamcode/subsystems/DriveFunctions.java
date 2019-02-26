@@ -555,6 +555,7 @@ public class DriveFunctions extends LinearOpMode
         {
             chassisTeleOp(gamepad1, gamepad2);
         }
+        stopDriving();
     }
 
     //Empty main
