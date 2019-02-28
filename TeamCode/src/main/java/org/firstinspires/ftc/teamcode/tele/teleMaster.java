@@ -4,9 +4,13 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.TouchSensor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
@@ -17,6 +21,8 @@ import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 import org.firstinspires.ftc.teamcode.subsystems.hang.*;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
 import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
+
+import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
 @TeleOp(name="TeleOp") //Name the class
 public class teleMaster extends LinearOpMode {
@@ -42,7 +48,8 @@ public class teleMaster extends LinearOpMode {
 
     BNO055IMU boschIMU;
 
-    enum flipPositions { DOWN, UP }
+    enum flipPositions {DOWN, UP}
+
     flipPositions currFlipPos;
 
     //Subsystems
@@ -54,12 +61,9 @@ public class teleMaster extends LinearOpMode {
 
     double MAX_POWER = 1.0;
     double STOP_POWER = 0.0;
-<<<<<<< HEAD
-    private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
-=======
->>>>>>> parent of 0935d74... timeout added
+    private ElapsedTime runTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
 
-//***************************************************************************************************************************
+    //***************************************************************************************************************************
     //MAIN BELOW
     @Override
     public void runOpMode() throws InterruptedException {
@@ -104,66 +108,55 @@ public class teleMaster extends LinearOpMode {
 
 //***************************************************************************************************************************
         while (opModeIsActive()) {
-            float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.4);
-            float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.4);
-            float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
-            float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
+            float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.6);
+            float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.6);
+            float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.6);
+            float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.6);
             float spoolPower = gamepad1.right_stick_y;
-            float liftPower = -gamepad2.right_stick_y;
+            float liftPower = - gamepad2.right_stick_y;
 
             //Drive if joystick pushed more Y than X on gamepad1 (fast)
-            if (Math.abs(drivePower) > Math.abs(shiftPower))
-            {
+            if (Math.abs(drivePower) > Math.abs(shiftPower)) {
                 chassis.driveTeleop(drivePower);
             }
 
             //Shift if pushed more on X than Y on gamepad1 (fast)
-            if (Math.abs(shiftPower) > Math.abs(drivePower))
-            {
+            if (Math.abs(shiftPower) > Math.abs(drivePower)) {
                 chassis.shiftTeleop(shiftPower);
             }
 
             //If the left trigger is pushed on gamepad1, turn left at that power (fast)
-            if (leftTurnPower > 0)
-            {
+            if (leftTurnPower > 0) {
                 chassis.leftTurnTeleop(leftTurnPower);
             }
 
             //If the right trigger is pushed on gamepad1, turn right at that power (fast)
             if (rightTurnPower > 0)
-            {
                 chassis.rightTurnTeleop(rightTurnPower);
-            }
 
             //If the joysticks are not pushed significantly shut off the wheels
-            if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
-            {
+            if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15) {
                 chassis.stopDriving();
             }
 
-            if (gamepad1.a)
-            {
+            if (gamepad1.a) {
                 hang.down();
             }
 
-            if (gamepad1.y)
-            {
+            if (gamepad1.y) {
                 hang.up();
             }
 
-            if (gamepad1.left_bumper || gamepad2.left_bumper)
-            {
+            if (gamepad1.left_bumper || gamepad2.left_bumper) {
                 intake.start();
             }
 
-            if (gamepad1.right_bumper || gamepad2.right_bumper)
-            {
+            if (gamepad1.right_bumper || gamepad2.right_bumper) {
                 intake.reverse();
             }
 
-            if (Math.abs(spoolPower) > 0.1)
-            {
-                mineralSpool.setPower(-spoolPower);
+            if (Math.abs(spoolPower) > 0.1) {
+                mineralSpool.setPower(- spoolPower);
             }
 
             if (Math.abs(spoolPower) <= 0.1)
@@ -182,16 +175,16 @@ public class teleMaster extends LinearOpMode {
                 if (currFlipPos == flipPositions.DOWN)
                 {
                     intake.reverse();
-                    chassis.driveTimedWait(gamepad1, gamepad2, timer, 300);
+                    Thread.sleep(300);
                     intake.start();
                     flip.up();
-                    intake.stop();
+                    intake.reverse();
                     currFlipPos = flipPositions.UP;
                     dunk.dunkDown();
                     chassis.spoolInFully(mineralSpool, colorSensor, gamepad1, gamepad2);
                     mineralSpool.setPower(STOP_POWER);
                     flip.flip();
-                    chassis.driveTimedWait(gamepad1, gamepad2, timer, 1200);
+                    Thread.sleep(1200);
                     flip.down();
                     dunk.dunkHold();
                     chassis.omeWithDriveMotors(lifter, MAX_POWER, 4400, gamepad1, gamepad2);
@@ -201,9 +194,9 @@ public class teleMaster extends LinearOpMode {
                 {
                     flip.down();
                     intake.reverse();
-                    chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 500, gamepad1, gamepad2);
+                    chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 100, gamepad1, gamepad2);
                     intake.start();
-                    currFlipPos=flipPositions.DOWN;
+                    currFlipPos = flipPositions.DOWN;
                 }
             }
 
@@ -226,26 +219,23 @@ public class teleMaster extends LinearOpMode {
                 chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 200, gamepad1, gamepad2);
                 lifter.setPower(STOP_POWER);
 
-                chassis.driveTimedWait(gamepad1, gamepad2, timer, 750);
+                Thread.sleep(750);
 
                 dunk.dunkDown();
 
-                lifter.setPower(-0.7);
+                lifter.setPower(- MAX_POWER);
 
-<<<<<<< HEAD
-                timer.reset();
-                while (!touch.isPressed() && timer.time() < 4000)
-=======
-                while (!touch.isPressed())
->>>>>>> parent of 0935d74... timeout added
+                runTime.reset();
+                while (! touch.isPressed() && runTime.time() < 3000)
                 {
                     chassis.chassisTeleOp(gamepad1, gamepad2);
-                    lifter.setPower(-0.7);
+                    lifter.setPower(- MAX_POWER);
                     mineralSpool.setPower(MAX_POWER / 4);
                 }
                 chassis.stopDriving();
 
-                if (touch.isPressed()){
+                if (touch.isPressed())
+                {
                     lifter.setPower(STOP_POWER);
                 }
 
@@ -275,8 +265,10 @@ public class teleMaster extends LinearOpMode {
                 lifter.setPower(0.0);
             }
 
+
+
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
         }//Close while opModeIsActive loop
     } //Close "run Opmode" loop
-} //Close class and end program
+}

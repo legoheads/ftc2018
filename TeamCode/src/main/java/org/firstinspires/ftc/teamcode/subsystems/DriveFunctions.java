@@ -425,10 +425,10 @@ public class DriveFunctions extends LinearOpMode
 
     public void chassisTeleOp(Gamepad gamepad1, Gamepad gamepad2)
     {
-        float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.4);
-        float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.4);
-        float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.4);
-        float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.4);
+        float drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.6);
+        float shiftPower = (float) ((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.6);
+        float leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.6);
+        float rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.6);
 
         //Drive if joystick pushed more Y than X on gamepad1 (fast)
         if (Math.abs(drivePower) > Math.abs(shiftPower))
