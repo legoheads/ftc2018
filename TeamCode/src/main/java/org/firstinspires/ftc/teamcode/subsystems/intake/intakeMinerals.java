@@ -14,11 +14,10 @@ public class intakeMinerals implements Intake
     final double SPIN_POWER = (float) 1.0;
     final float SPOOL_POWER = (float) 1.0;
 
-    public intakeMinerals(DcMotor spinner, DcMotor spool)
+    public intakeMinerals(DcMotor spinner, DcMotor mineralSpool)
     {
         this.spinner = spinner;
-        this.mineralSpool = spool;
-        spool.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.mineralSpool = mineralSpool;
     }
 
     @Override
