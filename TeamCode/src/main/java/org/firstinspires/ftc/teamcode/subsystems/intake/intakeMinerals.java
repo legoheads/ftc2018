@@ -18,6 +18,7 @@ public class intakeMinerals implements Intake
     {
         this.spinner = spinner;
         this.mineralSpool = mineralSpool;
+        mineralSpool.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override

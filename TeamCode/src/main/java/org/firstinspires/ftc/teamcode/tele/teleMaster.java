@@ -178,7 +178,7 @@ public class teleMaster extends LinearOpMode {
                     Thread.sleep(300);
                     intake.start();
                     flip.up();
-                    intake.reverse();
+                    intake.stop();
                     currFlipPos = flipPositions.UP;
                     dunk.dunkDown();
                     chassis.spoolInFully(mineralSpool, colorSensor, gamepad1, gamepad2);
@@ -194,7 +194,7 @@ public class teleMaster extends LinearOpMode {
                 {
                     flip.down();
                     intake.reverse();
-                    chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 100, gamepad1, gamepad2);
+                    chassis.omeWithDriveMotors(mineralSpool, MAX_POWER, 500, gamepad1, gamepad2);
                     intake.start();
                     currFlipPos = flipPositions.DOWN;
                 }
@@ -223,13 +223,13 @@ public class teleMaster extends LinearOpMode {
 
                 dunk.dunkDown();
 
-                lifter.setPower(- MAX_POWER);
+                lifter.setPower(-0.7);
 
                 runTime.reset();
                 while (! touch.isPressed() && runTime.time() < 3000)
                 {
                     chassis.chassisTeleOp(gamepad1, gamepad2);
-                    lifter.setPower(- MAX_POWER);
+                    lifter.setPower(-0.7);
                     mineralSpool.setPower(MAX_POWER / 4);
                 }
                 chassis.stopDriving();
@@ -264,9 +264,6 @@ public class teleMaster extends LinearOpMode {
             {
                 lifter.setPower(0.0);
             }
-
-
-
             //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
         }//Close while opModeIsActive loop
