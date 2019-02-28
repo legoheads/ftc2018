@@ -54,7 +54,10 @@ public class teleMaster extends LinearOpMode {
 
     double MAX_POWER = 1.0;
     double STOP_POWER = 0.0;
+<<<<<<< HEAD
     private ElapsedTime timer = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+=======
+>>>>>>> parent of 0935d74... timeout added
 
 //***************************************************************************************************************************
     //MAIN BELOW
@@ -229,8 +232,12 @@ public class teleMaster extends LinearOpMode {
 
                 lifter.setPower(-0.7);
 
+<<<<<<< HEAD
                 timer.reset();
                 while (!touch.isPressed() && timer.time() < 4000)
+=======
+                while (!touch.isPressed())
+>>>>>>> parent of 0935d74... timeout added
                 {
                     chassis.chassisTeleOp(gamepad1, gamepad2);
                     lifter.setPower(-0.7);
