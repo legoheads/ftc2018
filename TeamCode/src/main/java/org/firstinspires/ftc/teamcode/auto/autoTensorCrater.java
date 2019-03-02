@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.subsystems.dunk.*;
 
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
-@Autonomous(name="AutoTensorCrater") //Name the program
+@Autonomous(name="AutoCrater") //Name the program
 public class autoTensorCrater extends LinearOpMode
 {
     //Define drive motors
@@ -141,29 +141,6 @@ public class autoTensorCrater extends LinearOpMode
             //Center robot
             chassis.leftShiftAutonomous(shiftPower, 200);
 
-            oneMotorEncoder(mineralSpool, 1.0, 1000);
-
-            flip.down();
-
-            dunk.dunkDown();
-
-            runTime.reset();
-            while (!touch.isPressed() && runTime.time() < 750)
-            {
-                lifter.setPower(-1.0);
-            }
-
-            if (touch.isPressed())
-            {
-                lifter.setPower(0.0);
-            }
-
-//              Stop the motor
-            lifter.setPower(0.0);
-
-            intake.start();
-
-
             //Default to right
             if (goldMineral == TensorFlow.goldMineral.UNKNOWN)
             {
@@ -174,18 +151,82 @@ public class autoTensorCrater extends LinearOpMode
             {
                 //Turn to right mineral
                 chassis.leftTurnIMU(turnPower, 42);
+
+                oneMotorEncoder(mineralSpool, 1.0, 1000);
+
+                flip.down();
+
+                dunk.dunkDown();
+
+                runTime.reset();
+                while (!touch.isPressed() && runTime.time() < 750)
+                {
+                    lifter.setPower(-1.0);
+                }
+
+                if (touch.isPressed())
+                {
+                    lifter.setPower(0.0);
+                }
+
+//              Stop the motor
+                lifter.setPower(0.0);
+
+                intake.start();
                 //Move to mineral and intake
                 oneMotorEncoder(mineralSpool, (float) 1.0, 2600);
 
             }
             if (goldMineral == TensorFlow.goldMineral.CENTER)
             {
+                oneMotorEncoder(mineralSpool, 1.0, 1000);
+
+                flip.down();
+
+                dunk.dunkDown();
+
+                runTime.reset();
+                while (!touch.isPressed() && runTime.time() < 750)
+                {
+                    lifter.setPower(-1.0);
+                }
+
+                if (touch.isPressed())
+                {
+                    lifter.setPower(0.0);
+                }
+
+//              Stop the motor
+                lifter.setPower(0.0);
+
+                intake.start();
                 oneMotorEncoder(mineralSpool, (float) 1.0, 900);
             }
             if (goldMineral == TensorFlow.goldMineral.RIGHT)
             {
                 //Turn to right mineral
                 chassis.rightTurnIMU(turnPower, -45);
+                oneMotorEncoder(mineralSpool, 1.0, 1000);
+
+                flip.down();
+
+                dunk.dunkDown();
+
+                runTime.reset();
+                while (!touch.isPressed() && runTime.time() < 750)
+                {
+                    lifter.setPower(-1.0);
+                }
+
+                if (touch.isPressed())
+                {
+                    lifter.setPower(0.0);
+                }
+
+//              Stop the motor
+                lifter.setPower(0.0);
+
+                intake.start();
                 oneMotorEncoder(mineralSpool, (float) 1.0, 2600);
             }
 
@@ -214,15 +255,19 @@ public class autoTensorCrater extends LinearOpMode
 
             chassis.leftShiftAutonomous(shiftPower / 2, 500);
 
-            chassis.rightShiftAutonomous(shiftPower / 2, 150);
+            chassis.rightShiftAutonomous(shiftPower / 2, 50);
 
             //Back into depot
-            chassis.driveAutonomous(-drivePower, -1200);
+            chassis.driveAutonomous(-drivePower, -1100);
 
             //Drop marker in depot
             teamMarker.drop();
 
             chassis.driveAutonomous(-drivePower, -200);
+
+            Thread.sleep(200);
+
+            chassis.leftShiftAutonomous(shiftPower, 50);
 
             //Drive into crater
             chassis.driveAutonomous(drivePower, 2350);

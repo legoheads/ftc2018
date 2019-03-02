@@ -9,13 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.subsystems.DriveFunctions;
-
 import org.firstinspires.ftc.teamcode.subsystems.dunk.Dunk;
 import org.firstinspires.ftc.teamcode.subsystems.dunk.dunkMinerals;
 import org.firstinspires.ftc.teamcode.subsystems.hang.Hang;
@@ -24,13 +24,15 @@ import org.firstinspires.ftc.teamcode.subsystems.intake.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.intake.intakeMinerals;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.Flip;
 import org.firstinspires.ftc.teamcode.subsystems.mineral_flip.mineralFlip;
-import org.firstinspires.ftc.teamcode.subsystems.team_marker.*;
-import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.*;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.TeamMarker;
+import org.firstinspires.ftc.teamcode.subsystems.team_marker.claiming;
+import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.TensorFlow;
+import org.firstinspires.ftc.teamcode.subsystems.tensorFlow.twoSampling;
 
 import static org.firstinspires.ftc.teamcode.subsystems.DriveFunctions.oneMotorEncoder;
 
-@Autonomous(name="AutoBox") //Name the program
-public class autoTensorBox extends LinearOpMode
+@Autonomous(name="Injured Auto") //Name the program
+public class autoInjured extends LinearOpMode
 {
     //Define drive motors
     DcMotor leftMotorFront;
@@ -62,21 +64,22 @@ public class autoTensorBox extends LinearOpMode
 
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
-    private TensorFlow tensor;
-
-    private TensorFlow.goldMineral goldMineral;
+    TensorFlow tensor;
     private ElapsedTime runTime = new ElapsedTime(ElapsedTime.Resolution.MILLISECONDS);
+
+    TensorFlow.goldMineral goldMineral;
 
     //Subsystems
     Flip flip;
     Dunk dunk;
     Intake intake;
     Hang hang;
-    //***************************************************************************************************************************
+//***************************************************************************************************************************
     //MAIN BELOW
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() throws InterruptedException
+    {
         //Hardware Map
         leftMotorFront = hardwareMap.dcMotor.get("leftMotorFront");
         rightMotorFront = hardwareMap.dcMotor.get("rightMotorFront");
@@ -110,14 +113,7 @@ public class autoTensorBox extends LinearOpMode
         intake = new intakeMinerals(spinner, mineralSpool);
         hang = new linearActuator(hanger);
 
-        //Initializations
-        chassis.initializeRobotBrake();
-
-//        /** Wait for the game to begin */
-//        telemetry.addData(">", "Press Play to start");
-//        telemetry.update();
-
-        //Find Gold Mineral after Initialization but before game starts
+        mineralSpool.setDirection(DcMotorSimple.Direction.REVERSE);
 
         teamMarker.hold();
         while (!isStarted())
@@ -248,42 +244,10 @@ public class autoTensorBox extends LinearOpMode
             }
             mineralSpool.setPower(0.0);
             flip.flip();
-            chassis.leftTurnIMU(turnPower, 90);
 
             intake.stop();
 
-            chassis.rightShiftAutonomous(shiftPower/2, 350);
-
-            //Back into depot
-            chassis.driveAutonomous(drivePower, 1000);
-
-            chassis.leftTurnIMU(turnPower, 135);
-
-            chassis.rightShiftAutonomous(shiftPower / 2, 1000);
-
-            chassis.leftShiftAutonomous(shiftPower / 2, 150);
-
-            //Back into depot
-            chassis.driveAutonomous(-drivePower, -1300);
-
-            //Drop marker in depot
-            teamMarker.drop();
-
-            chassis.driveAutonomous(-drivePower, -200);
-
-            //Drive into crater
-            chassis.driveAutonomous(drivePower, 2150);
-
-//            intake.spoolOut(1500);
-
-            oneMotorEncoder(mineralSpool,1.0, 1500);
-
-            flip.down();
-            intake.reverse();
-
-            //Always call idle() at the bottom of your while(opModeIsActive()) loop
             idle();
-
             break;
         }
     }
