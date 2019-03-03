@@ -150,11 +150,13 @@ public class autoTensorCrater extends LinearOpMode
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
                 //Turn to right mineral
-                chassis.leftTurnIMU(turnPower, 42);
+                chassis.leftTurnIMU(turnPower, 39);
 
                 oneMotorEncoder(mineralSpool, 1.0, 1000);
 
                 flip.down();
+
+                oneMotorEncoder(lifter, 1.0, 500);
 
                 dunk.dunkDown();
 
@@ -183,6 +185,8 @@ public class autoTensorCrater extends LinearOpMode
 
                 flip.down();
 
+                oneMotorEncoder(lifter, 1.0, 500);
+
                 dunk.dunkDown();
 
                 runTime.reset();
@@ -209,6 +213,9 @@ public class autoTensorCrater extends LinearOpMode
                 oneMotorEncoder(mineralSpool, 1.0, 1000);
 
                 flip.down();
+
+                oneMotorEncoder(lifter, 1.0, 500);
+
 
                 dunk.dunkDown();
 

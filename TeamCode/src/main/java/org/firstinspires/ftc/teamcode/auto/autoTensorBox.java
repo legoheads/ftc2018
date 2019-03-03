@@ -157,11 +157,13 @@ public class autoTensorBox extends LinearOpMode
             if (goldMineral == TensorFlow.goldMineral.LEFT)
             {
                 //Turn to right mineral
-                chassis.leftTurnIMU(turnPower, 42);
+                chassis.leftTurnIMU(turnPower, 39);
 
                 oneMotorEncoder(mineralSpool, 1.0, 1000);
 
                 flip.down();
+
+                oneMotorEncoder(lifter, 1.0, 500);
 
                 dunk.dunkDown();
 
@@ -190,6 +192,8 @@ public class autoTensorBox extends LinearOpMode
 
                 flip.down();
 
+                oneMotorEncoder(lifter, 1.0, 500);
+
                 dunk.dunkDown();
 
                 runTime.reset();
@@ -216,6 +220,9 @@ public class autoTensorBox extends LinearOpMode
                 oneMotorEncoder(mineralSpool, 1.0, 1000);
 
                 flip.down();
+
+                oneMotorEncoder(lifter, 1.0, 500);
+
 
                 dunk.dunkDown();
 
@@ -266,10 +273,15 @@ public class autoTensorBox extends LinearOpMode
             //Back into depot
             chassis.driveAutonomous(-drivePower, -1300);
 
+            chassis.leftShiftAutonomous(shiftPower/ 2, 150);
+
             //Drop marker in depot
             teamMarker.drop();
 
             chassis.driveAutonomous(-drivePower, -200);
+
+
+            chassis.rightShiftAutonomous(shiftPower, 100);
 
             //Drive into crater
             chassis.driveAutonomous(drivePower, 2150);

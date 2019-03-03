@@ -159,6 +159,8 @@ public class autoInjured extends LinearOpMode
 
                 flip.down();
 
+                oneMotorEncoder(lifter, 1.0, 500);
+
                 dunk.dunkDown();
 
                 runTime.reset();
@@ -186,6 +188,8 @@ public class autoInjured extends LinearOpMode
 
                 flip.down();
 
+                oneMotorEncoder(lifter, 1.0, 500);
+
                 dunk.dunkDown();
 
                 runTime.reset();
@@ -212,6 +216,8 @@ public class autoInjured extends LinearOpMode
                 oneMotorEncoder(mineralSpool, 1.0, 1000);
 
                 flip.down();
+
+                oneMotorEncoder(lifter, 1.0, 500);
 
                 dunk.dunkDown();
 

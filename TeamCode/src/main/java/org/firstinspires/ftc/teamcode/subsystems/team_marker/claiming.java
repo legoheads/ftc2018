@@ -9,8 +9,8 @@ public class claiming implements TeamMarker {
 
     Servo dropper;
 
-    final double DROP_POSITION = 0.2;
-    final double HOLD_POSITION = 1.0;
+    final double DROP_POSITION = 1.0;
+    final double HOLD_POSITION = 0.2;
 
     public claiming(Servo teamMarkerArm){
         this.dropper = teamMarkerArm;

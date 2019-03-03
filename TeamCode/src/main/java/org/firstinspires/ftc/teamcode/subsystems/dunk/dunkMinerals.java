@@ -14,7 +14,7 @@ public class dunkMinerals implements Dunk
     private Servo dunker;
 
     //Dunk Servo Variables
-    private final double DUNK_POSITION = 0.22;
+    private final double DUNK_POSITION = 0.25;
     private final double DOWN_POSTITION = 0.75;
     private final double HOLD_POSITION = 0.665;
 
