@@ -189,8 +189,8 @@ public class teleMaster extends LinearOpMode {
                     Thread.sleep(1200);
                     flip.down();
                     dunk.dunkHold();
-                    chassis.omeWithDriveMotors(lifter, MAX_POWER, 4400, gamepad1, gamepad2);
-                    lifter.setPower(0.1);
+//                    chassis.omeWithDriveMotors(lifter, MAX_POWER, 4400, gamepad1, gamepad2);
+//                    lifter.setPower(0.1);
                 }
                 else if (currFlipPos == flipPositions.UP)
                 {
@@ -228,7 +228,7 @@ public class teleMaster extends LinearOpMode {
                 lifter.setPower(-MAX_POWER);
 
                 runTime.reset();
-                while (! touch.isPressed() && runTime.time() < 3000)
+                while (! touch.isPressed() && runTime.time() < 2500)
                 {
                     chassis.chassisTeleOp(gamepad1, gamepad2);
                     lifter.setPower(-MAX_POWER);
