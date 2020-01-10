@@ -10,14 +10,10 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-@TeleOp(name="test bot") //Name the class
-public class testBotTele extends LinearOpMode
-{
+@TeleOp(name="PUSHBOT TELE") //Name the class
+public class testBotTele extends LinearOpMode {
     //Define drive motors
-    DcMotor leftMotorFront;
-    DcMotor rightMotorFront;
-    DcMotor leftMotorBack;
-    DcMotor rightMotorBack;
+    DcMotor leftMotorFront, rightMotorFront, leftMotorBack, rightMotorBack;
     //Define floats to be used as joystick inputs and trigger inputs
     float drivePower;
     float shiftPower;
@@ -26,8 +22,6 @@ public class testBotTele extends LinearOpMode
 
     //Define an elapsed time variable
     private ElapsedTime runtime = new ElapsedTime();
-    private ElapsedTime flipTime = new ElapsedTime();
-    private ElapsedTime relicTime = new ElapsedTime();
 
     //Define booleans to make relic movements and shut off the intake wheels when gamepad2 is initialized
     boolean bMoved = false;
@@ -53,10 +47,10 @@ public class testBotTele extends LinearOpMode
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
-        leftMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftMotorBack.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotorBack.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //Set the drive motors to brake mode to prevent rolling due to chain
         leftMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -80,10 +74,10 @@ public class testBotTele extends LinearOpMode
 
             //DRIVE MOTOR CONTROLS
             //Set float variables as the inputs from the joysticks and the triggers
-            drivePower = (float) -((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.85);
+            drivePower = (float) ((gamepad1.left_stick_y + gamepad2.left_stick_y) * 0.85);
             shiftPower = (float) -((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.85);
-            leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.75);
-            rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.75);
+            leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.85);
+            rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.85);
 
             //Drive if the joystick is pushed more Y than X
             if (Math.abs(drivePower) > Math.abs(shiftPower))
