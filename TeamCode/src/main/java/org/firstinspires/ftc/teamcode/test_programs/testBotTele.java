@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-@Disabled
 @TeleOp(name="test bot") //Name the class
 public class testBotTele extends LinearOpMode
 {
@@ -19,22 +18,11 @@ public class testBotTele extends LinearOpMode
     DcMotor rightMotorFront;
     DcMotor leftMotorBack;
     DcMotor rightMotorBack;
-
-    Servo glyphFlip;
-
-    //Define relic motors
-    Servo relicGrab;
-    CRServo relicFlip;
-    DcMotor relicSpool;
-
     //Define floats to be used as joystick inputs and trigger inputs
     float drivePower;
     float shiftPower;
     float leftTurnPower;
     float rightTurnPower;
-
-    //Define an int to use as gamepad2 initialization
-    int gamepad2Init = 0;
 
     //Define an elapsed time variable
     private ElapsedTime runtime = new ElapsedTime();
@@ -65,15 +53,10 @@ public class testBotTele extends LinearOpMode
         leftMotorBack = hardwareMap.dcMotor.get("leftMotorBack");
         rightMotorBack = hardwareMap.dcMotor.get("rightMotorBack");
 
-        //Get references to the Servo Motors from the hardware map
-        glyphFlip = hardwareMap.servo.get("glyphFlip");
-        relicGrab = hardwareMap.servo.get("relicGrab");
-        relicFlip = hardwareMap.crservo.get("relicFlip");
-
-        leftMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
-        rightMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotorBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftMotorFront.setDirection(DcMotorSimple.Direction.FORWARD);
+        leftMotorBack.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightMotorFront.setDirection(DcMotorSimple.Direction.REVERSE);
+        rightMotorBack.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Set the drive motors to brake mode to prevent rolling due to chain
         leftMotorFront.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -84,8 +67,6 @@ public class testBotTele extends LinearOpMode
         //Wait for start button to be clicked
         waitForStart();
 
-        //Reset the flipper
-        glyphFlip.setPosition(0.95);
 
         //Reset the runtime after the start button is clicked
         runtime.reset();
@@ -103,21 +84,6 @@ public class testBotTele extends LinearOpMode
             shiftPower = (float) -((gamepad1.left_stick_x + gamepad2.left_stick_x) * 0.85);
             leftTurnPower = (float) ((gamepad1.left_trigger + gamepad2.left_trigger) * 0.75);
             rightTurnPower = (float) ((gamepad1.right_trigger + gamepad2.right_trigger) * 0.75);
-
-            //Gamepad2 init
-            if ((Math.abs(gamepad2.left_stick_y) > 0.1) && (gamepad2Init == 0))
-                bMoved = true;
-
-            //If gamepad2 is used, flip down the relic grabber and open the claws
-            if (bMoved)
-            {
-                relicFlip.setPower(0.7);
-                relicTime.reset();
-                relicGrab.setPosition(0.32);
-                bMoved = false;
-                gamepad2Init++;
-
-            }
 
             //Drive if the joystick is pushed more Y than X
             if (Math.abs(drivePower) > Math.abs(shiftPower))
@@ -143,58 +109,6 @@ public class testBotTele extends LinearOpMode
             if (Math.abs(drivePower) + Math.abs(shiftPower) + Math.abs(leftTurnPower) + Math.abs(rightTurnPower) < 0.15)
             {
                 setDriveMotorPowers((float) 0.0, (float) 0.0, (float) 0.0, (float) 0.0);
-            }
-
-            if (drivePower < -0.6)
-            {
-                glyphFlip.setPosition(0.75);
-            }
-
-            //If the dpad is pushed down, flip the glyphs into the cryptobox
-            //Then reset the flipper
-            if (gamepad1.dpad_down)
-            {
-                glyphFlip.setPosition(0.3);
-                flipTime.reset();
-                if (flipTime.time() > 1.2)
-                {
-                    glyphFlip.setPosition(0.75);
-                }
-            }
-
-            if (relicTime.time() > 1.1)
-            {
-                relicFlip.setPower(0.0);
-            }
-
-            //If the x button is pressed, open the claws
-            if (gamepad2.x)
-            {
-                relicGrab.setPosition(0.32);
-            }
-
-            //If the b button is pressed, close the
-            if (gamepad2.b)
-            {
-                relicGrab.setPosition(1.00);
-            }
-
-            //If the y button is pressed, flip the relic flipper down
-            //Also open the claws after a certain time to drop the relic
-            if (gamepad2.y)
-            {
-                relicFlip.setPower(0.7);
-                relicTime.reset();
-//                functions.crServoTime(relicFlip, (float) 0.7, 1500);
-            }
-
-            //If the a button is pressed, flip the relic flipper up
-            if (gamepad2.a)
-            {
-                //Up while holding relic, since it requires more time
-//                functions.crServoTime(relicFlip, (float) -0.7, 3000);
-                relicFlip.setPower(-0.7);
-                relicTime.reset();
             }
 
             //Count time
